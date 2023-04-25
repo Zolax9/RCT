@@ -1,0 +1,248 @@
+#include <stdlib.h>
+#include <cmath>
+#include <iostream>
+#include <vector>
+
+#include "cube_functions.hpp"
+
+#include "cube.hpp"
+
+std::vector<int> Cube_rotate(std::vector<int> v, int r)
+{
+    std::vector<int> out = std::vector<int>(9, CUBE_ANY);
+    double angle = r * PI_RCT / 2;
+    int X;
+    int Y;
+  
+    for (int y = 0; y < 3; ++y)
+    {
+        for (int x = 0; x < 3; ++x)
+        {
+            X = (int)std::round(((x - 1) * std::cos(angle)) - ((y - 1) * std::sin(angle))) + 1;
+            Y = (int)std::round(((x - 1) * std::sin(angle)) + ((y - 1) * std::cos(angle))) + 1;
+            out[Y * 3 + X] = v[(y * 3) + x];
+        }
+    }
+
+    return out;
+};
+
+std::vector<std::vector<int>> Cube_set_front_face(std::vector<std::vector<int>> state, int front_face)
+{
+    std::vector<std::vector<int>> new_state = std::vector<std::vector<int>>{};
+
+    switch (front_face)
+    {
+        case CUBE_WHITE:
+            new_state.push_back(Cube_rotate(state[4], 2));
+            new_state.push_back(Cube_rotate(state[1], 1));
+            new_state.push_back(state[0]);
+            new_state.push_back(Cube_rotate(state[3], 3));
+            new_state.push_back(Cube_rotate(state[5], 2));
+            new_state.push_back(state[2]);
+            break;
+
+        case CUBE_ORANGE:
+            new_state.push_back(Cube_rotate(state[0], 3));
+            new_state.push_back(state[4]);
+            new_state.push_back(state[1]);
+            new_state.push_back(state[2]);
+            new_state.push_back(state[3]);
+            new_state.push_back(Cube_rotate(state[5], 1));
+            break;
+
+        case CUBE_RED:
+            new_state.push_back(Cube_rotate(state[0], 1));
+            new_state.push_back(state[2]);
+            new_state.push_back(state[3]);
+            new_state.push_back(state[4]);
+            new_state.push_back(state[1]);
+            new_state.push_back(Cube_rotate(state[5], 3));
+            break;
+
+        case CUBE_BLUE:
+            new_state.push_back(Cube_rotate(state[0], 2));
+            new_state.push_back(state[3]);
+            new_state.push_back(state[4]);
+            new_state.push_back(state[1]);
+            new_state.push_back(state[2]);
+            new_state.push_back(Cube_rotate(state[5], 2));
+            break;
+
+        case CUBE_YELLOW:
+            new_state.push_back(state[2]);
+            new_state.push_back(Cube_rotate(state[1], 3));
+            new_state.push_back(state[5]);
+            new_state.push_back(Cube_rotate(state[3], 1));
+            new_state.push_back(Cube_rotate(state[0], 2));
+            new_state.push_back(Cube_rotate(state[4], 2));
+            break;
+    }
+    return new_state;
+};
+std::vector<std::vector<int>> Cube_set_orient(std::vector<std::vector<int>> state, int orient)
+{
+    std::vector<std::vector<int>> new_state = std::vector<std::vector<int>>{};
+
+    switch (orient)
+    {
+        case 1:
+            new_state.push_back(Cube_rotate(state[1], 1));
+            new_state.push_back(Cube_rotate(state[5], 1));
+            new_state.push_back(Cube_rotate(state[2], 1));
+            new_state.push_back(Cube_rotate(state[0], 1));
+            new_state.push_back(Cube_rotate(state[4], 3));
+            new_state.push_back(Cube_rotate(state[3], 1));
+            break;
+
+        case 2:
+            new_state.push_back(Cube_rotate(state[5], 2));
+            new_state.push_back(Cube_rotate(state[3], 2));
+            new_state.push_back(Cube_rotate(state[2], 2));
+            new_state.push_back(Cube_rotate(state[1], 2));
+            new_state.push_back(Cube_rotate(state[4], 2));
+            new_state.push_back(Cube_rotate(state[0], 2));
+            break;
+
+        case 3:
+            new_state.push_back(Cube_rotate(state[3], 3));
+            new_state.push_back(Cube_rotate(state[0], 3));
+            new_state.push_back(Cube_rotate(state[2], 3));
+            new_state.push_back(Cube_rotate(state[5], 3));
+            new_state.push_back(Cube_rotate(state[4], 1));
+            new_state.push_back(Cube_rotate(state[1], 3));
+            break;
+    }
+    return new_state;
+};
+
+int Cube_to_corner(int i)
+{
+    switch (i)
+    {
+        case 0:
+            return 0;
+
+        case 2:
+            return 1;
+
+        case 8:
+            return 2;
+
+        case 6:
+            return 3;
+    }
+    return -1;
+};
+int Cube_to_edge(Coord c)
+{
+    switch (c.i)
+    {
+        case 1:
+            return 0;
+
+        case 5:
+            return 1;
+
+        case 7:
+            return 2;
+
+        case 3:
+            return 3;
+    }
+    return -1;
+};
+int Cube_corner_to_index(int c)
+{
+    switch (c)
+    {
+        case 0:
+            return 0;
+
+        case 1:
+            return 2;
+
+        case 2:
+            return 8;
+
+        case 3:
+            return 6;
+    }
+    return -1;
+};
+int Cube_edge_to_index(int e)
+{
+    switch (e)
+    {
+        case 0:
+            return 1;
+
+        case 1:
+            return 5;
+
+        case 2:
+            return 7;
+
+        case 3:
+            return 3;
+    }
+    return -1;
+};
+
+std::string Cube_notation_str(int n)
+{
+    switch (n)
+    {
+        case M_U: return "U ";
+        case M_UP: return "U' ";
+        case M_U2: return "U2 ";
+        case M_L: return "L ";
+        case M_LP: return "L' ";
+        case M_L2: return "L2 ";
+        case M_F: return "F ";
+        case M_FP: return "F' ";
+        case M_F2: return "F2 ";
+        case M_R: return "R ";
+        case M_RP: return "R' ";
+        case M_R2: return "R2 ";
+        case M_B: return "B ";
+        case M_BP: return "B' ";
+        case M_B2: return "B2 ";
+        case M_D: return "D ";
+        case M_DP: return "D' ";
+        case M_D2: return "D2 ";
+    }
+    return "?? ";
+};
+std::string Cube_notation_str(std::vector<int> n)
+{
+    std::string str;
+    for (size_t i = 0; i < n.size(); ++i)
+    {
+        str.append(Cube_notation_str(n[i]));
+    }
+    return str;
+};
+
+std::string Cube_face_str(int f)
+{
+    switch (f)
+    {
+        case CUBE_WHITE: return "White ";
+        case CUBE_ORANGE: return "Orange ";
+        case CUBE_GREEN: return "Green ";
+        case CUBE_RED: return "Red ";
+        case CUBE_BLUE: return "Blue ";
+        case CUBE_YELLOW: return "Yellow ";
+    }
+    return "??? ";
+};
+std::string Cube_face_str(std::vector<int> f)
+{
+    std::string str;
+    for (size_t i = 0; i < f.size(); ++i)
+    {
+        str.append(Cube_face_str(f[i]));
+    }
+    return str;
+};
