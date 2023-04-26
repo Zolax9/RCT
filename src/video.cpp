@@ -9,6 +9,7 @@ void Video::Init(int _screenW, int _screenH)
 {
     screenW = _screenW;
     screenH = _screenH;
+    visible = true;
 
     frame_image.format = PIXELFORMAT_UNCOMPRESSED_R8G8B8;
     frame_image.mipmaps = 1;
@@ -36,6 +37,7 @@ void Video::Init(int _screenW, int _screenH)
 
 void Video::Update()
 {
+    if (IsKeyPressed(KEY_CTRL)) { visible = !visible; }
     UnloadTexture(frame_texture2D);
     
     cap.read(frame);
@@ -51,10 +53,10 @@ void Video::Update()
 
 void Video::Draw()
 {
-    //DrawTextureEx(frame_texture2D, pos, 0, scale, WHITE);
-}
+    if (visible) { DrawTextureEx(frame_texture2D, pos, 0, scale, WHITE); }
+};
 
-cv::Mat* Video::get_frame_pointer() { return &frame; }
-float Video::get_scale() { return scale; }
-Vector2 Video::get_size() { return Vector2{ frame_image.width, frame_image.height }; }
-Texture2D Video::get_texture() { return frame_texture2D; }
+cv::Mat* Video::get_frame_pointer() { return &frame; };
+float Video::get_scale() { return scale; };
+Vector2 Video::get_size() { return Vector2{ frame_image.width, frame_image.height }; };
+Texture2D Video::get_texture() { return frame_texture2D; };

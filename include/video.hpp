@@ -23,6 +23,7 @@ class Video
     private:
         int screenW;
         int screenH;
+        bool visible;
         float scale;
         Vector2 pos;
 
