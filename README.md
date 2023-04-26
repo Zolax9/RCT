@@ -47,7 +47,7 @@ A Rubik's Cube Tutorial application for beginners learning to solve the cube.
 
 * Linux-based OS (Windows port under consideration)
 * Raylib (currently v4.5)
-* OpenCV (currently stable v4)
+* OpenCV (currently v4)
 
 # Thanks
 
@@ -55,4 +55,4 @@ Thanks to:
 * [@AndroidSteve](https://www.github.com/AndroidSteve)
 * [@chan94306](https://www.github.com/chan94306)
 * [@16magrzywacz](https://www.github.com/16magrzywacz)
-* and others for advice in creating this projectw
+* and others for advice and help in creating this project!
