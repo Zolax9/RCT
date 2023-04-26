@@ -1,4 +1,4 @@
 .etc/
-obj/
+obj/debug/*
+obj/release/*
 README.md.backup
-rct

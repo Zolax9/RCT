@@ -878,7 +878,7 @@ void Tutorial::move_white_cross(int white_cross_edge, int slot_edge)
     if (loop(white_cross_edge + slot_edge, 0, 4) == 0)
     { // needs double move
         white_cross_alg.push_back(M_D2);
-    } else if (loop(white_cross + slot_edge, 1, 5) == 1)
+    } else if (loop(white_cross_edge + slot_edge, 1, 5) == 1)
     { // needs clockwise move
         white_cross_alg.push_back(M_D);
     } else if (white_cross_edge + slot_edge == 3) // needs counterclockwise move 
