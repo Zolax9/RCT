@@ -866,11 +866,10 @@ int Tutorial::get_white_cross_alg(int white_cross_edge)
 };
 void Tutorial::move_white_cross(int white_cross_edge, int slot_edge)
 {
-    if (loop(white_cross_edge + slot_edge, 0, 4) == 0)
-    if (petal_edge + loop(slot_edge, 1, 4) == 4)
+    if (loop(white_cross_edge + slot_edge, 1, 4) == 4)
     { // needs double move
         white_cross_alg.push_back(M_D2);
-    } else if (loop(white_cross_edge + slot_edge, 1, 5) == 1)
+    } else if (loop(white_cross_edge + slot_edge, -2, 1) == 1)
     { // needs clockwise move
         white_cross_alg.push_back(M_D);
     } else if (white_cross_edge + slot_edge == 3) // needs counterclockwise move 
@@ -1257,14 +1256,14 @@ void Tutorial::get_middle_layer_alg()
 };
 void Tutorial::get_middle_layer_setup_alg(int front_face, int target_face)
 {
-    if (front_face - loop(target_face, 2, 5) == -1) // needs clockwise move
-    {
+    if (front_face - loop(target_face, 2, 5) == -1)
+    { // needs clockwise move
         middle_layer_setup_alg.push_back(M_U);
-    } else if (loop(front_face, 2, 5) - target_face == 1) // needs counterclockwise move
-    {
+    } else if (loop(front_face, 2, 5) - target_face == 1)
+    { // needs counterclockwise move
         middle_layer_setup_alg.push_back(M_UP);
-    } else if (std::abs(front_face - target_face) == 2) // needs double move
-    {
+    } else if (std::abs(front_face - target_face) == 2)
+    { // needs double move
         middle_layer_setup_alg.push_back(M_U2);
     }
 };
