@@ -12,6 +12,7 @@ A Rubik's Cube Tutorial application for beginners learning to solve the cube.
 
 # Controls
 
+* **Left Control**: Toggle camera
 * **Space**: Store current face and move on to next / Fast forward cube animation
 * **Backspace**: Remove current face and move to previous
 * **N**: Reset all scanned faces

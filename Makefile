@@ -1,5 +1,7 @@
 DBGEXE:=RCT-debug
 RELEXE:=RCT-release
+DBGOBJDIR:=obj/debug
+RELOBJDIR:=obj/release
 CONFIG:=debug
 
 LDFLAGS:=-L raylib -lm -lraylib -lX11 -ldl -lopencv_core -lopencv_highgui -lopencv_imgcodecs -lopencv_imgproc -lopencv_videoio -pthread
@@ -9,6 +11,9 @@ CFLAGS+= -std=c++17 -I ./include -I raylib -I /usr/include/opencv4
 
 SRC:=$(wildcard src/*.cpp)
 INC:=$(wildcard include/*.hpp)
+DBGOBJ:=$(SRC:src/%.cpp=obj/debug/%.o)
+#DGBOBJ:=$(addprefix obj/debug/, $(DBGOBJ))
+RELOBJ:=$(SRC:src/%.cpp=obj/release/%.o)
 
 CC=g++
 
@@ -22,16 +27,17 @@ debug:CFLAGS+= -g -DDEBUG
 release:CONFIG:=release
 release: CFLAGS+= -O3
 
-OBJ:=$(SRC:src/%.cpp=%.o)
+debug: $(DBGOBJ)
+	$(CC) $(DBGOBJ) -o $(DBGEXE) $(LDFLAGS)
 
-debug: $(OBJ)
-	$(CC) $(addprefix obj/$(CONFIG)/, $(OBJ)) -o $(DBGEXE) $(LDFLAGS)
+release: $(RELOBJ)
+	$(CC) $(RELOBJ) -o $(RELEXE) $(LDFLAGS)
 
-release: $(OBJ)
-	$(CC) $(OBJ) -o $(RELEXE) $(LDFLAGS)
+$(DBGOBJDIR)/%.o : src/%.cpp
+	$(CC) $(CFLAGS) -c $< -o $@
 
-$(OBJ): %.o : src/%.cpp
-	$(CC) $(CFLAGS) -c $< -o obj/$(CONFIG)/$@
+$(RELOBJDIR)/%.o : src/%.cpp
+	$(CC) $(CFLAGS) -c $< -o $@
 
 debug: $(DGBEXE)
 release: $(RELEXE)

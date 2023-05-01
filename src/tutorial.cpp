@@ -803,10 +803,10 @@ int Tutorial::get_petal_alg(Coord petal)
 };
 void Tutorial::move_petal(int petal_edge, int slot_edge)
 {
-    if (loop(petal_edge + slot_edge, 0, 4) == 0)
+    if (petal_edge + loop(slot_edge, 1, 4) == 4)
     { // needs double move
         petal_move_alg.push_back(M_D2);
-    } else if (loop(petal_edge + slot_edge, 1, 5) == 1)
+    } else if (petal_edge + loop(slot_edge, -2, 1) == 1)
     { // needs clockwise move
         petal_move_alg.push_back(M_D);
     } else if (petal_edge + slot_edge == 3) // needs counterclockwise move 
@@ -839,18 +839,9 @@ int Tutorial::get_white_cross_alg(int white_cross_edge)
     int white_cross_front_face; // Front face to do alg at
     int slot_edge; // edge index of empty edge for cross at white face
 
-    switch (white_cross_edge)
-    {
-        case 3:
-            white_cross_front_face = cube.get_sticker(1, 7);
-            slot_edge = 4 - white_cross_front_face;
-            break;
+    white_cross_front_face = cube.get_edge(loop(white_cross_edge + 2, 1, 4), 2);
+    slot_edge = 4 - white_cross_front_face;
 
-        default:
-            white_cross_front_face = cube.get_sticker(white_cross_edge + 2, 7);
-            slot_edge = 4 - white_cross_front_face;
-            break;
-    }
     std::cout << "White cross front face: " << white_cross_front_face << '\n';
     std::cout << "Slot edge: " << slot_edge << "\n\n";
 
@@ -876,6 +867,7 @@ int Tutorial::get_white_cross_alg(int white_cross_edge)
 void Tutorial::move_white_cross(int white_cross_edge, int slot_edge)
 {
     if (loop(white_cross_edge + slot_edge, 0, 4) == 0)
+    if (petal_edge + loop(slot_edge, 1, 4) == 4)
     { // needs double move
         white_cross_alg.push_back(M_D2);
     } else if (loop(white_cross_edge + slot_edge, 1, 5) == 1)

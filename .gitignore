@@ -1,4 +1,5 @@
 .etc/
 obj/debug/*
 obj/release/*
+build.sh
 README.md.backup
