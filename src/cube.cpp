@@ -261,21 +261,14 @@ std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE> Cube_permute(std::array<s
     return state;
 };
 
-std::array<int, CUBE_FACE_SIZE> Cube_rotate(std::array<int, CUBE_FACE_SIZE> v, int r)
+std::array<int, CUBE_FACE_SIZE> Cube_rotate(std::array<int, CUBE_FACE_SIZE> vec, int r)
 {
     std::array<int, CUBE_FACE_SIZE> out;
-    double angle = r * PI_RCT / 2;
-    int X;
-    int Y;
-  
-    for (int y = 0; y < 3; ++y)
+
+    for (size_t i = 0; i < 4; ++i)
     {
-        for (int x = 0; x < 3; ++x)
-        {
-            X = (int)std::round(((x - 1) * std::cos(angle)) - ((y - 1) * std::sin(angle))) + 1;
-            Y = (int)std::round(((x - 1) * std::sin(angle)) + ((y - 1) * std::cos(angle))) + 1;
-            out[Y * 3 + X] = v[(y * 3) + x];
-        }
+        out[Cube_corner_to_index(i)] = vec[Cube_corner_to_index(loop(i - r, 0, 3))];
+        out[Cube_edge_to_index(i)] = vec[Cube_edge_to_index(loop(i - r, 0, 3))];
     }
     return out;
 };
