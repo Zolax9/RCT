@@ -140,7 +140,7 @@ std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE> Cube_permute(std::array<s
     std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE> temp_state;
     int rotation; // alg[i] % 3 + 1, CW = 1, double = 2, CCW = 3
     int permute_face;
-    size_t face_index;
+    int face_index;
 
     if (front_face != 2) { state = Cube_set_front_face(state, front_face); }
     if (orient != 0) { state = Cube_set_orient(state, orient); }
@@ -264,8 +264,9 @@ std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE> Cube_permute(std::array<s
 std::array<int, CUBE_FACE_SIZE> Cube_rotate(std::array<int, CUBE_FACE_SIZE> vec, int r)
 {
     std::array<int, CUBE_FACE_SIZE> out;
+    out[4] = vec[4];
 
-    for (size_t i = 0; i < 4; ++i)
+    for (int i = 0; i < 4; ++i)
     {
         out[Cube_corner_to_index(i)] = vec[Cube_corner_to_index(loop(i - r, 0, 3))];
         out[Cube_edge_to_index(i)] = vec[Cube_edge_to_index(loop(i - r, 0, 3))];

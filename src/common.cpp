@@ -8,11 +8,9 @@
 #include "rlgl.h"
 
 int loop(int n, int start, int end)
-{  
-    int i = (end - start) + 1;
-    while (n < start) { n += i; }
-    while (n > end) { n -= i; }
-    return n;
+{
+    if (n < start) { n += (((start - n) / ((end - start) + 1)) + 1) * ((end - start) + 1); }
+    return start + ((n - start) % ((end - start) + 1));
 };
 
 void DrawCubeEx(Vector3 position, float width, float height, float length, Vector3 rotationAxis, float rotationAngle, std::array<Color, 6> colors)
@@ -27,6 +25,7 @@ void DrawCubeEx(Vector3 position, float width, float height, float length, Vecto
         rlRotatef(rotationAngle, rotationAxis.x, rotationAxis.y, rotationAxis.z);
 
         rlBegin(RL_TRIANGLES);
+
             // Top face
  
             rlColor4ub(colors[0].r, colors[0].g, colors[0].b, colors[0].a);
@@ -38,7 +37,7 @@ void DrawCubeEx(Vector3 position, float width, float height, float length, Vecto
             rlVertex3f(x + width/2, y + height/2, z - length/2);  // Top Right
             rlVertex3f(x - width/2, y + height/2, z - length/2);  // Top Left
             rlVertex3f(x + width/2, y + height/2, z + length/2);  // Bottom Right
-                                                                  //
+
             // Left face
  
             rlColor4ub(colors[1].r, colors[1].g, colors[1].b, colors[1].a);
