@@ -137,369 +137,124 @@ void Cube::Permute(std::vector<int> alg, int front_face, int orient)
 
 std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE> Cube_permute(std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE> state, std::vector<int> alg, int front_face, int orient)
 {
-    int permute_face;
     std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE> temp_state;
-
-    temp_state = state;
+    int rotation; // alg[i] % 3 + 1, CW = 1, double = 2, CCW = 3
+    int permute_face;
+    size_t face_index;
 
     if (front_face != 2) { state = Cube_set_front_face(state, front_face); }
     if (orient != 0) { state = Cube_set_orient(state, orient); }
 
     for (size_t i = 0; i < alg.size(); ++i)
     {
-        temp_state = state;
+        rotation = loop(4 - alg[i] % 3, 1, 3);
         permute_face = alg[i] / 3;
 
-        switch (alg[i] % 3)
+        temp_state = state;
+        temp_state[permute_face] = Cube_rotate(state[permute_face], rotation);
+        face_index = 0;
+
+        switch (permute_face)
         {
-            case 0: // Clockwise
-                temp_state[permute_face] = Cube_rotate(state[permute_face], 1);
-
-                switch (permute_face)
+            case CUBE_WHITE: // Orange, Green, Red, Blue
+                for (size_t j = 1; j < 5; ++j)
                 {
-                    case 0: // Orange, Green, Red, Blue
-                        temp_state[1][0] = state[2][0];
-                        temp_state[1][1] = state[2][1];
-                        temp_state[1][2] = state[2][2];
-                        temp_state[2][0] = state[3][0];
-                        temp_state[2][1] = state[3][1];
-                        temp_state[2][2] = state[3][2];
-                        temp_state[3][0] = state[4][0];
-                        temp_state[3][1] = state[4][1];
-                        temp_state[3][2] = state[4][2];
-                        temp_state[4][0] = state[1][0];
-                        temp_state[4][1] = state[1][1];
-                        temp_state[4][2] = state[1][2];
-                        break;
-
-                    case 1: // White, Blue, Yellow, Green
-                        temp_state[0][0] = state[4][8];
-                        temp_state[0][3] = state[4][5];
-                        temp_state[0][6] = state[4][2];
-                        temp_state[4][8] = state[5][0];
-                        temp_state[4][5] = state[5][3];
-                        temp_state[4][2] = state[5][6];
-                        temp_state[5][0] = state[2][0];
-                        temp_state[5][3] = state[2][3];
-                        temp_state[5][6] = state[2][6];
-                        temp_state[2][0] = state[0][0];
-                        temp_state[2][3] = state[0][3];
-                        temp_state[2][6] = state[0][6];
-                        break;
-
-                    case 2: // White, Orange, Yellow, Red
-                        temp_state[0][6] = state[1][8];
-                        temp_state[0][7] = state[1][5];
-                        temp_state[0][8] = state[1][2];
-                        temp_state[1][8] = state[5][2];
-                        temp_state[1][5] = state[5][1];
-                        temp_state[1][2] = state[5][0];
-                        temp_state[5][2] = state[3][0];
-                        temp_state[5][1] = state[3][3];
-                        temp_state[5][0] = state[3][6];
-                        temp_state[3][0] = state[0][6];
-                        temp_state[3][3] = state[0][7];
-                        temp_state[3][6] = state[0][8];
-                        break;
-
-                    case 3: // White, Green, Yellow, Blue 
-                        temp_state[0][2] = state[2][2];
-                        temp_state[0][5] = state[2][5];
-                        temp_state[0][8] = state[2][8];
-                        temp_state[2][2] = state[5][2];
-                        temp_state[2][5] = state[5][5];
-                        temp_state[2][8] = state[5][8];
-                        temp_state[5][2] = state[4][6];
-                        temp_state[5][5] = state[4][3];
-                        temp_state[5][8] = state[4][0];
-                        temp_state[4][6] = state[0][2];
-                        temp_state[4][3] = state[0][5];
-                        temp_state[4][0] = state[0][8];
-                        break;
-
-                    case 4: // White, Red, Yellow, Orange
-                        temp_state[0][0] = state[3][2];
-                        temp_state[0][1] = state[3][5];
-                        temp_state[0][2] = state[3][8];
-                        temp_state[3][2] = state[5][8];
-                        temp_state[3][5] = state[5][7];
-                        temp_state[3][8] = state[5][6];
-                        temp_state[5][8] = state[1][6];
-                        temp_state[5][7] = state[1][3];
-                        temp_state[5][6] = state[1][0];
-                        temp_state[1][6] = state[0][0];
-                        temp_state[1][3] = state[0][1];
-                        temp_state[1][0] = state[0][2];
-                        break;
-
-                    case 5: // Orange, Blue, Red, Green
-                        temp_state[1][6] = state[4][6];
-                        temp_state[1][7] = state[4][7];
-                        temp_state[1][8] = state[4][8];
-                        temp_state[4][6] = state[3][6];
-                        temp_state[4][7] = state[3][7];
-                        temp_state[4][8] = state[3][8];
-                        temp_state[3][6] = state[2][6];
-                        temp_state[3][7] = state[2][7];
-                        temp_state[3][8] = state[2][8];
-                        temp_state[2][6] = state[1][6];
-                        temp_state[2][7] = state[1][7];
-                        temp_state[2][8] = state[1][8];
-                        break;
+                    for (size_t k = 0; k < 3; ++k)
+                    {
+                        temp_state[j][k] = state[loop(j + rotation, 1, 4)][k];
+                    }
                 }
-
                 break;
 
-            case 1: // Counterclockwise
-                temp_state[permute_face] = Cube_rotate(state[permute_face], 3);
-
-                switch (permute_face)
+            case CUBE_ORANGE: // White, Blue, Yellow, Green
+                for (size_t j = 0; j < CUBE_FACE_SIZE; j += 3)
                 {
-                    case 0: // Orange, Blue, Red, Green
-                        temp_state[1][0] = state[4][0];
-                        temp_state[1][1] = state[4][1];
-                        temp_state[1][2] = state[4][2];
-                        temp_state[4][0] = state[3][0];
-                        temp_state[4][1] = state[3][1];
-                        temp_state[4][2] = state[3][2];
-                        temp_state[3][0] = state[2][0];
-                        temp_state[3][1] = state[2][1];
-                        temp_state[3][2] = state[2][2];
-                        temp_state[2][0] = state[1][0];
-                        temp_state[2][1] = state[1][1];
-                        temp_state[2][2] = state[1][2];
-                        break;
-
-                    case 1: // White, Green, Yellow, Blue 
-                        temp_state[0][0] = state[2][0];
-                        temp_state[0][3] = state[2][3];
-                        temp_state[0][6] = state[2][6];
-                        temp_state[2][0] = state[5][0];
-                        temp_state[2][3] = state[5][3];
-                        temp_state[2][6] = state[5][6];
-                        temp_state[5][0] = state[4][8];
-                        temp_state[5][3] = state[4][5];
-                        temp_state[5][6] = state[4][2];
-                        temp_state[4][8] = state[0][0];
-                        temp_state[4][5] = state[0][3];
-                        temp_state[4][2] = state[0][6];
-                        break;
-
-                    case 2: // White, Red, Yellow, Orange
-                        temp_state[0][6] = state[3][0];
-                        temp_state[0][7] = state[3][3];
-                        temp_state[0][8] = state[3][6];
-                        temp_state[3][0] = state[5][2];
-                        temp_state[3][3] = state[5][1];
-                        temp_state[3][6] = state[5][0];
-                        temp_state[5][2] = state[1][8];
-                        temp_state[5][1] = state[1][5];
-                        temp_state[5][0] = state[1][2];
-                        temp_state[1][8] = state[0][6];
-                        temp_state[1][5] = state[0][7];
-                        temp_state[1][2] = state[0][8];
-                        break;
-
-                    case 3: // White, Blue, Yellow, Green
-                        temp_state[0][2] = state[4][6];
-                        temp_state[0][5] = state[4][3];
-                        temp_state[0][8] = state[4][0];
-                        temp_state[4][6] = state[5][2];
-                        temp_state[4][3] = state[5][5];
-                        temp_state[4][0] = state[5][8];
-                        temp_state[5][2] = state[2][2];
-                        temp_state[5][5] = state[2][5];
-                        temp_state[5][8] = state[2][8];
-                        temp_state[2][2] = state[0][2];
-                        temp_state[2][5] = state[0][5];
-                        temp_state[2][8] = state[0][8];
-                        break;
-
-                    case 4: // White, Orange, Yellow, Red
-                        temp_state[0][0] = state[1][6];
-                        temp_state[0][1] = state[1][3];
-                        temp_state[0][2] = state[1][0];
-                        temp_state[1][6] = state[5][8];
-                        temp_state[1][3] = state[5][7];
-                        temp_state[1][0] = state[5][6];
-                        temp_state[5][8] = state[3][2];
-                        temp_state[5][7] = state[3][5];
-                        temp_state[5][6] = state[3][8];
-                        temp_state[3][2] = state[0][0];
-                        temp_state[3][5] = state[0][1];
-                        temp_state[3][8] = state[0][2];
-                        break;
-
-                    case 5: // Orange, Green, Red, Blue
-                        temp_state[1][6] = state[2][6];
-                        temp_state[1][7] = state[2][7];
-                        temp_state[1][8] = state[2][8];
-                        temp_state[2][6] = state[3][6];
-                        temp_state[2][7] = state[3][7];
-                        temp_state[2][8] = state[3][8];
-                        temp_state[3][6] = state[4][6];
-                        temp_state[3][7] = state[4][7];
-                        temp_state[3][8] = state[4][8];
-                        temp_state[4][6] = state[1][6];
-                        temp_state[4][7] = state[1][7];
-                        temp_state[4][8] = state[1][8];
-                        break;
+                    temp_state[L_FACES[face_index]][j] = state[L_FACES[loop(rotation + face_index, 0, 3)]][(rotation == 1) ? (8 - j) : j];
                 }
-
+                ++face_index;
+                for (size_t j = 2; j < CUBE_FACE_SIZE; j += 3)
+                {
+                    temp_state[L_FACES[face_index]][j] = state[L_FACES[loop(rotation + face_index, 0, 3)]][8 - j];
+                }
+                ++face_index;
+                for (size_t j = 0; j < CUBE_FACE_SIZE; j += 3)
+                {
+                    temp_state[L_FACES[face_index]][j] = state[L_FACES[loop(rotation + face_index, 0, 3)]][(rotation == 3) ? (8 - j) : j];
+                }
+                ++face_index;
+                for (size_t j = 0; j < CUBE_FACE_SIZE; j += 3)
+                {
+                    temp_state[L_FACES[face_index]][j] = state[L_FACES[loop(rotation + face_index, 0, 3)]][(rotation == 2) ? (8 - j) : j];
+                }
                 break;
 
-            case 2: // Double move
-                temp_state[permute_face] = Cube_rotate(state[permute_face], 2);
-
-                switch (permute_face)
+            case CUBE_GREEN: // White, Orange, Yellow, Red
+                for (size_t j = 2; face_index < 4; j = loop(j - 1, 0, 3))
                 {
-                    case 0: // Orange, Red, Green, Blue
-                        temp_state[1][0] = state[3][0];
-                        temp_state[1][1] = state[3][1];
-                        temp_state[1][2] = state[3][2];
-                        temp_state[3][0] = state[1][0];
-                        temp_state[3][1] = state[1][1];
-                        temp_state[3][2] = state[1][2];
-                        temp_state[2][0] = state[4][0];
-                        temp_state[2][1] = state[4][1];
-                        temp_state[2][2] = state[4][2];
-                        temp_state[4][0] = state[2][0];
-                        temp_state[4][1] = state[2][1];
-                        temp_state[4][2] = state[2][2];
-                        break;
-
-                    case 1: // White, Yellow, Blue, Green
-                        temp_state[0][0] = state[5][0];
-                        temp_state[0][3] = state[5][3];
-                        temp_state[0][6] = state[5][6];
-                        temp_state[5][0] = state[0][0];
-                        temp_state[5][3] = state[0][3];
-                        temp_state[5][6] = state[0][6];
-                        temp_state[4][8] = state[2][0];
-                        temp_state[4][5] = state[2][3];
-                        temp_state[4][2] = state[2][6];
-                        temp_state[2][0] = state[4][8];
-                        temp_state[2][3] = state[4][5];
-                        temp_state[2][6] = state[4][2];
-                        break;
-
-                    case 2: // White, Yellow, Orange, Red
-                        temp_state[0][6] = state[5][2];
-                        temp_state[0][7] = state[5][1];
-                        temp_state[0][8] = state[5][0];
-                        temp_state[5][2] = state[0][6];
-                        temp_state[5][1] = state[0][7];
-                        temp_state[5][0] = state[0][8];
-                        temp_state[1][8] = state[3][0];
-                        temp_state[1][5] = state[3][3];
-                        temp_state[1][2] = state[3][6];
-                        temp_state[3][0] = state[1][8];
-                        temp_state[3][3] = state[1][5];
-                        temp_state[3][6] = state[1][2];
-                        break;
-
-                    case 3: // White, Yellow, Green, Blue 
-                        temp_state[0][2] = state[5][2];
-                        temp_state[0][5] = state[5][5];
-                        temp_state[0][8] = state[5][8];
-                        temp_state[5][2] = state[0][2];
-                        temp_state[5][5] = state[0][5];
-                        temp_state[5][8] = state[0][8];
-                        temp_state[2][2] = state[4][6];
-                        temp_state[2][5] = state[4][3];
-                        temp_state[2][8] = state[4][0];
-                        temp_state[4][6] = state[2][2];
-                        temp_state[4][3] = state[2][5];
-                        temp_state[4][0] = state[2][8];
-                    break;
-
-                    case 4: // White, Yellow, Red, Orange
-                        temp_state[0][0] = state[5][8];
-                        temp_state[0][1] = state[5][7];
-                        temp_state[0][2] = state[5][6];
-                        temp_state[5][8] = state[0][0];
-                        temp_state[5][7] = state[0][1];
-                        temp_state[5][6] = state[0][2];
-                        temp_state[3][2] = state[1][6];
-                        temp_state[3][5] = state[1][3];
-                        temp_state[3][8] = state[1][0];
-                        temp_state[1][6] = state[3][2];
-                        temp_state[1][3] = state[3][5];
-                        temp_state[1][0] = state[3][8];
-                        break;
-
-                    case 5: // Orange, Red, Blue, Green
-                        temp_state[1][6] = state[3][6];
-                        temp_state[1][7] = state[3][7];
-                        temp_state[1][8] = state[3][8];
-                        temp_state[3][6] = state[1][6];
-                        temp_state[3][7] = state[1][7];
-                        temp_state[3][8] = state[1][8];
-                        temp_state[4][6] = state[2][6];
-                        temp_state[4][7] = state[2][7];
-                        temp_state[4][8] = state[2][8];
-                        temp_state[2][6] = state[4][6];
-                        temp_state[2][7] = state[4][7];
-                        temp_state[2][8] = state[4][8];
-                        break;
+                    temp_state[F_FACES[face_index]][Cube_edge_to_index(j)] = state[F_FACES[loop(rotation + face_index, 0, 3)]][Cube_edge_to_index(loop(j - rotation, 0, 3))];
+                    temp_state[F_FACES[face_index]][Cube_corner_to_index(j)] = state[F_FACES[loop(rotation + face_index, 0, 3)]][Cube_corner_to_index(loop(j - rotation, 0, 3))];
+                    temp_state[F_FACES[face_index]][Cube_corner_to_index(loop(j + 1, 0, 3))] = state[F_FACES[loop(rotation + face_index, 0, 3)]][Cube_corner_to_index(loop(loop(j + 1, 0, 3) - rotation, 0, 3))];
+                    ++face_index;
                 }
+                break;
 
+            case CUBE_RED: // White, Green, Yellow, Blue
+                for (size_t j = 0; j < 3; ++j)
+                {
+                    temp_state[R_FACES[face_index]][Cube_edge_to_index(1)] = state[R_FACES[loop(rotation + face_index, 0, 3)]][(rotation == (3 - face_index)) ? Cube_edge_to_index(3) : Cube_edge_to_index(1)];
+                    temp_state[R_FACES[face_index]][Cube_corner_to_index(1)] = state[R_FACES[loop(rotation + face_index, 0, 3)]][(rotation == (3 - face_index)) ? Cube_corner_to_index(3) : Cube_corner_to_index(1)];
+                    temp_state[R_FACES[face_index]][Cube_corner_to_index(2)] = state[R_FACES[loop(rotation + face_index, 0, 3)]][(rotation == (3 - face_index)) ? Cube_corner_to_index(0) : Cube_corner_to_index(2)];
+                    ++face_index;
+                }
+                temp_state[R_FACES[face_index]][Cube_edge_to_index(3)] = state[R_FACES[loop(rotation + face_index, 0, 3)]][Cube_edge_to_index(1)];
+                temp_state[R_FACES[face_index]][Cube_corner_to_index(3)] = state[R_FACES[loop(rotation + face_index, 0, 3)]][Cube_corner_to_index(1)];
+                temp_state[R_FACES[face_index]][Cube_corner_to_index(0)] = state[R_FACES[loop(rotation + face_index, 0, 3)]][Cube_corner_to_index(2)];
+                break;
+
+            case CUBE_BLUE: // White, Red, Yellow, Orange
+                for (size_t j = 0; j < 4; ++j)
+                {
+                    temp_state[B_FACES[face_index]][Cube_edge_to_index(j)] = state[B_FACES[loop(rotation + face_index, 0, 3)]][Cube_edge_to_index(loop(j + rotation, 0, 3))];
+                    temp_state[B_FACES[face_index]][Cube_corner_to_index(j)] = state[B_FACES[loop(rotation + face_index, 0, 3)]][Cube_corner_to_index(loop(j + rotation, 0, 3))];
+                    temp_state[B_FACES[face_index]][Cube_corner_to_index(loop(j + 1, 0, 3))] = state[B_FACES[loop(rotation + face_index, 0, 3)]][Cube_corner_to_index(loop(loop(j + 1, 0, 3) + rotation, 0, 3))];
+                    ++face_index;
+                }
+                break;
+
+            case CUBE_YELLOW: // Orange, Blue, Red, Green
+                for (size_t j = 1; j < 5; ++j)
+                {
+                    for (size_t k = 6; k < CUBE_FACE_SIZE; ++k)
+                    {
+                        temp_state[j][k] = state[loop(j - rotation, 1, 4)][k];
+                    }
+                }
                 break;
         }
         state = temp_state;
     }
 
     if (orient != 0) { state = Cube_set_orient(state, 4 - orient); }
-    if (front_face != 2)
+    if (front_face != CUBE_GREEN)
     {
-        std::array<int, CUBE_FACE_SIZE> temp_face;
-
-        switch (front_face)
+        if (
+            front_face == CUBE_WHITE ||
+            front_face == CUBE_YELLOW
+        ) {
+            temp_state[front_face * 5] = state[CUBE_GREEN];
+            temp_state[CUBE_ORANGE] = Cube_rotate(state[CUBE_ORANGE], loop(front_face, 1, 3));
+            temp_state[CUBE_GREEN] = state[loop(front_face, 1, 6) - 1];
+            temp_state[CUBE_RED] = Cube_rotate(state[CUBE_RED], loop(1 - front_face, 1, 3));
+            temp_state[CUBE_BLUE] = Cube_rotate(state[front_face * 5], 2);
+            temp_state[(1 - front_face) * 5] = Cube_rotate(state[CUBE_BLUE], 2);
+        } else
         {
-            case 0:
-                temp_state[0] = state[2];
-                temp_state[1] = Cube_rotate(state[1], 3);
-                temp_state[2] = state[5];
-                temp_state[3] = Cube_rotate(state[3], 1);
-                temp_state[4] = Cube_rotate(state[0], 2);
-                temp_state[5] = Cube_rotate(state[4], 2);
-                break;
-
-            case 1:
-                temp_state[0] = Cube_rotate(state[0], 1);
-                temp_state[1] = state[2];
-                temp_state[2] = state[3];
-                temp_state[3] = state[4];
-                temp_state[4] = state[1];
-                temp_state[5] = Cube_rotate(state[5], 3);
-                break;
-
-            case 3:
-                temp_state[0] = Cube_rotate(state[0], 3);
-                temp_state[1] = state[4];
-                temp_state[2] = state[1];
-                temp_state[3] = state[2];
-                temp_state[4] = state[3];
-                temp_state[5] = Cube_rotate(state[5], 1);
-                break;
-
-            case 4:
-                temp_state[0] = Cube_rotate(state[0], 2);
-                temp_state[1] = state[3];
-                temp_state[2] = state[4];
-                temp_state[3] = state[1];
-                temp_state[4] = state[2];
-                temp_state[5] = Cube_rotate(state[5], 2);
-                break;
-
-            case 5:
-                temp_state[0] = Cube_rotate(state[4], 2);
-                temp_state[1] = Cube_rotate(state[1], 1);
-                temp_state[2] = state[0];
-                temp_state[3] = Cube_rotate(state[3], 3);
-                temp_state[4] = Cube_rotate(state[5], 2);
-                temp_state[5] = state[2];
-                break;
+            temp_state[CUBE_WHITE] = Cube_rotate(state[CUBE_WHITE], (front_face == CUBE_BLUE) ? CUBE_GREEN : front_face);
+            for (size_t i = CUBE_ORANGE; i < CUBE_YELLOW; ++i)
+            {
+                temp_state[i] = state[loop(i + ((front_face == CUBE_BLUE) ? CUBE_GREEN : front_face), CUBE_ORANGE, CUBE_BLUE)];
+            }
+            temp_state[CUBE_YELLOW] = Cube_rotate(state[CUBE_YELLOW], (front_face == CUBE_BLUE) ? CUBE_GREEN : (4 - front_face));
         }
         state = temp_state;
     }
@@ -529,62 +284,24 @@ std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE> Cube_set_front_face(std::
 {
     std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE> new_state;
 
-    switch (front_face)
+    if (
+        front_face == CUBE_WHITE ||
+        front_face == CUBE_YELLOW
+    ) {
+        new_state[front_face * 5] = Cube_rotate(state[CUBE_BLUE], 2);
+        new_state[CUBE_ORANGE] = Cube_rotate(state[CUBE_ORANGE], loop(1 - front_face, 1, 3));
+        new_state[CUBE_GREEN] = state[front_face * 5];
+        new_state[CUBE_RED] = Cube_rotate(state[CUBE_RED], loop(front_face, 1, 3));
+        new_state[CUBE_BLUE] = Cube_rotate(state[(1 - front_face) * 5], 2);
+        new_state[(1 - front_face) * 5] = state[CUBE_GREEN];
+    } else
     {
-        case CUBE_WHITE:
-            new_state = std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE>{ {
-                Cube_rotate(state[4], 2),
-                Cube_rotate(state[1], 1),
-                state[0],
-                Cube_rotate(state[3], 3),
-                Cube_rotate(state[5], 2),
-                state[2]
-            } };
-            break;
-
-        case CUBE_ORANGE:
-            new_state = std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE>{ {
-                Cube_rotate(state[0], 3),
-                state[4],
-                state[1],
-                state[2],
-                state[3],
-                Cube_rotate(state[5], 1)
-            } };
-            break;
-
-        case CUBE_RED:
-            new_state = std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE>{ {
-                Cube_rotate(state[0], 1),
-                state[2],
-                state[3],
-                state[4],
-                state[1],
-                Cube_rotate(state[5], 3)
-            } };
-            break;
-
-        case CUBE_BLUE:
-            new_state = std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE>{ {
-                Cube_rotate(state[0], 2),
-                state[3],
-                state[4],
-                state[1],
-                state[2],
-                Cube_rotate(state[5], 2)
-            } };
-            break;
-
-        case CUBE_YELLOW:
-            new_state = std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE>{ {
-                state[2],
-                Cube_rotate(state[1], 3),
-                state[5],
-                Cube_rotate(state[3], 1),
-                Cube_rotate(state[0], 2),
-                Cube_rotate(state[4], 2)
-            } };
-            break;
+        new_state[CUBE_WHITE] = Cube_rotate(state[CUBE_WHITE], loop(front_face - 2, 1, 4));
+        for (size_t i = CUBE_ORANGE; i < CUBE_YELLOW; ++i)
+        {
+            new_state[i] = state[loop(i + loop(front_face, 3, 6) - 2, CUBE_ORANGE, CUBE_BLUE)];
+        }
+        new_state[CUBE_YELLOW] = Cube_rotate(state[CUBE_YELLOW], (front_face == CUBE_BLUE) ? CUBE_GREEN : front_face);
     }
     return new_state;
 };

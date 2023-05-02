@@ -45,7 +45,7 @@ void UI::Update()
     tutorial.Update(pred_state);
 
 #ifdef DEBUG
-    if (IsKeyPressed(KEY_U)) { cube->Permute(std::vector<int>{ { M_U } }); }
+    if (IsKeyPressed(KEY_U)) { cube->Permute(std::vector<int>{ { M_U } }, CUBE_RED); }
     if (IsKeyPressed(KEY_Y)) { cube->Permute(std::vector<int>{ { M_UP } }); }
     if (IsKeyPressed(KEY_I)) { cube->Permute(std::vector<int>{ { M_U2 } }); }
     if (IsKeyPressed(KEY_L)) { cube->Permute(std::vector<int>{ { M_L } }); }

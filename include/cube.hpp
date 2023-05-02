@@ -37,6 +37,11 @@
 
 const double PI_RCT = std::acos(-1);
 
+const std::array<int, 4> L_FACES = { { CUBE_WHITE, CUBE_BLUE,   CUBE_YELLOW, CUBE_GREEN  } };
+const std::array<int, 4> F_FACES = { { CUBE_WHITE, CUBE_ORANGE, CUBE_YELLOW, CUBE_RED    } };
+const std::array<int, 4> R_FACES = { { CUBE_WHITE, CUBE_GREEN,  CUBE_YELLOW, CUBE_BLUE   } };
+const std::array<int, 4> B_FACES = { { CUBE_WHITE, CUBE_RED,    CUBE_YELLOW, CUBE_ORANGE } };
+
 class Cube
 {
     public:

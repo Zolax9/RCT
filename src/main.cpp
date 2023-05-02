@@ -17,10 +17,10 @@ int main(void)
     screenW = screenWidth;
     screenH = screenHeight;
 
-    UI ui = {};
-
     InitWindow(screenW, screenH, "RCT");
     SetTargetFPS(60);
+
+    UI ui = {};
 
     // Main game loop
     while (!WindowShouldClose())
