@@ -7,7 +7,7 @@ A Rubik's Cube Tutorial application for beginners learning to solve the cube.
 # Functionality
 
 * The program can solve the Rubik's Cube (assuming a valid state is used) from start to finish
-* However,  the user interface is minimal and not ideal for beginners currently
+* However, the user interface is minimal and not ideal for beginners currently
 * Program is still being actively worked on to hopefully realise such a program
 
 # Controls
@@ -19,9 +19,9 @@ A Rubik's Cube Tutorial application for beginners learning to solve the cube.
 * **Right arrow**: Move on to next step
 * **Period**: Skip cube animation
 
-**Debug**
+## Debug-only Controls
 
-* **Q**: Load premade scramble
+* **Q**: Load pre-made scramble (for testing)
 
 |Move|Key|
 |----|---|
