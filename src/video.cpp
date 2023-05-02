@@ -1,3 +1,5 @@
+#include "common.hpp"
+
 #include "video.hpp"
 
 #include "raylib.h"
@@ -5,10 +7,8 @@
 #include "opencv2/opencv.hpp"
 #include "opencv2/highgui/highgui.hpp"
 
-void Video::Init(int _screenW, int _screenH)
+void Video::Init()
 {
-    screenW = _screenW;
-    screenH = _screenH;
 #ifdef DEBUG
     visible = false; // easy to debug if camera is off by default
 #else

@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <iostream>
+#include "common.hpp"
 
 #include "ui.hpp"
 
@@ -11,15 +12,17 @@
 int main(void)
 {
     // Initialization
-    // const int screenWidth = 1920;
-    // const int screenHeight = 1080;
-    const int screenWidth = 800;
-    const int screenHeight = 540;
+    // int screenWidth = 1920;
+    // int screenHeight = 1080;
+    int screenWidth = 800;
+    int screenHeight = 540;
+    screenW = screenWidth;
+    screenH = screenHeight;
 
-    InitWindow(screenWidth, screenHeight, "RCT");
+    InitWindow(screenW, screenH, "RCT");
     SetTargetFPS(60);
 
-    UI ui(screenWidth, screenHeight);
+    UI ui = {};
 
     // Main game loop
     while (!WindowShouldClose())

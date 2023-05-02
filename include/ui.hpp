@@ -1,10 +1,7 @@
 #ifndef UI_HPP
 #define UI_HPP
 
-#include <stdlib.h>
-#include <array>
 #include <string>
-#include <vector>
 #include "common.hpp"
 
 #include "colour.hpp"
@@ -16,15 +13,13 @@
 class UI
 {
     public:
-        UI(int _screenW, int _screenH);
+        UI();
 
         void Update();
         void Draw();
     private:
         std::string get_command_string(int index);
 
-        int screenW;
-        int screenH;
         Font font;
         int* codepoints;
         int codepointCount;
@@ -33,7 +28,7 @@ class UI
         Video video;
         Face face;
 
-        std::vector<int> pred_state;
+        std::array<int, CUBE_FACE_SIZE> pred_state;
         int* step;
         int* cur_face;
 

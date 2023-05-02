@@ -10,7 +10,7 @@ class Video
 {
     public:
         Video() { };
-        void Init(int _screenWidth, int _screenHeight);
+        void Init();
 
         void Update();
         void Draw();
@@ -21,8 +21,6 @@ class Video
         Texture2D get_texture();
 
     private:
-        int screenW;
-        int screenH;
         bool visible;
         float scale;
         Vector2 pos;

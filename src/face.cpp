@@ -1,5 +1,7 @@
 #include <stdlib.h>
+#include <array>
 #include <vector>
+#include "common.hpp"
 
 #include "face.hpp"
 #include "colour.hpp"
@@ -9,10 +11,8 @@
 #include "opencv2/opencv.hpp"
 #include "opencv2/highgui/highgui.hpp"
 
-void Face::Init(int _screenW, int _screenH, cv::Mat* _frame, Vector2 videoSize, float _videoScale, Cube* _cube, int* _step, int* _cur_face)
+void Face::Init(cv::Mat* _frame, Vector2 videoSize, float _videoScale, Cube* _cube, int* _step, int* _cur_face)
 {
-    screenW = _screenW;
-    screenH = _screenH;
     frame = _frame;
     videoW = videoSize.x;
     videoH = videoSize.y;
@@ -148,7 +148,7 @@ void Face::Init(int _screenW, int _screenH, cv::Mat* _frame, Vector2 videoSize, 
     state_frame = state_target.texture;
 };
 
-std::vector<int> Face::Update()
+std::array<int, CUBE_FACE_SIZE> Face::Update()
 {
     cv::Mat roi;
 

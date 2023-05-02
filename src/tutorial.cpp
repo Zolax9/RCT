@@ -1,21 +1,18 @@
 #include <stdlib.h>
 #include <iostream>
 #include <vector>
+#include "common.hpp"
 
 #include "tutorial.hpp"
 
 #include "raylib.h"
 
-#include "common.hpp"
 #include "cube.hpp"
 
 #define FONT_SIZE 48
 
-void Tutorial::Init(int _screenW, int _screenH)
+void Tutorial::Init()
 {
-    screenW = _screenW;
-    screenH = _screenH;
-
     cube3D.Init(get_cube_pointer());
     renderTexture_cube3D = LoadRenderTexture(320, 320);
     step = -1;
@@ -79,29 +76,29 @@ void Tutorial::Init(int _screenW, int _screenH)
     pll_edges_back_face = -1;
 };
 
-void Tutorial::Update(std::vector<int> pred_state)
+void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 {
 #ifdef DEBUG
     if (step > 0)
     {
-        if (IsKeyPressed(KEY_U)) { cube3D.Permute(std::vector<int> { { M_U } }, front_face, orient); }
-        if (IsKeyPressed(KEY_Y)) { cube3D.Permute(std::vector<int> { { M_UP } }, front_face, orient); }
-        if (IsKeyPressed(KEY_I)) { cube3D.Permute(std::vector<int> { { M_U2 } }, front_face, orient); }
-        if (IsKeyPressed(KEY_L)) { cube3D.Permute(std::vector<int> { { M_L } }, front_face, orient); }
-        if (IsKeyPressed(KEY_K)) { cube3D.Permute(std::vector<int> { { M_LP } }, front_face, orient); }
-        if (IsKeyPressed(KEY_SEMICOLON)) { cube3D.Permute(std::vector<int> { { M_L2 } }, front_face, orient); }
-        if (IsKeyPressed(KEY_F)) { cube3D.Permute(std::vector<int> { { M_F } }, front_face, orient); }
-        if (IsKeyPressed(KEY_C)) { cube3D.Permute(std::vector<int> { { M_FP } }, front_face, orient); }
-        if (IsKeyPressed(KEY_G)) { cube3D.Permute(std::vector<int> { { M_F2 } }, front_face, orient); }
-        if (IsKeyPressed(KEY_R)) { cube3D.Permute(std::vector<int> { { M_R } }, front_face, orient); }
-        if (IsKeyPressed(KEY_E)) { cube3D.Permute(std::vector<int> { { M_RP } }, front_face, orient); }
-        if (IsKeyPressed(KEY_T)) { cube3D.Permute(std::vector<int> { { M_R2 } }, front_face, orient); }
-        if (IsKeyPressed(KEY_B)) { cube3D.Permute(std::vector<int> { { M_B } }, front_face, orient); }
-        if (IsKeyPressed(KEY_V)) { cube3D.Permute(std::vector<int> { { M_BP } }, front_face, orient); }
-        if (IsKeyPressed(KEY_N)) { cube3D.Permute(std::vector<int> { { M_B2 } }, front_face, orient); }
-        if (IsKeyPressed(KEY_D)) { cube3D.Permute(std::vector<int> { { M_D } }, front_face, orient); }
-        if (IsKeyPressed(KEY_S)) { cube3D.Permute(std::vector<int> { { M_DP } }, front_face, orient); }
-        if (IsKeyPressed(KEY_X)) { cube3D.Permute(std::vector<int> { { M_D2 } }, front_face, orient); }
+        if (IsKeyPressed(KEY_U)) { cube3D.Permute(std::vector<int>{ { M_U } }, front_face, orient); }
+        if (IsKeyPressed(KEY_Y)) { cube3D.Permute(std::vector<int>{ { M_UP } }, front_face, orient); }
+        if (IsKeyPressed(KEY_I)) { cube3D.Permute(std::vector<int>{ { M_U2 } }, front_face, orient); }
+        if (IsKeyPressed(KEY_L)) { cube3D.Permute(std::vector<int>{ { M_L } }, front_face, orient); }
+        if (IsKeyPressed(KEY_K)) { cube3D.Permute(std::vector<int>{ { M_LP } }, front_face, orient); }
+        if (IsKeyPressed(KEY_SEMICOLON)) { cube3D.Permute(std::vector<int>{ { M_L2 } }, front_face, orient); }
+        if (IsKeyPressed(KEY_F)) { cube3D.Permute(std::vector<int>{ { M_F } }, front_face, orient); }
+        if (IsKeyPressed(KEY_C)) { cube3D.Permute(std::vector<int>{ { M_FP } }, front_face, orient); }
+        if (IsKeyPressed(KEY_G)) { cube3D.Permute(std::vector<int>{ { M_F2 } }, front_face, orient); }
+        if (IsKeyPressed(KEY_R)) { cube3D.Permute(std::vector<int>{ { M_R } }, front_face, orient); }
+        if (IsKeyPressed(KEY_E)) { cube3D.Permute(std::vector<int>{ { M_RP } }, front_face, orient); }
+        if (IsKeyPressed(KEY_T)) { cube3D.Permute(std::vector<int>{ { M_R2 } }, front_face, orient); }
+        if (IsKeyPressed(KEY_B)) { cube3D.Permute(std::vector<int>{ { M_B } }, front_face, orient); }
+        if (IsKeyPressed(KEY_V)) { cube3D.Permute(std::vector<int>{ { M_BP } }, front_face, orient); }
+        if (IsKeyPressed(KEY_N)) { cube3D.Permute(std::vector<int>{ { M_B2 } }, front_face, orient); }
+        if (IsKeyPressed(KEY_D)) { cube3D.Permute(std::vector<int>{ { M_D } }, front_face, orient); }
+        if (IsKeyPressed(KEY_S)) { cube3D.Permute(std::vector<int>{ { M_DP } }, front_face, orient); }
+        if (IsKeyPressed(KEY_X)) { cube3D.Permute(std::vector<int>{ { M_D2 } }, front_face, orient); }
         if (IsKeyPressed(KEY_PERIOD)) { cube3D.Finish_move(); }
     }
 
@@ -119,14 +116,14 @@ void Tutorial::Update(std::vector<int> pred_state)
             {
                 if (
                     cur_face > 0 &&
-                    cube.get_face(cur_face)[0] == CUBE_ANY
+                    cube.get_sticker(cur_face, 0) == CUBE_ANY
                 ) { --cur_face; }
-                cube.set_face(cur_face, std::vector<int>(9, CUBE_ANY));
+                cube.set_face(cur_face, make_array<CUBE_FACE_SIZE>(CUBE_ANY));
             }
             if (
                 IsKeyPressed(KEY_RIGHT) &&
                 cur_face == CUBE_YELLOW &&
-                cube.get_face(cur_face)[0] != CUBE_ANY
+                cube.get_sticker(cur_face, 0) != CUBE_ANY
             ) {
                 next_step();
                 break;
@@ -134,7 +131,7 @@ void Tutorial::Update(std::vector<int> pred_state)
             if (IsKeyPressed(KEY_P))
             {
                 cur_face = 0;
-                cube.set_state(std::vector<std::vector<int>>(CUBE_SIZE, std::vector<int>(9, CUBE_ANY)));
+                cube.set_state(make_array<CUBE_SIZE>(make_array<CUBE_FACE_SIZE>(CUBE_ANY)));
             }
             break;
 
@@ -456,13 +453,13 @@ void Tutorial::next_step()
             case 0:
                 cube = {};
                 cur_face = 0;
-                cube.set_state(std::vector<std::vector<int>>(CUBE_SIZE, std::vector<int>(9, CUBE_ANY)));
+                cube.set_state(make_array<CUBE_SIZE>(make_array<CUBE_FACE_SIZE>(CUBE_ANY)));
                 break;
 
             case 1:
                 if (cube.match_pattern_face(
                     CUBE_WHITE,
-                    std::vector<int> { {
+                    std::array<int, CUBE_FACE_SIZE>{ {
                         CUBE_ANY, CUBE_WHITE, CUBE_ANY,
                         CUBE_WHITE, CUBE_ANY, CUBE_WHITE,
                         CUBE_ANY, CUBE_WHITE, CUBE_ANY
@@ -476,7 +473,7 @@ void Tutorial::next_step()
                 }
                 petals_count = cube.match_pattern_face(
                     CUBE_YELLOW,
-                    std::vector<int>{ {
+                    std::array<int, CUBE_FACE_SIZE>{ {
                         CUBE_ANY, CUBE_WHITE, CUBE_ANY,
                         CUBE_WHITE, CUBE_ANY, CUBE_WHITE,
                         CUBE_ANY, CUBE_WHITE, CUBE_ANY
@@ -499,7 +496,7 @@ void Tutorial::next_step()
             case 2:
                 white_cross_count = cube.match_pattern_face(
                     0,
-                    std::vector<int>{ {
+                    std::array<int, CUBE_FACE_SIZE>{ {
                         CUBE_ANY, CUBE_WHITE, CUBE_ANY,
                         CUBE_WHITE, CUBE_ANY, CUBE_WHITE,
                         CUBE_ANY, CUBE_WHITE, CUBE_ANY
@@ -521,7 +518,7 @@ void Tutorial::next_step()
             case 3:
                 top_layer_matches = cube.match_pattern_face(
                     0,
-                    std::vector<int>{ {
+                    std::array<int, CUBE_FACE_SIZE>{ {
                         CUBE_WHITE, CUBE_ANY, CUBE_WHITE,
                         CUBE_ANY, CUBE_ANY, CUBE_ANY,
                         CUBE_WHITE, CUBE_ANY, CUBE_WHITE
@@ -583,7 +580,7 @@ void Tutorial::next_step()
             case 5:
                 if (cube.match_pattern_face(
                     CUBE_YELLOW,
-                    std::vector<int>{ {
+                    std::array<int, CUBE_FACE_SIZE>{ {
                         CUBE_ANY, CUBE_YELLOW, CUBE_ANY,
                         CUBE_YELLOW, CUBE_ANY, CUBE_YELLOW,
                         CUBE_ANY, CUBE_YELLOW, CUBE_ANY,
@@ -606,7 +603,7 @@ void Tutorial::next_step()
             case 6:
                 if (cube.match_pattern_face(
                     CUBE_YELLOW,
-                    std::vector<int>{ {
+                    std::array<int, CUBE_FACE_SIZE>{ {
                         CUBE_YELLOW, CUBE_ANY, CUBE_YELLOW,
                         CUBE_ANY, CUBE_ANY, CUBE_ANY,
                         CUBE_YELLOW, CUBE_ANY, CUBE_YELLOW
@@ -683,7 +680,7 @@ void Tutorial::next_step()
                 {
                     if (cube.match_pattern_face(
                         CUBE_GREEN,
-                        std::vector<int>{ {
+                        std::array<int, CUBE_FACE_SIZE>{ {
                             CUBE_GREEN, CUBE_GREEN, CUBE_GREEN,
                             CUBE_GREEN, CUBE_ANY, CUBE_GREEN,
                             CUBE_GREEN, CUBE_GREEN, CUBE_GREEN
@@ -732,12 +729,12 @@ void Tutorial::set_orient(int val)
 
 Coord Tutorial::find_petal()
 {
-    std::vector<int> edges;
+    std::array<int, 4> edges;
 
     for (int f = 0; f < CUBE_SIZE - 1; ++f)
     {
         edges = cube.get_edges(f);
-        for (int i = 0; i < 4; ++i)
+        for (int i = 0; i < edges.size(); ++i)
         {
             if (edges[i] == CUBE_WHITE) { return Coord{ f, Cube_edge_to_index(i) }; }
         }
@@ -749,7 +746,7 @@ int Tutorial::get_petal_alg(Coord petal)
     petal_setup_alg = std::vector<int>();
     petal_move_alg = std::vector<int>();
     int petal_edge = Cube_to_edge(petal);
-    std::vector<int> edges = cube.get_edges(CUBE_YELLOW);
+    std::array<int, 4> edges = cube.get_edges(CUBE_YELLOW);
     int slot_edge; // edge index of empty petal at yellow face (not white)
 
     for (slot_edge = 0; slot_edge < 4; ++slot_edge)
@@ -826,7 +823,7 @@ void Tutorial::permute_petal(Coord petal, int slot_edge)
 
 int Tutorial::find_white_cross()
 {
-    std::vector<int> edges = cube.get_edges(CUBE_YELLOW);
+    std::array<int, 4> edges = cube.get_edges(CUBE_YELLOW);
     for (int i = 0; i < 4; ++i)
     {
         if (edges[i] == CUBE_WHITE) { return i; }
@@ -947,7 +944,7 @@ bool Tutorial::check_top_layer_case(int c)
         case 4:
             white_corners = cube.match_pattern_face(
                 CUBE_YELLOW,
-                std::vector<int> { {
+                std::array<int, CUBE_FACE_SIZE>{ {
                     CUBE_WHITE, CUBE_ANY, CUBE_WHITE,
                     CUBE_ANY, CUBE_ANY, CUBE_ANY,
                     CUBE_WHITE, CUBE_ANY, CUBE_WHITE
@@ -968,7 +965,7 @@ bool Tutorial::check_top_layer_case(int c)
         case 5:
             white_corners = cube.match_pattern_face(
                 CUBE_WHITE,
-                std::vector<int> { {
+                std::array<int, CUBE_FACE_SIZE>{ {
                     CUBE_WHITE, CUBE_ANY, CUBE_WHITE,
                     CUBE_ANY, CUBE_ANY, CUBE_ANY,
                     CUBE_WHITE, CUBE_ANY, CUBE_WHITE
@@ -1283,7 +1280,7 @@ bool Tutorial::check_yellow_cross_case(int c)
         case 0:
             matches = cube.match_pattern_face(
                 CUBE_YELLOW,
-                std::vector<int>{ {
+                std::array<int, CUBE_FACE_SIZE>{ {
                     CUBE_ANY,        CUBE_NOT_YELLOW, CUBE_ANY,
                     CUBE_NOT_YELLOW, CUBE_ANY,        CUBE_NOT_YELLOW,
                     CUBE_ANY,        CUBE_NOT_YELLOW, CUBE_ANY
@@ -1302,7 +1299,7 @@ bool Tutorial::check_yellow_cross_case(int c)
         case 1:
             matches = cube.match_pattern_face(
                 CUBE_YELLOW,
-                std::vector<int>{ {
+                std::array<int, CUBE_FACE_SIZE>{ {
                     CUBE_ANY,        CUBE_YELLOW,     CUBE_ANY,
                     CUBE_YELLOW,     CUBE_ANY,        CUBE_NOT_YELLOW,
                     CUBE_ANY,        CUBE_NOT_YELLOW, CUBE_ANY,
@@ -1321,7 +1318,7 @@ bool Tutorial::check_yellow_cross_case(int c)
         case 2:
             matches = cube.match_pattern_face(
                 CUBE_YELLOW,
-                std::vector<int>{ {
+                std::array<int, CUBE_FACE_SIZE>{ {
                     CUBE_ANY,        CUBE_NOT_YELLOW, CUBE_ANY,
                     CUBE_YELLOW,     CUBE_ANY,        CUBE_YELLOW,
                     CUBE_ANY,        CUBE_NOT_YELLOW, CUBE_ANY,
@@ -1408,7 +1405,7 @@ void Tutorial::get_yellow_corners_alg()
     {
         if (cube.match_pattern_face(
             CUBE_YELLOW,
-            std::vector<int>{ {
+            std::array<int, CUBE_FACE_SIZE>{ {
                 CUBE_NOT_YELLOW, CUBE_YELLOW, CUBE_NOT_YELLOW,
                 CUBE_YELLOW,     CUBE_ANY,    CUBE_YELLOW,
                 CUBE_NOT_YELLOW, CUBE_YELLOW, CUBE_NOT_YELLOW
@@ -1445,7 +1442,7 @@ void Tutorial::get_yellow_corners_alg()
 
         if (cube.match_pattern_face(
             CUBE_YELLOW,
-            std::vector<int>{ {
+            std::array<int, CUBE_FACE_SIZE>{ {
                 CUBE_YELLOW,     CUBE_YELLOW, CUBE_YELLOW,
                 CUBE_YELLOW,     CUBE_ANY,    CUBE_YELLOW,
                 CUBE_NOT_YELLOW, CUBE_YELLOW, CUBE_NOT_YELLOW
@@ -1484,7 +1481,7 @@ void Tutorial::get_yellow_corners_alg()
 
         if (cube.match_pattern_face(
             CUBE_YELLOW,
-            std::vector<int>{ {
+            std::array<int, CUBE_FACE_SIZE>{ {
                 CUBE_YELLOW,     CUBE_YELLOW, CUBE_NOT_YELLOW,
                 CUBE_YELLOW,     CUBE_ANY,    CUBE_YELLOW,
                 CUBE_NOT_YELLOW, CUBE_YELLOW, CUBE_YELLOW
@@ -1510,7 +1507,7 @@ void Tutorial::get_yellow_corners_alg()
 
         matches = cube.match_pattern_face(
             CUBE_YELLOW,
-            std::vector<int>{ {
+            std::array<int, CUBE_FACE_SIZE>{ {
                 CUBE_NOT_YELLOW, CUBE_YELLOW, CUBE_NOT_YELLOW,
                 CUBE_YELLOW,     CUBE_ANY,    CUBE_YELLOW,
                 CUBE_YELLOW,     CUBE_YELLOW, CUBE_NOT_YELLOW

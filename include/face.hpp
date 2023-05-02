@@ -2,7 +2,9 @@
 #define FACE_HPP
 
 #include <stdlib.h>
+#include <array>
 #include <vector>
+#include "common.hpp"
 
 #include "cube.hpp"
 
@@ -15,9 +17,9 @@ class Face
 {
     public:
         Face() { };
-        void Init(int _screenW, int _screenH, cv::Mat* _frame, Vector2 videoSize, float _videoScale, Cube* _cube, int* _step, int* _cur_face);
+        void Init(cv::Mat* _frame, Vector2 videoSize, float _videoScale, Cube* _cube, int* _step, int* _cur_face);
 
-        std::vector<int> Update();
+        std::array<int, CUBE_FACE_SIZE> Update();
         void Draw();
 
     private:
@@ -29,11 +31,9 @@ class Face
         std::vector<Rectangle> live_preview;
         std::vector<Rectangle> pred_preview;
         std::vector<cv::Scalar> avgCols;
-        std::vector<int> predCols;
+        std::array<int, CUBE_FACE_SIZE> predCols;
         std::vector<std::vector<Rectangle>> state_preview;
 
-        int screenW;
-        int screenH;
         int videoW;
         int videoH;
         float videoScale;

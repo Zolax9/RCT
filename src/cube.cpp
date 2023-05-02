@@ -9,39 +9,39 @@
 
 Cube::Cube()
 {
-    state = std::vector<std::vector<int>>(CUBE_SIZE, std::vector<int>(9, CUBE_ANY));
+    state = make_array<CUBE_SIZE>(make_array<CUBE_FACE_SIZE>(CUBE_ANY));
 };
 
-std::vector<std::vector<int>> Cube::get_state() { return state; };
-void Cube::set_state(std::vector<std::vector<int>> val) { state = val; };
-std::vector<int> Cube::get_corners(int i)
+std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE> Cube::get_state() { return state; };
+void Cube::set_state(std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE> val) { state = val; };
+std::array<int, 4> Cube::get_corners(int i)
 {
-    return std::vector<int> { {
+    return std::array<int, 4> { {
         state[i][0],
         state[i][2],
         state[i][8],
         state[i][6]
     } };
 };
-std::vector<int> Cube::get_edges(int i)
+std::array<int, 4> Cube::get_edges(int i)
 {
-    return std::vector<int> { {
+    return std::array<int, 4> { {
         state[i][1],
         state[i][5],
         state[i][7],
         state[i][3]
     } };
 };
-std::vector<int> Cube::get_face(int i) { return state[i]; };
-void Cube::set_face(int i, std::vector<int> val) { state[i] = val; };
+std::array<int, CUBE_FACE_SIZE> Cube::get_face(int i) { return state[i]; };
+void Cube::set_face(int i, std::array<int, CUBE_FACE_SIZE> val) { state[i] = val; };
 int Cube::get_corner(int f, int i) { return state[f][Cube_corner_to_index(i)]; }
 int Cube::get_edge(int f, int i) { return state[f][Cube_edge_to_index(i)]; }
 int Cube::get_sticker(int f, int i) { return state[f][i]; };
 
-std::vector<int> Cube::match_pattern_face(int f, std::vector<int> face, bool relation, int format)
+std::vector<int> Cube::match_pattern_face(int f, std::array<int, CUBE_FACE_SIZE> face, bool relation, int format)
 {
     std::vector<int> matches;
-    std::vector<std::vector<int>> all_matches;
+    std::array<std::vector<int>, 4> all_matches;
     int most_matches_index = 0;
     size_t i;
 
@@ -75,7 +75,7 @@ std::vector<int> Cube::match_pattern_face(int f, std::vector<int> face, bool rel
         case true:
             for (i = 0; i < 4; ++i)
             {
-                all_matches.push_back(std::vector<int>{});
+                all_matches[i] = std::vector<int>();
 
                 for (size_t j = 0; j < face.size(); ++j)
                 {
@@ -97,6 +97,7 @@ std::vector<int> Cube::match_pattern_face(int f, std::vector<int> face, bool rel
 
         default:
             matches = std::vector<int>{};
+
             for (size_t i = 0; i < face.size(); ++i)
             {
                 if (
@@ -134,10 +135,10 @@ void Cube::Permute(std::vector<int> alg, int front_face, int orient)
     state = Cube_permute(state, alg, front_face, orient);
 };
 
-std::vector<std::vector<int>> Cube_permute(std::vector<std::vector<int>> state, std::vector<int> alg, int front_face, int orient)
+std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE> Cube_permute(std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE> state, std::vector<int> alg, int front_face, int orient)
 {
     int permute_face;
-    std::vector<std::vector<int>> temp_state;
+    std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE> temp_state;
 
     temp_state = state;
 
@@ -448,42 +449,10 @@ std::vector<std::vector<int>> Cube_permute(std::vector<std::vector<int>> state, 
         state = temp_state;
     }
 
-    if (orient != 0)
-    {
-        switch (orient)
-        {
-            case 1:
-                temp_state[0] = Cube_rotate(state[3], 3);
-                temp_state[1] = Cube_rotate(state[0], 3);
-                temp_state[2] = Cube_rotate(state[2], 3);
-                temp_state[3] = Cube_rotate(state[5], 3);
-                temp_state[4] = Cube_rotate(state[4], 1);
-                temp_state[5] = Cube_rotate(state[1], 3);
-                break;
-
-            case 2:
-                temp_state[0] = Cube_rotate(state[5], 2);
-                temp_state[1] = Cube_rotate(state[3], 2);
-                temp_state[2] = Cube_rotate(state[2], 2);
-                temp_state[3] = Cube_rotate(state[1], 2);
-                temp_state[4] = Cube_rotate(state[4], 2);
-                temp_state[5] = Cube_rotate(state[0], 2);
-                break;
-
-            case 3:
-                temp_state[0] = Cube_rotate(state[1], 1);
-                temp_state[1] = Cube_rotate(state[5], 1);
-                temp_state[2] = Cube_rotate(state[2], 1);
-                temp_state[3] = Cube_rotate(state[0], 1);
-                temp_state[4] = Cube_rotate(state[4], 3);
-                temp_state[5] = Cube_rotate(state[3], 1);
-                break;
-        }
-        state = temp_state;
-    }
+    if (orient != 0) { state = Cube_set_orient(state, 4 - orient); }
     if (front_face != 2)
     {
-        std::vector<int> temp_face;
+        std::array<int, CUBE_FACE_SIZE> temp_face;
 
         switch (front_face)
         {
@@ -537,9 +506,9 @@ std::vector<std::vector<int>> Cube_permute(std::vector<std::vector<int>> state, 
     return state;
 };
 
-std::vector<int> Cube_rotate(std::vector<int> v, int r)
+std::array<int, CUBE_FACE_SIZE> Cube_rotate(std::array<int, CUBE_FACE_SIZE> v, int r)
 {
-    std::vector<int> out = std::vector<int>(9, CUBE_ANY);
+    std::array<int, CUBE_FACE_SIZE> out;
     double angle = r * PI_RCT / 2;
     int X;
     int Y;
@@ -553,94 +522,109 @@ std::vector<int> Cube_rotate(std::vector<int> v, int r)
             out[Y * 3 + X] = v[(y * 3) + x];
         }
     }
-
     return out;
 };
 
-std::vector<std::vector<int>> Cube_set_front_face(std::vector<std::vector<int>> state, int front_face)
+std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE> Cube_set_front_face(std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE> state, int front_face)
 {
-    std::vector<std::vector<int>> new_state = std::vector<std::vector<int>>{};
+    std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE> new_state;
 
     switch (front_face)
     {
         case CUBE_WHITE:
-            new_state.push_back(Cube_rotate(state[4], 2));
-            new_state.push_back(Cube_rotate(state[1], 1));
-            new_state.push_back(state[0]);
-            new_state.push_back(Cube_rotate(state[3], 3));
-            new_state.push_back(Cube_rotate(state[5], 2));
-            new_state.push_back(state[2]);
+            new_state = std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE>{ {
+                Cube_rotate(state[4], 2),
+                Cube_rotate(state[1], 1),
+                state[0],
+                Cube_rotate(state[3], 3),
+                Cube_rotate(state[5], 2),
+                state[2]
+            } };
             break;
 
         case CUBE_ORANGE:
-            new_state.push_back(Cube_rotate(state[0], 3));
-            new_state.push_back(state[4]);
-            new_state.push_back(state[1]);
-            new_state.push_back(state[2]);
-            new_state.push_back(state[3]);
-            new_state.push_back(Cube_rotate(state[5], 1));
+            new_state = std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE>{ {
+                Cube_rotate(state[0], 3),
+                state[4],
+                state[1],
+                state[2],
+                state[3],
+                Cube_rotate(state[5], 1)
+            } };
             break;
 
         case CUBE_RED:
-            new_state.push_back(Cube_rotate(state[0], 1));
-            new_state.push_back(state[2]);
-            new_state.push_back(state[3]);
-            new_state.push_back(state[4]);
-            new_state.push_back(state[1]);
-            new_state.push_back(Cube_rotate(state[5], 3));
+            new_state = std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE>{ {
+                Cube_rotate(state[0], 1),
+                state[2],
+                state[3],
+                state[4],
+                state[1],
+                Cube_rotate(state[5], 3)
+            } };
             break;
 
         case CUBE_BLUE:
-            new_state.push_back(Cube_rotate(state[0], 2));
-            new_state.push_back(state[3]);
-            new_state.push_back(state[4]);
-            new_state.push_back(state[1]);
-            new_state.push_back(state[2]);
-            new_state.push_back(Cube_rotate(state[5], 2));
+            new_state = std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE>{ {
+                Cube_rotate(state[0], 2),
+                state[3],
+                state[4],
+                state[1],
+                state[2],
+                Cube_rotate(state[5], 2)
+            } };
             break;
 
         case CUBE_YELLOW:
-            new_state.push_back(state[2]);
-            new_state.push_back(Cube_rotate(state[1], 3));
-            new_state.push_back(state[5]);
-            new_state.push_back(Cube_rotate(state[3], 1));
-            new_state.push_back(Cube_rotate(state[0], 2));
-            new_state.push_back(Cube_rotate(state[4], 2));
+            new_state = std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE>{ {
+                state[2],
+                Cube_rotate(state[1], 3),
+                state[5],
+                Cube_rotate(state[3], 1),
+                Cube_rotate(state[0], 2),
+                Cube_rotate(state[4], 2)
+            } };
             break;
     }
     return new_state;
 };
-std::vector<std::vector<int>> Cube_set_orient(std::vector<std::vector<int>> state, int orient)
+std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE> Cube_set_orient(std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE> state, int orient)
 {
-    std::vector<std::vector<int>> new_state = std::vector<std::vector<int>>{};
+    std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE> new_state;
 
     switch (orient)
     {
         case 1:
-            new_state.push_back(Cube_rotate(state[1], 1));
-            new_state.push_back(Cube_rotate(state[5], 1));
-            new_state.push_back(Cube_rotate(state[2], 1));
-            new_state.push_back(Cube_rotate(state[0], 1));
-            new_state.push_back(Cube_rotate(state[4], 3));
-            new_state.push_back(Cube_rotate(state[3], 1));
+            new_state = std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE>{ {
+                Cube_rotate(state[1], 1),
+                Cube_rotate(state[5], 1),
+                Cube_rotate(state[2], 1),
+                Cube_rotate(state[0], 1),
+                Cube_rotate(state[4], 3),
+                Cube_rotate(state[3], 1)
+            } };
             break;
 
         case 2:
-            new_state.push_back(Cube_rotate(state[5], 2));
-            new_state.push_back(Cube_rotate(state[3], 2));
-            new_state.push_back(Cube_rotate(state[2], 2));
-            new_state.push_back(Cube_rotate(state[1], 2));
-            new_state.push_back(Cube_rotate(state[4], 2));
-            new_state.push_back(Cube_rotate(state[0], 2));
+            new_state = std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE>{ {
+                Cube_rotate(state[5], 2),
+                Cube_rotate(state[3], 2),
+                Cube_rotate(state[2], 2),
+                Cube_rotate(state[1], 2),
+                Cube_rotate(state[4], 2),
+                Cube_rotate(state[0], 2)
+            } };
             break;
 
         case 3:
-            new_state.push_back(Cube_rotate(state[3], 3));
-            new_state.push_back(Cube_rotate(state[0], 3));
-            new_state.push_back(Cube_rotate(state[2], 3));
-            new_state.push_back(Cube_rotate(state[5], 3));
-            new_state.push_back(Cube_rotate(state[4], 1));
-            new_state.push_back(Cube_rotate(state[1], 3));
+            new_state = std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE>{ {
+                Cube_rotate(state[3], 3),
+                Cube_rotate(state[0], 3),
+                Cube_rotate(state[2], 3),
+                Cube_rotate(state[5], 3),
+                Cube_rotate(state[4], 1),
+                Cube_rotate(state[1], 3)
+            } };
             break;
     }
     return new_state;

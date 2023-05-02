@@ -2,7 +2,9 @@
 #define COLOUR_HPP
 
 #include <stdlib.h>
+#include <array>
 #include <vector>
+#include "common.hpp"
 
 #include "raylib.h"
 
@@ -24,7 +26,7 @@ struct hueRange
 };
 
 const int cubeWhite = 30;
-const std::vector<hueRange> cubeHues { {
+const std::array<hueRange, CUBE_FACE_SIZE - 1> cubeHues { {
     hueRange{10, 45}, // Orange
     hueRange{95, 180}, // Green
     hueRange{300, 10}, // Red
@@ -49,18 +51,8 @@ const std::vector<std::vector<Color>> relativeFacesCols { {
     std::vector<Color> { { COL_WHITE, COL_BLUE, COL_YELLOW } },
     std::vector<Color> { { COL_GREEN, COL_YELLOW, COL_BLUE } }
 } };
-/*
-const std::vector<hsv> cubeHSVCols { {
-    hsv{148, 100, 61}, // Green
-    hsv{0, 100, 73}, // Red
-    hsv{183, 100, 29}, // Blue
-    hsv{21, 100, 100}, // Orange
-    hsv{0, 0, 100}, // White
-    hsv{50, 100, 100} // Yellow
-} };
-*/
 
 int Colour_getPredColour(hsv col);
-std::vector<int> Colour_getColours(std::vector<cv::Scalar> avgCols);
+std::array<int, CUBE_FACE_SIZE> Colour_getColours(std::vector<cv::Scalar> avgCols);
 
 #endif

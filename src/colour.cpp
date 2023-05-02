@@ -41,27 +41,26 @@ int Colour_getPredColour(hsv col)
     return -1;
 };
 
-std::vector<int> Colour_getColours(std::vector<cv::Scalar> avgRGBCols)
+std::array<int, CUBE_FACE_SIZE> Colour_getColours(std::vector<cv::Scalar> avgRGBCols)
 {
-    std::vector<int> predCols;
-    std::vector<float> proximities(6, 0);
-    std::vector<hsv> avgHSVCols;
+    std::array<int, CUBE_FACE_SIZE> predCols;
+    std::array<hsv, CUBE_FACE_SIZE> avgHSVCols;
 
     for (size_t i = 0; i < avgRGBCols.size(); ++i)
     {
         if (i == 4)
         {
-            avgHSVCols.push_back(hsv{0, 0, 0});
-            predCols.push_back(-1); // Can be any number, will be overwritten by Face class (middle sticker's colour already known)
+            avgHSVCols[i] = hsv{0, 0, 0};
+            predCols[i] = -1; // can be any number, will be overwritten by Face class (middle sticker's colour already known)
             continue;
         }
-        avgHSVCols.push_back(rgb2hsv(
+        avgHSVCols[i] = rgb2hsv(
             rgb{
                 (double)avgRGBCols[i].val[2] / 255,
                 (double)avgRGBCols[i].val[1] / 255,
                 (double)avgRGBCols[i].val[0] / 255
             }
-        ));
+        );
         avgHSVCols[i].s *= 100;
 
         if (i == 0)
@@ -70,8 +69,7 @@ std::vector<int> Colour_getColours(std::vector<cv::Scalar> avgRGBCols)
             std::printf("HSV %f %f %f\n", avgHSVCols[i].h, avgHSVCols[i].s, avgHSVCols[i].v);
         }
 
-        predCols.push_back(Colour_getPredColour(avgHSVCols[i]));
+        predCols[i] = Colour_getPredColour(avgHSVCols[i]);
     }
-
     return predCols;
 };

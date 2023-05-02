@@ -12,11 +12,8 @@
 #include "tutorial.hpp"
 #include "video.hpp"
 
-UI::UI(int _screenW, int _screenH)
+UI::UI()
 {
-    screenW = _screenW;
-    screenH = _screenH;
-
     // all required letters, needed to draw arrow keys
     // may substitute with a texture to avoid this approach in future
     static char* text = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz2' ↑↓←→↻↺";
@@ -24,21 +21,13 @@ UI::UI(int _screenW, int _screenH)
     codepoints = LoadCodepoints(text, &codepointCount);
     font = LoadFontEx("data/terminus.ttf", 48, codepoints, codepointCount);
 
-    tutorial.Init(
-        screenW,
-        screenH
-    );
+    tutorial.Init();
 
     cube = tutorial.get_cube_pointer();
     cur_face = tutorial.get_cur_face_pointer();
 
-    video.Init(
-        screenW,
-        screenH
-    );
+    video.Init();
     face.Init(
-        screenW,
-        screenH,
         video.get_frame_pointer(),
         video.get_size(),
         video.get_scale(),
@@ -48,7 +37,7 @@ UI::UI(int _screenW, int _screenH)
     );
 
     step = tutorial.get_step_pointer();
-    pred_state = std::vector<int>(9, 6);
+    pred_state = make_array<CUBE_FACE_SIZE>(CUBE_ANY);
 };
 
 void UI::Update()
@@ -56,24 +45,24 @@ void UI::Update()
     tutorial.Update(pred_state);
 
 #ifdef DEBUG
-    if (IsKeyPressed(KEY_U)) { cube->Permute(std::vector<int> { { M_U } }); }
-    if (IsKeyPressed(KEY_Y)) { cube->Permute(std::vector<int> { { M_UP } }); }
-    if (IsKeyPressed(KEY_I)) { cube->Permute(std::vector<int> { { M_U2 } }); }
-    if (IsKeyPressed(KEY_L)) { cube->Permute(std::vector<int> { { M_L } }); }
-    if (IsKeyPressed(KEY_K)) { cube->Permute(std::vector<int> { { M_LP } }); }
-    if (IsKeyPressed(KEY_SEMICOLON)) { cube->Permute(std::vector<int> { { M_L2 } }); }
-    if (IsKeyPressed(KEY_F)) { cube->Permute(std::vector<int> { { M_F } }); }
-    if (IsKeyPressed(KEY_C)) { cube->Permute(std::vector<int> { { M_FP } }); }
-    if (IsKeyPressed(KEY_G)) { cube->Permute(std::vector<int> { { M_F2 } }); }
-    if (IsKeyPressed(KEY_R)) { cube->Permute(std::vector<int> { { M_R } }); }
-    if (IsKeyPressed(KEY_E)) { cube->Permute(std::vector<int> { { M_RP } }); }
-    if (IsKeyPressed(KEY_T)) { cube->Permute(std::vector<int> { { M_R2 } }); }
-    if (IsKeyPressed(KEY_B)) { cube->Permute(std::vector<int> { { M_B } }); }
-    if (IsKeyPressed(KEY_V)) { cube->Permute(std::vector<int> { { M_BP } }); }
-    if (IsKeyPressed(KEY_N)) { cube->Permute(std::vector<int> { { M_B2 } }); }
-    if (IsKeyPressed(KEY_D)) { cube->Permute(std::vector<int> { { M_D } }); }
-    if (IsKeyPressed(KEY_S)) { cube->Permute(std::vector<int> { { M_DP } }); }
-    if (IsKeyPressed(KEY_X)) { cube->Permute(std::vector<int> { { M_D2 } }); }
+    if (IsKeyPressed(KEY_U)) { cube->Permute(std::vector<int>{ { M_U } }); }
+    if (IsKeyPressed(KEY_Y)) { cube->Permute(std::vector<int>{ { M_UP } }); }
+    if (IsKeyPressed(KEY_I)) { cube->Permute(std::vector<int>{ { M_U2 } }); }
+    if (IsKeyPressed(KEY_L)) { cube->Permute(std::vector<int>{ { M_L } }); }
+    if (IsKeyPressed(KEY_K)) { cube->Permute(std::vector<int>{ { M_LP } }); }
+    if (IsKeyPressed(KEY_SEMICOLON)) { cube->Permute(std::vector<int>{ { M_L2 } }); }
+    if (IsKeyPressed(KEY_F)) { cube->Permute(std::vector<int>{ { M_F } }); }
+    if (IsKeyPressed(KEY_C)) { cube->Permute(std::vector<int>{ { M_FP } }); }
+    if (IsKeyPressed(KEY_G)) { cube->Permute(std::vector<int>{ { M_F2 } }); }
+    if (IsKeyPressed(KEY_R)) { cube->Permute(std::vector<int>{ { M_R } }); }
+    if (IsKeyPressed(KEY_E)) { cube->Permute(std::vector<int>{ { M_RP } }); }
+    if (IsKeyPressed(KEY_T)) { cube->Permute(std::vector<int>{ { M_R2 } }); }
+    if (IsKeyPressed(KEY_B)) { cube->Permute(std::vector<int>{ { M_B } }); }
+    if (IsKeyPressed(KEY_V)) { cube->Permute(std::vector<int>{ { M_BP } }); }
+    if (IsKeyPressed(KEY_N)) { cube->Permute(std::vector<int>{ { M_B2 } }); }
+    if (IsKeyPressed(KEY_D)) { cube->Permute(std::vector<int>{ { M_D } }); }
+    if (IsKeyPressed(KEY_S)) { cube->Permute(std::vector<int>{ { M_DP } }); }
+    if (IsKeyPressed(KEY_X)) { cube->Permute(std::vector<int>{ { M_D2 } }); }
 
 #endif
     if (*step == 0)
@@ -82,33 +71,33 @@ void UI::Update()
         {
             *cur_face = 5;
             cube->set_state(
-                std::vector<std::vector<int>> { {
-                    std::vector<int> { {
+                std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE>{ {
+                    std::array<int, CUBE_FACE_SIZE>{ {
                         CUBE_BLUE, CUBE_BLUE, CUBE_BLUE,
                         CUBE_RED, CUBE_WHITE, CUBE_YELLOW,
                         CUBE_BLUE, CUBE_YELLOW, CUBE_BLUE
                     } },
-                    std::vector<int> { {
+                    std::array<int, CUBE_FACE_SIZE>{ {
                         CUBE_YELLOW, CUBE_GREEN, CUBE_ORANGE,
                         CUBE_RED, CUBE_ORANGE, CUBE_YELLOW,
                         CUBE_RED, CUBE_ORANGE, CUBE_WHITE
                     } },
-                    std::vector<int> { {
+                    std::array<int, CUBE_FACE_SIZE>{ {
                         CUBE_WHITE, CUBE_RED, CUBE_WHITE,
                         CUBE_BLUE, CUBE_GREEN, CUBE_GREEN,
                         CUBE_GREEN, CUBE_BLUE, CUBE_YELLOW
                     } },
-                    std::vector<int> { {
+                    std::array<int, CUBE_FACE_SIZE>{ {
                         CUBE_RED, CUBE_ORANGE, CUBE_YELLOW,
                         CUBE_YELLOW, CUBE_RED, CUBE_GREEN,
                         CUBE_ORANGE, CUBE_GREEN, CUBE_GREEN
                     } },
-                    std::vector<int> { {
+                    std::array<int, CUBE_FACE_SIZE>{ {
                         CUBE_ORANGE, CUBE_ORANGE, CUBE_RED,
                         CUBE_ORANGE, CUBE_BLUE, CUBE_BLUE,
                         CUBE_RED, CUBE_RED, CUBE_WHITE
                     } },
-                    std::vector<int> { {
+                    std::array<int, CUBE_FACE_SIZE>{ {
                         CUBE_ORANGE, CUBE_WHITE, CUBE_GREEN,
                         CUBE_WHITE, CUBE_YELLOW, CUBE_WHITE,
                         CUBE_GREEN, CUBE_WHITE, CUBE_YELLOW

@@ -19,9 +19,9 @@ class Tutorial
 {
     public:
         Tutorial() { };
-        void Init(int _screenW, int _screenH);
+        void Init();
 
-        void Update(std::vector<int> pred_state);
+        void Update(std::array<int, CUBE_FACE_SIZE> pred_state);
         void Draw();
 
         int* get_step_pointer();
@@ -82,15 +82,11 @@ class Tutorial
         std::vector<int> get_pll_edges_setup_alg(int front_face, int target_face);
         void permute_pll_edges();
 
-        int screenW;
-        int screenH;
-
         Cube cube;
         Cube3D cube3D;
         RenderTexture renderTexture_cube3D;
         int cur_face;
 
-        std::vector<std::vector<int>> state;
         int front_face;
         int orient;
 

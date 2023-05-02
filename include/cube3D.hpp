@@ -46,12 +46,12 @@ class Cube3D
 
         RenderTexture2D renderTexture;
         Cube* cube;
-        std::vector<std::vector<int>> orig_state; // state w/o change of front face and orientation
-        std::vector<std::vector<int>> state; // state w/ change of front face and orientation
+        std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE> orig_state; // state w/o change of front face and orientation
+        std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE> state; // state w/ change of front face and orientation
 
         // position of all pieces (before rotations)
-        std::array<Vector3, 27> piece_pos; 
-        std::array<std::array<Color, 6>, 27> piece_cols; // positions of all pieces
+        std::array<Vector3, CUBE_FACE_SIZE * 3> piece_pos; 
+        std::array<std::array<Color, CUBE_SIZE>, CUBE_FACE_SIZE * 3> piece_cols; // positions of all pieces
 
         // these variables act as check if front face or orient is changed, so state is changed
         int front_face;
