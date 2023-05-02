@@ -12,7 +12,6 @@ CFLAGS+= -std=c++17 -I ./include -I raylib -I /usr/include/opencv4
 SRC:=$(wildcard src/*.cpp)
 INC:=$(wildcard include/*.hpp)
 DBGOBJ:=$(SRC:src/%.cpp=obj/debug/%.o)
-#DGBOBJ:=$(addprefix obj/debug/, $(DBGOBJ))
 RELOBJ:=$(SRC:src/%.cpp=obj/release/%.o)
 
 CC=g++
@@ -38,9 +37,6 @@ $(DBGOBJDIR)/%.o : src/%.cpp
 
 $(RELOBJDIR)/%.o : src/%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
-
-debug: $(DGBEXE)
-release: $(RELEXE)
 
 clean:
 	rm obj/debug/* obj/release/* $(DBGEXE) $(RELEXE) -f

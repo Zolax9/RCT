@@ -12,17 +12,15 @@
 int main(void)
 {
     // Initialization
-    // int screenWidth = 1920;
-    // int screenHeight = 1080;
     int screenWidth = 800;
     int screenHeight = 540;
     screenW = screenWidth;
     screenH = screenHeight;
 
+    UI ui = {};
+
     InitWindow(screenW, screenH, "RCT");
     SetTargetFPS(60);
-
-    UI ui = {};
 
     // Main game loop
     while (!WindowShouldClose())
