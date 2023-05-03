@@ -63,7 +63,7 @@ std::array<int, CUBE_FACE_SIZE> Colour_getColours(std::vector<cv::Scalar> avgRGB
         );
         avgHSVCols[i].s *= 100;
 
-#ifndef DEBUG
+#ifdef DEBUG
         if (i == 0)
         {
             std::printf("RGB %f %f %f\n", avgRGBCols[i].val[2], avgRGBCols[i].val[1], avgRGBCols[i].val[0]);
