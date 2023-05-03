@@ -27,10 +27,10 @@ release:CONFIG:=release
 release: CFLAGS+= -O3
 
 debug: $(DBGOBJ)
-	$(CC) $(DBGOBJ) -o $(DBGEXE) $(LDFLAGS)
+	$(CC) $(DBGOBJ) -o bin/debug/$(DBGEXE) $(LDFLAGS)
 
 release: $(RELOBJ)
-	$(CC) $(RELOBJ) -o $(RELEXE) $(LDFLAGS)
+	$(CC) $(RELOBJ) -o bin/release/$(RELEXE) $(LDFLAGS)
 
 $(DBGOBJDIR)/%.o : src/%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
