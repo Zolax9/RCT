@@ -1210,39 +1210,29 @@ void Tutorial::get_middle_layer_alg()
         case 0:
             middle_layer_target_face = cube.get_edge(next_middle_layer.f, 2);
             get_middle_layer_setup_alg(middle_layer_front_face, middle_layer_target_face);
-            middle_layer_move_alg = std::vector<int> { {
-                M_U, M_R, M_UP, M_RP, M_UP, M_FP, M_U, M_F
-            } };
+            middle_layer_move_alg = ALG_MIDDLE_LAYER1;
             break;
 
         case 1:
             middle_layer_target_face = cube.get_edge(next_middle_layer.f, 2);
             get_middle_layer_setup_alg(middle_layer_front_face, middle_layer_target_face);
-            middle_layer_move_alg = std::vector<int> { {
-                M_UP, M_LP, M_U, M_L, M_U, M_F, M_UP, M_FP
-            } };
+            middle_layer_move_alg = ALG_MIDDLE_LAYER2;
             break;
 
         case 2:
-            middle_layer_setup_alg = std::vector<int> { {
-                M_U, M_R, M_UP, M_RP, M_UP, M_FP, M_U, M_F, M_U2
-            } };
+            middle_layer_move_alg = ALG_MIDDLE_LAYER1;
+            middle_layer_move_alg.push_back(M_U2);
             middle_layer_target_face = cube.get_edge(loop(middle_layer_front_face - 1, 1, 4), 1);
             get_middle_layer_setup_alg(middle_layer_front_face, middle_layer_target_face);
-            middle_layer_move_alg = std::vector<int> { {
-                M_U, M_R, M_UP, M_RP, M_UP, M_FP, M_U, M_F
-            } };
+            middle_layer_move_alg = ALG_MIDDLE_LAYER1;
             break;
 
         case 3:
-            middle_layer_setup_alg = std::vector<int> { {
-                M_U, M_R, M_UP, M_RP, M_UP, M_FP, M_U, M_F, M_U2
-            } };
+            middle_layer_move_alg = ALG_MIDDLE_LAYER1;
+            middle_layer_move_alg.push_back(M_U2);
             middle_layer_target_face = cube.get_edge(loop(middle_layer_front_face - 1, 1, 4), 1);
             get_middle_layer_setup_alg(middle_layer_front_face, middle_layer_target_face);
-            middle_layer_move_alg = std::vector<int> { {
-                M_UP, M_LP, M_U, M_L, M_U, M_F, M_UP, M_FP
-            } };
+            middle_layer_move_alg = ALG_MIDDLE_LAYER2;
             break;
     }
 
