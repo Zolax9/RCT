@@ -18,7 +18,7 @@ void Video::Init()
     frame_image.format = PIXELFORMAT_UNCOMPRESSED_R8G8B8;
     frame_image.mipmaps = 1;
 
-    cap.open(0);
+    cap.open(1);
     // check if we succeeded
     if (!cap.isOpened()) { std::cerr << "ERROR! Unable to open camera\n"; }
 
