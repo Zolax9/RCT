@@ -110,14 +110,6 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
         case 0:
             if (
                 buttons[0] ||
-                IsKeyPressed(KEY_SPACE)
-            ) {
-                cube.set_face(cur_face, pred_state);
-                ++cur_face;
-                if (cur_face == CUBE_SIZE) { cur_face = CUBE_YELLOW; }
-            }
-            if (
-                buttons[1] ||
                 IsKeyPressed(KEY_BACKSPACE)
             ) {
                 if (
@@ -126,7 +118,15 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                 ) { --cur_face; }
                 cube.set_face(cur_face, make_array<CUBE_FACE_SIZE>(CUBE_ANY));
             }
-            if (
+            else if (
+                buttons[1] ||
+                IsKeyPressed(KEY_SPACE)
+            ) {
+                cube.set_face(cur_face, pred_state);
+                ++cur_face;
+                if (cur_face == CUBE_SIZE) { cur_face = CUBE_YELLOW; }
+            }
+            else if (
                 IsKeyPressed(KEY_RIGHT) &&
                 cur_face == CUBE_YELLOW &&
                 cube.get_sticker(cur_face, 0) != CUBE_ANY
@@ -134,7 +134,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                 next_step();
                 break;
             }
-            if (IsKeyPressed(KEY_P))
+            else if (IsKeyPressed(KEY_P))
             {
                 cur_face = 0;
                 cube.set_state(make_array<CUBE_SIZE>(make_array<CUBE_FACE_SIZE>(CUBE_ANY)));
@@ -378,8 +378,8 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 
 void Tutorial::Draw()
 {
-    buttons[0] = GuiButton((Rectangle){ 20, screenH - 60, 100, 40 }, GuiIconText(ICON_ARROW_RIGHT, "Next"));
-    buttons[1] = GuiButton((Rectangle){ 20, screenH - 120, 100, 40 }, GuiIconText(ICON_ARROW_LEFT, "Previous"));
+    buttons[0] = GuiButton((Rectangle){ 20, screenH - 120, 100, 40 }, GuiIconText(ICON_ARROW_LEFT, "Previous"));
+    buttons[1] = GuiButton((Rectangle){ 20, screenH - 60, 100, 40 }, GuiIconText(ICON_ARROW_RIGHT, "Next"));
 
     switch (step)
     {
