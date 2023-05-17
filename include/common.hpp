@@ -4,11 +4,11 @@
 #include <stdlib.h>
 #include <array>
 
-#include "common.hpp"
-
 #include "raylib.h"
 #include "raymath.h"
 #include "rlgl.h"
+
+#include "raygui.h"
 
 #define CUBE_WHITE      0
 #define CUBE_ORANGE     1

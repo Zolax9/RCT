@@ -21,6 +21,8 @@ void Tutorial::Init()
     front_face = CUBE_GREEN;
     orient = 0;
 
+    buttons = make_array<2>(false);
+
     petal_setup_alg = std::vector<int>();
     petal_move_alg = std::vector<int>();
     next_petal = Coord{ -1, -1 };
@@ -106,14 +108,18 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
     switch (step)
     {
         case 0:
-            if (IsKeyPressed(KEY_SPACE))
-            {
+            if (
+                buttons[0] ||
+                IsKeyPressed(KEY_SPACE)
+            ) {
                 cube.set_face(cur_face, pred_state);
                 ++cur_face;
                 if (cur_face == CUBE_SIZE) { cur_face = CUBE_YELLOW; }
             }
-            if (IsKeyPressed(KEY_BACKSPACE))
-            {
+            if (
+                buttons[1] ||
+                IsKeyPressed(KEY_BACKSPACE)
+            ) {
                 if (
                     cur_face > 0 &&
                     cube.get_sticker(cur_face, 0) == CUBE_ANY
@@ -372,6 +378,9 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 
 void Tutorial::Draw()
 {
+    buttons[0] = GuiButton((Rectangle){ 20, screenH - 60, 100, 40 }, GuiIconText(ICON_ARROW_RIGHT, "Next"));
+    buttons[1] = GuiButton((Rectangle){ 20, screenH - 120, 100, 40 }, GuiIconText(ICON_ARROW_LEFT, "Previous"));
+
     switch (step)
     {
         case 0:

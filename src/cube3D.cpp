@@ -100,7 +100,9 @@ void Cube3D::Update()
             }
         } else {
             cur_move = move_buffer[alg_index][buffer_index];
-            //std::cout << "[Cube3D]: " << Cube_notation_str(cur_move) << '\n';
+#ifndef DEBUG
+            std::cout << "[Cube3D]: " << Cube_notation_str(cur_move) << '\n';
+#endif
         }
     }
     if (cur_move != -1)

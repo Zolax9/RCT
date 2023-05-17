@@ -4,7 +4,8 @@ DBGOBJDIR:=obj/debug
 RELOBJDIR:=obj/release
 CONFIG:=debug
 
-LDFLAGS:=-L raylib -lm -lraylib -lX11 -ldl -lopencv_core -lopencv_highgui -lopencv_imgcodecs -lopencv_imgproc -lopencv_videoio -pthread
+LDFLAGS:=-L lib -L raylib -lm -lraylib -lraygui -lX11 -ldl -lopencv_core -lopencv_highgui -lopencv_imgcodecs -lopencv_imgproc -lopencv_videoio -pthread
+#LDFLAGS:=-L raylib -lm -lraylib -DRAYGUI_IMPLEMENTATION -lX11 -ldl -lopencv_core -lopencv_highgui -lopencv_imgcodecs -lopencv_imgproc -lopencv_videoio -pthread
 
 CFLAGS:= -g -pedantic -Wall -Wextra -Wno-missing-field-initializers
 CFLAGS+= -std=c++17 -I ./include -I raylib -I /usr/include/opencv4

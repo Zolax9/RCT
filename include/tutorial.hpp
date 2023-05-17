@@ -40,6 +40,10 @@ class Tutorial
         void set_front_face(int val); // sets front_face of cube3D as well
         void set_orient(int val); // sets orient of cube3D as well
 
+        std::array<bool, 2> buttons;
+        // 0 = previous
+        // 1 = next
+
         // Step 1
         Coord find_petal();
         int get_petal_alg(Coord petal);

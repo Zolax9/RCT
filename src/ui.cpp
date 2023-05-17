@@ -6,6 +6,8 @@
 
 #include "ui.hpp"
 
+#include "raygui.h"
+
 #include "colour.hpp"
 #include "cube.hpp"
 #include "face.hpp"
@@ -152,7 +154,12 @@ void UI::Update()
 
 void UI::Draw()
 {
-    if (*step == 0) { video.Draw(); }
+    ClearBackground(GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR)));
+
+    if (*step == 0)
+    {
+        video.Draw();
+    }
     face.Draw();
     tutorial.Draw();
 
