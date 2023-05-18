@@ -40,9 +40,10 @@ class Tutorial
         void set_front_face(int val); // sets front_face of cube3D as well
         void set_orient(int val); // sets orient of cube3D as well
 
-        std::array<bool, 2> buttons;
-        // 0 = previous
-        // 1 = next
+        std::array<bool, 3> buttons; // holds state (pressed or released) of all buttons
+        // 0 - 1 = previous, next
+        // 2 = finish
+        bool full_scan; // if whole cube is scanned (can press finish button)
 
         // Step 1
         Coord find_petal();

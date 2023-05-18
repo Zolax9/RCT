@@ -21,7 +21,7 @@ void Tutorial::Init()
     front_face = CUBE_GREEN;
     orient = 0;
 
-    buttons = make_array<2>(false);
+    buttons = make_array<3>(false);
 
     petal_setup_alg = std::vector<int>();
     petal_move_alg = std::vector<int>();
@@ -108,6 +108,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
     switch (step)
     {
         case 0:
+            full_scan = (cur_face == CUBE_YELLOW && cube.get_sticker(cur_face, 0) != CUBE_ANY);
             if (
                 buttons[0] ||
                 IsKeyPressed(KEY_BACKSPACE)
@@ -127,12 +128,10 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                 if (cur_face == CUBE_SIZE) { cur_face = CUBE_YELLOW; }
             }
             else if (
-                IsKeyPressed(KEY_RIGHT) &&
-                cur_face == CUBE_YELLOW &&
-                cube.get_sticker(cur_face, 0) != CUBE_ANY
+                full_scan &&
+                IsKeyPressed(KEY_RIGHT)
             ) {
-                next_step();
-                break;
+                next_step(); 
             }
             else if (IsKeyPressed(KEY_P))
             {
@@ -380,6 +379,9 @@ void Tutorial::Draw()
 {
     buttons[0] = GuiButton((Rectangle){ 20, screenH - 120, 100, 40 }, GuiIconText(ICON_ARROW_LEFT, "Previous"));
     buttons[1] = GuiButton((Rectangle){ 20, screenH - 60, 100, 40 }, GuiIconText(ICON_ARROW_RIGHT, "Next"));
+    if (!full_scan) { GuiSetState(STATE_DISABLED); }
+    buttons[2] = GuiButton((Rectangle){ 140, screenH - 60, 100, 40 }, GuiIconText(ICON_ARROW_RIGHT, "Finish"));
+    if (!full_scan) { GuiSetState(STATE_NORMAL); }
 
     switch (step)
     {
