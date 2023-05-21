@@ -44,8 +44,6 @@ UI::UI()
 
 void UI::Update()
 {
-    tutorial.Update(pred_state);
-
 #ifdef DEBUG
     if (IsKeyPressed(KEY_U)) { cube->Permute(std::vector<int>{ { M_U } }, CUBE_RED); }
     if (IsKeyPressed(KEY_Y)) { cube->Permute(std::vector<int>{ { M_UP } }); }
@@ -111,6 +109,8 @@ void UI::Update()
         pred_state = face.Update();
         video.Update();
     }
+
+    tutorial.Update(pred_state);
 
     temp_alg = tutorial.get_alg();
     buffer_index = tutorial.get_buffer_index();

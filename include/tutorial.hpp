@@ -19,6 +19,12 @@
 #define ALG_PLLUA         std::vector<int>{ { 8, 1, 3, 10, 8, 4, 9, 1, 8 } }
 #define ALG_PLLUB         std::vector<int>{ { 8, 0, 3, 10, 8, 4, 9, 0, 8 } }
 
+#define K_PREV  0
+#define K_NEXT1 1
+#define K_FIN   2
+#define K_RESET 3
+#define K_NEXT2 4
+
 class Tutorial
 {
     public:
@@ -40,9 +46,11 @@ class Tutorial
         void set_front_face(int val); // sets front_face of cube3D as well
         void set_orient(int val); // sets orient of cube3D as well
 
-        std::array<bool, 3> buttons; // holds state (pressed or released) of all buttons
+        std::array<bool, 5> buttons; // holds state (pressed or released) of all buttons
         // 0 - 1 = previous, next
         // 2 = finish
+        // 3 = reset step
+        // 4 = next
         bool full_scan; // if whole cube is scanned (can press finish button)
 
         // Step 1
@@ -143,7 +151,7 @@ class Tutorial
 
         // Step 4
         std::vector<int> middle_layer_setup_alg; // permute edge out of middle layer (case 2) and orient edge so sticker is same as centre sticker
-        std::vector<int> middle_layer_move_alg; // move edge into middle layer
+        std::vector<std::vector<int>> middle_layer_move_algs; // (if case is 2-3, move edge out of middle layer, and) move edge into middle layer
         int middle_layer_alg_shown; // 0 = step started (so don't show), 1 = show, 2 = don't show
         int middle_layer_case;
         // 0 = edge @ yellow face for edge @ right side (eg. O/G edge:)

@@ -27,6 +27,7 @@ class Cube3D
         void Set_state(); // updates state of cube in Cube3D to state in Cube
         void Set_orientation(); // changes set state to reflect change in cube (different front face, orient, or permutation and Update_pieces()
         void Append_move_buffer(std::vector<int> alg, int _front_face = CUBE_GREEN, int _orient = 0);
+        void Clear_buffer(); // clears move_buffer, front_faces, and orients
         void Finish_move(); // finishes ongoing and buffered moves (skips animation)
 
         std::vector<int> get_alg(); // gets currently executed alg
@@ -38,7 +39,6 @@ class Cube3D
         void Set_orbital(bool val);
 
     private:
-        void clear_buffer(); // clears move_buffer, front_faces, and orients
         void new_orientation(); // sets front_face and orient to respective "new" variables (if they != -1 and move_buffer is empty)
         Camera camera;
         int camera_mode;

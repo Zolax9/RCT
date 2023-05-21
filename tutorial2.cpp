@@ -21,7 +21,7 @@ void Tutorial::Init()
     front_face = CUBE_GREEN;
     orient = 0;
 
-    buttons = make_array<5>(false);
+    buttons = make_array<3>(false);
 
     petal_setup_alg = std::vector<int>();
     petal_move_alg = std::vector<int>();
@@ -47,7 +47,7 @@ void Tutorial::Init()
     top_layer_target_face = -1;
 
     middle_layer_setup_alg = std::vector<int>();
-    middle_layer_move_algs = std::vector<std::vector<int>>();
+    middle_layer_move_alg = std::vector<int>();
     middle_layer_alg_shown = 0;
     middle_layer_case = -1;
     next_middle_layer = Coord{ -1, -1 };
@@ -92,7 +92,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
         if (IsKeyPressed(KEY_F)) { cube3D.Permute(std::vector<int>{ { M_F } }, front_face, orient); }
         if (IsKeyPressed(KEY_C)) { cube3D.Permute(std::vector<int>{ { M_FP } }, front_face, orient); }
         if (IsKeyPressed(KEY_G)) { cube3D.Permute(std::vector<int>{ { M_F2 } }, front_face, orient); }
-        if (IsKeyPressed(KEY_FOUR)) { cube3D.Permute(std::vector<int>{ { M_R } }, front_face, orient); }
+        if (IsKeyPressed(KEY_R)) { cube3D.Permute(std::vector<int>{ { M_R } }, front_face, orient); }
         if (IsKeyPressed(KEY_E)) { cube3D.Permute(std::vector<int>{ { M_RP } }, front_face, orient); }
         if (IsKeyPressed(KEY_T)) { cube3D.Permute(std::vector<int>{ { M_R2 } }, front_face, orient); }
         if (IsKeyPressed(KEY_B)) { cube3D.Permute(std::vector<int>{ { M_B } }, front_face, orient); }
@@ -105,23 +105,12 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
     }
 
 #endif
-    if (
-        buttons[K_RESET] ||
-        IsKeyPressed(KEY_R)
-    ) {
-        buttons[K_RESET] = false;
-        cube3D.Clear_buffer();
-        step = -1;
-        next_step();
-        return;
-    }
-
     switch (step)
     {
         case 0:
             full_scan = (cur_face == CUBE_YELLOW && cube.get_sticker(cur_face, 0) != CUBE_ANY);
             if (
-                buttons[K_PREV] ||
+                buttons[0] ||
                 IsKeyPressed(KEY_BACKSPACE)
             ) {
                 if (
@@ -131,7 +120,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                 cube.set_face(cur_face, make_array<CUBE_FACE_SIZE>(CUBE_ANY));
             }
             else if (
-                buttons[K_NEXT1] ||
+                buttons[1] ||
                 IsKeyPressed(KEY_SPACE)
             ) {
                 cube.set_face(cur_face, pred_state);
@@ -140,7 +129,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
             }
             else if (
                 full_scan && (
-                    buttons[K_FIN] ||
+                    buttons[2] ||
                     IsKeyPressed(KEY_RIGHT)
                 )
             ) {
@@ -156,7 +145,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
         case 1:
             cube3D.Update();
             if (
-                buttons[K_NEXT2] ||
+                buttons[4] ||
                 IsKeyPressed(KEY_RIGHT)
             ) {
                 if (petal_alg_shown == 0) { petal_alg_shown = 1; }
@@ -164,7 +153,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                 {
                     case 1:
                         next_petal = find_petal();
-                        if (next_petal.f == CUBE_SIZE)
+                        if (next_petal.f == 6)
                         {
                             std::cout << "Petal not found!\n";
                             std::cout << "Presuming the petal is already created.\n";
@@ -193,10 +182,8 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 
         case 2:
             cube3D.Update();
-            if (
-                buttons[K_NEXT2] ||
-                IsKeyPressed(KEY_RIGHT)
-            ) {
+            if (IsKeyPressed(KEY_RIGHT))
+            {
                 if (white_cross_alg_shown == 0) { white_cross_alg_shown = 1; }
                 switch (white_cross_alg_shown)
                 {
@@ -223,10 +210,8 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 
         case 3:
             cube3D.Update();
-            if (
-                buttons[K_NEXT2] ||
-                IsKeyPressed(KEY_RIGHT)
-            ) {
+            if (IsKeyPressed(KEY_RIGHT))
+            {
                 if (top_layer_alg_shown == 0) { top_layer_alg_shown = 1; }
                 switch (top_layer_alg_shown)
                 {
@@ -263,10 +248,8 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 
         case 4:
             cube3D.Update();
-            if (
-                buttons[K_NEXT2] ||
-                IsKeyPressed(KEY_RIGHT)
-            ) {
+            if (IsKeyPressed(KEY_RIGHT))
+            {
                 if (middle_layer_alg_shown == 0) { middle_layer_alg_shown = 1; }
                 switch (middle_layer_alg_shown)
                 {
@@ -275,7 +258,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         if (next_middle_layer.f == 6) { std::cout << "Edge not found!\n"; }
                         set_front_face(next_middle_layer.f);
                         get_middle_layer_alg();
-                        if (middle_layer_move_algs.size() == 0) { std::cout << "Edge alg not found!\n"; }
+                        if (middle_layer_move_alg.size() == 0) { std::cout << "Edge alg not found!\n"; }
 
                         middle_layer_alg_shown = 2;
                         break;
@@ -293,10 +276,8 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 
         case 5:
             cube3D.Update();
-            if (
-                buttons[K_NEXT2] ||
-                IsKeyPressed(KEY_RIGHT)
-            ) {
+            if (IsKeyPressed(KEY_RIGHT))
+            {
                 if (yellow_cross_alg_shown == 0) { yellow_cross_alg_shown = 1; }
                 switch (yellow_cross_alg_shown)
                 {
@@ -319,10 +300,8 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 
         case 6:
             cube3D.Update();
-            if (
-                buttons[K_NEXT2] ||
-                IsKeyPressed(KEY_RIGHT)
-            ) {
+            if (IsKeyPressed(KEY_RIGHT))
+            {
                 if (yellow_corners_alg_shown == 0) { yellow_corners_alg_shown = 1; }
                 switch (yellow_corners_alg_shown)
                 {
@@ -344,10 +323,8 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 
         case 7:
             cube3D.Update();
-            if (
-                buttons[K_NEXT2] ||
-                IsKeyPressed(KEY_RIGHT)
-            ) {
+            if (IsKeyPressed(KEY_RIGHT))
+            {
                 if (pll_corners_alg_shown == 0) { pll_corners_alg_shown = 1; }
                 switch (pll_corners_alg_shown)
                 {
@@ -369,10 +346,8 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 
         case 8:
             cube3D.Update();
-            if (
-                buttons[K_NEXT2] ||
-                IsKeyPressed(KEY_RIGHT)
-            ) {
+            if (IsKeyPressed(KEY_RIGHT))
+            {
                 if (pll_edges_alg_shown == 0) { pll_edges_alg_shown = 1; }
                 switch (pll_edges_alg_shown)
                 {
@@ -408,19 +383,19 @@ void Tutorial::Draw()
 {
     if (step != 0)
     {
-        buttons[K_RESET] = GuiButton((Rectangle){ 20, screenH - 120, 100, 40 }, GuiIconText(ICON_REDO_FILL, "Reset"));
+        buttons[3] = GuiButton((Rectangle){ 20, screenH - 120, 100, 40 }, GuiIconText(ICON_ARROW_LEFT, "Reset"));
         if (step == 9) { GuiSetState(STATE_DISABLED); }
-        buttons[K_NEXT2] = GuiButton((Rectangle){ 20, screenH - 60, 100, 40 }, GuiIconText(ICON_ARROW_RIGHT_FILL, "Next"));
+        buttons[4] = GuiButton((Rectangle){ 20, screenH - 60, 100, 40 }, GuiIconText(ICON_ARROW_RIGHT, "Next"));
         if (step == 9) { GuiSetState(STATE_NORMAL); }
     }
 
     switch (step)
     {
         case 0:
-            buttons[K_PREV] = GuiButton((Rectangle){ 20, screenH - 120, 100, 40 }, GuiIconText(ICON_ARROW_LEFT_FILL, "Previous"));
-            buttons[K_NEXT1] = GuiButton((Rectangle){ 20, screenH - 60, 100, 40 }, GuiIconText(ICON_ARROW_RIGHT_FILL, "Next"));
+            buttons[0] = GuiButton((Rectangle){ 20, screenH - 120, 100, 40 }, GuiIconText(ICON_ARROW_LEFT, "Previous"));
+            buttons[1] = GuiButton((Rectangle){ 20, screenH - 60, 100, 40 }, GuiIconText(ICON_ARROW_RIGHT, "Next"));
             if (!full_scan) { GuiSetState(STATE_DISABLED); }
-            buttons[K_FIN] = GuiButton((Rectangle){ 140, screenH - 60, 100, 40 }, GuiIconText(ICON_ARROW_RIGHT_FILL, "Finish"));
+            buttons[2] = GuiButton((Rectangle){ 140, screenH - 60, 100, 40 }, GuiIconText(ICON_ARROW_RIGHT, "Finish"));
             if (!full_scan) { GuiSetState(STATE_NORMAL); }
 
             DrawText("Scan the cube", 8, 0, FONT_SIZE, DARKGRAY);
@@ -492,7 +467,6 @@ void Tutorial::next_step()
     int pll_edges_count;
     if (step == 0) { cube3D.Set_state(); } // cube3D has initial cube state if scanning just finished
     bool increment = true; // Whether or not to continue incrementing to next steps (may need to increment through multiple steps)
-
     while (increment)
     {
         increment = false;
@@ -503,7 +477,6 @@ void Tutorial::next_step()
                 cube = {};
                 cur_face = 0;
                 cube.set_state(make_array<CUBE_SIZE>(make_array<CUBE_FACE_SIZE>(CUBE_ANY)));
-                cube3D.Set_orbital(false);
                 break;
 
             case 1:
@@ -619,7 +592,7 @@ void Tutorial::next_step()
 
                 set_orient(2);
                 middle_layer_setup_alg = std::vector<int>();
-                middle_layer_move_algs = std::vector<std::vector<int>>();
+                middle_layer_move_alg = std::vector<int>();
                 middle_layer_alg_shown = 0;
                 middle_layer_case = -1;
                 next_middle_layer = Coord{ -1, -1 };
@@ -1174,7 +1147,7 @@ bool Tutorial::check_middle_layer_case(int c)
         // check for edge in yellow face to:
         //     permute to right side
         case 0:
-            for (f = CUBE_ORANGE; f < CUBE_YELLOW; ++f)
+            for (f = 1; f < 5; ++f)
             {
                 if (
                     cube.get_edge(f, 2) - loop(cube.get_edge(CUBE_YELLOW, loop(f - 2, 0, 3)), 0, 3) == 1 && // if edge would permute to right side
@@ -1190,7 +1163,7 @@ bool Tutorial::check_middle_layer_case(int c)
 
         //     permute to left side
         case 1:
-            for (f = CUBE_ORANGE; f < CUBE_YELLOW; ++f)
+            for (f = 1; f < 5; ++f)
             {
                 if (
                     cube.get_edge(f, 2) - loop(cube.get_edge(CUBE_YELLOW, loop(f - 2, 0, 3)), 2, 5) == -1 && // if edge would permute to left side
@@ -1207,15 +1180,16 @@ bool Tutorial::check_middle_layer_case(int c)
         // check for edge in middle layer to:
         //     permute to right side
         case 2:
-            for (f = CUBE_ORANGE; f < CUBE_YELLOW; ++f)
+            for (f = 1; f < 5; ++f)
             {
+                
                 if (
-                    (cube.get_edge(f, 3) != CUBE_YELLOW && cube.get_edge(loop(f - 1, CUBE_ORANGE, CUBE_BLUE), 1) != CUBE_YELLOW) && // if both stickers of edge (right side) aren't yellow
-                    (cube.get_edge(loop(f - 1, CUBE_ORANGE, CUBE_BLUE), 1) - loop(cube.get_edge(f, 3), 0, 3) == 1)// if both stickers of edge (right side) would be permuted to right side
+                    (cube.get_edge(f, 3) != CUBE_YELLOW && cube.get_edge(loop(f - 1, 1, 4), 1) != CUBE_YELLOW) && // if both stickers of edge (right side) aren't yellow
+                    (cube.get_edge(loop(f - 1, 1, 4), 1) - loop(cube.get_edge(f, 3), 0, 3) == 1)// if both stickers of edge (right side) would be permuted to right side
                 ) {
                     middle_layer_case = 2;
                     middle_layer_front_face = f;
-                    next_middle_layer = Coord{ f, 2 }; // not the correct edge, but the edge used to swap flipped edge to yellow face
+                    next_middle_layer = Coord{ f, 2 };
                     return true;
                 }
             }
@@ -1223,16 +1197,16 @@ bool Tutorial::check_middle_layer_case(int c)
 
         //     permute to left side
         case 3:
-            for (f = CUBE_ORANGE; f < CUBE_YELLOW; ++f)
+            for (f = 1; f < 5; ++f)
             {
                 if (
-                    (cube.get_edge(f, 3) != CUBE_YELLOW && cube.get_edge(loop(f - 1, CUBE_ORANGE, CUBE_BLUE), 1) != CUBE_YELLOW) && // if both stickers of edge (right side) aren't yellow
-                    (cube.get_edge(f, 3) != f || cube.get_edge(loop(f - 1, CUBE_ORANGE, CUBE_BLUE), 1) != loop(f - 1, CUBE_ORANGE, CUBE_BLUE)) && // if stickers aren't already correctly permuted (only applies for this case, not case 2)
-                    (cube.get_edge(loop(f - 1, CUBE_ORANGE, CUBE_BLUE), 1) - loop(cube.get_edge(f, 3), 2, 5) == -1)// if both stickers of edge (left side) would be permuted to left side
+                    (cube.get_edge(f, 3) != CUBE_YELLOW && cube.get_edge(loop(f - 1, 1, 4), 1) != CUBE_YELLOW) && // if both stickers of edge (right side) aren't yellow
+                    (cube.get_edge(f, 3) != f || cube.get_edge(loop(f - 1, 1, 4), 1) != loop(f - 1, 1, 4)) && // if stickers aren't already correctly permuted (only applies for this case, not case 2)
+                    (cube.get_edge(loop(f - 1, 1, 4), 1) - loop(cube.get_edge(f, 3), 2, 5) == -1)// if both stickers of edge (right side) would be permuted to right side
                 ) {
                     middle_layer_case = 3;
                     middle_layer_front_face = f;
-                    next_middle_layer = Coord{ f, 2 }; // not the correct edge, but the edge used to swap flipped edge to yellow face
+                    next_middle_layer = Coord{ f, 2 };
                     return true;
                 }
             }
@@ -1251,54 +1225,44 @@ void Tutorial::find_middle_layer()
 };
 void Tutorial::get_middle_layer_alg()
 {
-    int middle_layer_intermediate_face; // if case is 2 or 3, this is the face the edge is moved to after first move alg
     middle_layer_setup_alg = std::vector<int>();
-    middle_layer_move_algs = std::vector<std::vector<int>>();
+    middle_layer_move_alg = std::vector<int>();
 
     switch (middle_layer_case)
     {
         case 0:
             middle_layer_target_face = cube.get_edge(next_middle_layer.f, 2);
             get_middle_layer_setup_alg(middle_layer_front_face, middle_layer_target_face);
-            middle_layer_move_algs.push_back(ALG_MIDDLE_LAYER1);
+            middle_layer_move_alg = ALG_MIDDLE_LAYER1;
             break;
 
         case 1:
             middle_layer_target_face = cube.get_edge(next_middle_layer.f, 2);
             get_middle_layer_setup_alg(middle_layer_front_face, middle_layer_target_face);
-            middle_layer_move_algs.push_back(ALG_MIDDLE_LAYER2);
+            middle_layer_move_alg = ALG_MIDDLE_LAYER2;
             break;
 
         case 2:
-            middle_layer_move_algs.push_back(ALG_MIDDLE_LAYER1);
-            middle_layer_intermediate_face = loop(middle_layer_front_face + 2, CUBE_ORANGE, CUBE_BLUE);
-            middle_layer_target_face = cube.get_edge(loop(middle_layer_front_face - 1, CUBE_ORANGE, CUBE_BLUE), 1);
-            get_middle_layer_setup_alg(middle_layer_intermediate_face, middle_layer_target_face);
-            middle_layer_move_algs.push_back(ALG_MIDDLE_LAYER1);
+            middle_layer_move_alg = ALG_MIDDLE_LAYER1;
+            middle_layer_move_alg.push_back(M_U2);
+            middle_layer_target_face = cube.get_edge(loop(middle_layer_front_face - 1, 1, 4), 1);
+            get_middle_layer_setup_alg(middle_layer_front_face, middle_layer_target_face);
+            middle_layer_move_alg = ALG_MIDDLE_LAYER1;
             break;
 
         case 3:
-            middle_layer_move_algs.push_back(ALG_MIDDLE_LAYER1);
-            middle_layer_intermediate_face = loop(middle_layer_front_face + 2, CUBE_ORANGE, CUBE_BLUE);
-            middle_layer_target_face = cube.get_edge(loop(middle_layer_front_face - 1, CUBE_ORANGE, CUBE_BLUE), 1);
-            get_middle_layer_setup_alg(middle_layer_intermediate_face, middle_layer_target_face);
-            middle_layer_move_algs.push_back(ALG_MIDDLE_LAYER2);
+            middle_layer_move_alg = ALG_MIDDLE_LAYER1;
+            middle_layer_move_alg.push_back(M_U2);
+            middle_layer_target_face = cube.get_edge(loop(middle_layer_front_face - 1, 1, 4), 1);
+            get_middle_layer_setup_alg(middle_layer_front_face, middle_layer_target_face);
+            middle_layer_move_alg = ALG_MIDDLE_LAYER2;
             break;
     }
 
-    if (middle_layer_case < 2)
-    {
-        std::cout << "Move whole cube so front face is " << Cube_face_str(middle_layer_front_face) << '\n';
-        std::cout << "Setup alg: " << Cube_notation_str(middle_layer_setup_alg) << "\n\n";
-        std::cout << "Move whole cube so front face is " << Cube_face_str(middle_layer_target_face) << '\n';
-        std::cout << "Move alg: " << Cube_notation_str(middle_layer_move_algs[0]) << "\n\n";
-    } else {
-        std::cout << "Move whole cube so front face is " << Cube_face_str(middle_layer_front_face) << '\n';
-        std::cout << "Move alg: " << Cube_notation_str(middle_layer_move_algs[0]) << "\n\n";
-        std::cout << "Move whole cube so front face is " << Cube_face_str(middle_layer_target_face) << '\n';
-        std::cout << "Setup alg: " << Cube_notation_str(middle_layer_setup_alg) << '\n';
-        std::cout << "Move alg: " << Cube_notation_str(middle_layer_move_algs[1]) << "\n\n";
-    }
+    std::cout << "Move whole cube so front face is " << Cube_face_str(middle_layer_front_face) << '\n';
+    std::cout << "Setup alg: " << Cube_notation_str(middle_layer_setup_alg) << "\n\n";
+    std::cout << "Move whole cube so front face is " << Cube_face_str(middle_layer_target_face) << '\n';
+    std::cout << "Move alg: " << Cube_notation_str(middle_layer_move_alg) << "\n\n";
 };
 void Tutorial::get_middle_layer_setup_alg(int front_face, int target_face)
 {
@@ -1315,17 +1279,8 @@ void Tutorial::get_middle_layer_setup_alg(int front_face, int target_face)
 };
 void Tutorial::permute_middle_layer()
 {
-    // if cases 0-1, order is setup, move
-    // if cases 2-3, order is move, setup, move
-    if (middle_layer_case < 2)
-    {
-        if (middle_layer_setup_alg.size() != 0) { permute(middle_layer_setup_alg, middle_layer_front_face, 2); }
-        permute(middle_layer_move_algs[0], middle_layer_target_face, 2);
-    } else {
-        permute(middle_layer_move_algs[0], middle_layer_front_face, 2);
-        if (middle_layer_setup_alg.size() != 0) { permute(middle_layer_setup_alg, middle_layer_target_face, 2); }
-        permute(middle_layer_move_algs[1], middle_layer_target_face, 2);
-    }
+    if (middle_layer_setup_alg.size() != 0) { permute(middle_layer_setup_alg, middle_layer_front_face, 2); }
+    permute(middle_layer_move_alg, middle_layer_target_face, 2);
 };
 
 bool Tutorial::check_yellow_cross_case(int c)
