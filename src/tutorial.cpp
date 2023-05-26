@@ -450,43 +450,43 @@ void Tutorial::Draw()
             buttons[B_FIN1] = GuiButton((Rectangle){ 140, screenH - 60, 100, 40 }, GuiIconText(ICON_ARROW_RIGHT_FILL, "Finish"));
             if (!full_scan) { GuiSetState(STATE_NORMAL); }
 
-            DrawText("Scan the cube", 8, 0, FONT_SIZE, DARKGRAY);
+            DrawText("Scan the cube", 8, 0, HEADER_SIZE, DARKGRAY);
             break;
 
         case 1:
-            DrawText("Create the daisy", 8, 0, FONT_SIZE, DARKGRAY);
+            DrawText("Create the daisy", 8, 0, HEADER_SIZE, DARKGRAY);
             break;
 
         case 2:
-            DrawText("Create the white cross", 8, 0, FONT_SIZE, DARKGRAY);
+            DrawText("Create the white cross", 8, 0, HEADER_SIZE, DARKGRAY);
             break;
 
         case 3:
-            DrawText("Create the top layer", 8, 0, FONT_SIZE, DARKGRAY);
+            DrawText("Create the top layer", 8, 0, HEADER_SIZE, DARKGRAY);
             break;
 
         case 4:
-            DrawText("Create the middle layer", 8, 0, FONT_SIZE, DARKGRAY);
+            DrawText("Create the middle layer", 8, 0, HEADER_SIZE, DARKGRAY);
             break;
 
         case 5:
-            DrawText("Create the yellow cross", 8, 0, FONT_SIZE, DARKGRAY);
+            DrawText("Create the yellow cross", 8, 0, HEADER_SIZE, DARKGRAY);
             break;
 
         case 6:
-            DrawText("Orient the yellow corners", 8, 0, FONT_SIZE, DARKGRAY);
+            DrawText("Orient the yellow corners", 8, 0, HEADER_SIZE, DARKGRAY);
             break;
 
         case 7:
-            DrawText("Permute the yellow corners", 8, 0, FONT_SIZE, DARKGRAY);
+            DrawText("Permute the yellow corners", 8, 0, HEADER_SIZE, DARKGRAY);
             break;
 
         case 8:
-            DrawText("Permute the yellow edges", 8, 0, FONT_SIZE, DARKGRAY);
+            DrawText("Permute the yellow edges", 8, 0, HEADER_SIZE, DARKGRAY);
             break;
 
         case 9:
-            DrawText("You've solved the cube!", 8, 0, FONT_SIZE, DARKGRAY);
+            DrawText("You've solved the cube!", 8, 0, HEADER_SIZE, DARKGRAY);
             break;
     }
     if (step != 0)
@@ -498,7 +498,7 @@ void Tutorial::Draw()
         DrawTextureRec(
             renderTexture_cube3D.texture,
             Rectangle{ 0, 0, renderTexture_cube3D.texture.width, renderTexture_cube3D.texture.height * -1 } ,
-            Vector2{ screenW - renderTexture_cube3D.texture.width, 48 },
+            Vector2{ screenW + 48 - renderTexture_cube3D.texture.width, 120 },
             WHITE
         );
 
@@ -506,7 +506,7 @@ void Tutorial::Draw()
         {
             for (int i = 0; i < prompts.size(); ++i)
             {
-                DrawText(prompts[i].c_str(), 8, (i + 1) * FONT_SIZE, FONT_SIZE, DARKGRAY);
+                DrawText(prompts[i].c_str(), 8, HEADER_SIZE + i * INSTR_SIZE, INSTR_SIZE, DARKGRAY);
             }
         }
     }
@@ -527,6 +527,7 @@ void Tutorial::next_step()
     int pll_edges_count;
     if (step == 0) { cube3D.Set_state(); } // cube3D has initial cube state if scanning just finished
     bool increment = true; // Whether or not to continue incrementing to next steps (may need to increment through multiple steps)
+    prompts = std::vector<std::string>();
 
     while (increment)
     {
@@ -871,16 +872,28 @@ int Tutorial::get_petal_alg(Coord petal)
     {
         case 0:
             std::cout << "No setup alg as petal already at white face\n";
+            prompts.push_back("No setup alg as petal is ready to", "be moved to yellow face");
             break;
 
         default: 
             std::cout << "Move whole cube so front face is " << Cube_face_str(petal.f) << "\n\n";
-            std::cout << "Setup alg: " << Cube_notation_str(petal_setup_alg) << '\n';
+            prompts.push_back("Move the cube so the ");
+            prompts[0].append(Cube_face_str(petal.f));
+            prompts[0].append("face");
+            prompts.push_back("is facing you");
+            prompts.push_back("Setup algorithm:");
+            prompts.push_back(Cube_notation_str(petal_setup_alg));
             break;
 
     }
-    std::cout << "Move whole cube so front face is " << Cube_face_str(loop(slot_edge + 2, 1, 4)) << "\n\n";
+    std::cout << "Move whole cube so front face is " << Cube_face_str(loop(slot_edge + 2, CUBE_GREEN, CUBE_BLUE)) << "\n\n";
     std::cout << "Move alg: " << Cube_notation_str(petal_move_alg) << "\n\n";
+    prompts.push_back("Move the cube so the ");
+    prompts[prompts.size() - 1].append(Cube_face_str(loop(slot_edge + 2, CUBE_GREEN, CUBE_BLUE)));
+    prompts[prompts.size() - 1].append("face");
+    prompts.push_back("is facing you");
+    prompts.push_back("Move algorithm:");
+    prompts.push_back(Cube_notation_str(petal_move_alg));
     return slot_edge;
 };
 void Tutorial::move_petal(int petal_edge, int slot_edge)

@@ -171,20 +171,20 @@ void UI::Draw()
                 commands.size() > i &&
                 buffer_index >= i
             ) {
-                DrawTextEx(font, Cube_notation_str(alg[buffer_index - i]).c_str(), Vector2{2, 104 - i * 32 }, 48, 0, BLUE);
-                DrawTextEx(font, get_command_string(buffer_index - i).c_str(), Vector2{ 48, 104 - i * 32 }, 48, 0, DARKGRAY);
+                DrawTextEx(font, Cube_notation_str(alg[buffer_index - i]).c_str(), Vector2{260, screenH - 16 - 32 * 3 - i * 32 }, 48, 0, BLUE);
+                DrawTextEx(font, get_command_string(buffer_index - i).c_str(), Vector2{ 308, screenH - 16 - 32 * 3 - i * 32 }, 48, 0, DARKGRAY);
             }
         }
-        DrawTextEx(font, Cube_notation_str(alg[buffer_index]).c_str(), Vector2{ 2, 104 }, 48, 0, DARKBLUE);
-        DrawTextEx(font, get_command_string(buffer_index).c_str(), Vector2{ 48, 104 }, 48, 0, BLACK);
+        DrawTextEx(font, Cube_notation_str(alg[buffer_index]).c_str(), Vector2{ 260, screenH - 16 - 32 * 3 }, 48, 0, DARKBLUE);
+        DrawTextEx(font, get_command_string(buffer_index).c_str(), Vector2{ 308, screenH - 16 - 32 * 3 }, 48, 0, BLACK);
         for (int i = 1; i < 3; ++i)
         {
             if (
                 commands.size() > i &&
                 buffer_index < commands.size() - i
             ) {
-                DrawTextEx(font, Cube_notation_str(alg[buffer_index + i]).c_str(), Vector2{2, 104 + i * 32 }, 48, 0, BLUE);
-                DrawTextEx(font, get_command_string(buffer_index + i).c_str(), Vector2{ 48, 104 + i * 32 }, 48, 0, DARKGRAY);
+                DrawTextEx(font, Cube_notation_str(alg[buffer_index + i]).c_str(), Vector2{260, screenH - 16 - 32 * 3 + i * 32 }, 48, 0, BLUE);
+                DrawTextEx(font, get_command_string(buffer_index + i).c_str(), Vector2{ 308, screenH - 16 - 32 * 3 + i * 32 }, 48, 0, DARKGRAY);
             }
         }
     }

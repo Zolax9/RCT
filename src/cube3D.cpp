@@ -50,7 +50,7 @@ void Cube3D::Init(Cube* _cube)
         Vector3{  0.0f, -1.0f,  1.0f },
         Vector3{  1.0f, -1.0f,  1.0f } 
     } };
-    front_face = 2;
+    front_face = CUBE_GREEN;
     orient = 0;
 
     front_face_new = -1;

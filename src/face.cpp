@@ -56,8 +56,8 @@ void Face::Init(cv::Mat* _frame, Vector2 videoSize, float _videoScale, Cube* _cu
                 LIVEPREVIEW_SIZE
             });
             pred_preview.push_back(Rectangle{
-                screenW - PREDPREVIEW_SIZE * 2  + (x - 1.5) * PREDPREVIEW_SIZE,
-                PREDPREVIEW_SIZE * 2 + (y - 1.5) * PREDPREVIEW_SIZE,
+                screenW - PREDPREVIEW_SIZE * 2 + (x - 1.5) * PREDPREVIEW_SIZE,
+                screenH - PREDPREVIEW_SIZE * 2 - (y - 1.5) * PREDPREVIEW_SIZE,
                 PREDPREVIEW_SIZE,
                 PREDPREVIEW_SIZE
             });
@@ -66,37 +66,37 @@ void Face::Init(cv::Mat* _frame, Vector2 videoSize, float _videoScale, Cube* _cu
 
     state_preview.push_back(GetStateFrameRects(
         (screenW - STATEPREVIEW_SIZE / 2.0) - STATEPREVIEW_SIZE * 9,
-        (screenH - STATEPREVIEW_SIZE / 2.0),
+        STATEPREVIEW_SIZE / 2.0,
         STATEPREVIEW_SIZE,
         STATEPREVIEW_SIZE
     ));
     state_preview.push_back(GetStateFrameRects(
         (screenW - STATEPREVIEW_SIZE / 2.0) - STATEPREVIEW_SIZE * 12,
-        (screenH - STATEPREVIEW_SIZE / 2.0) - STATEPREVIEW_SIZE * 6,
+        (STATEPREVIEW_SIZE / 2.0) + STATEPREVIEW_SIZE * 3,
         STATEPREVIEW_SIZE,
         STATEPREVIEW_SIZE
     ));
     state_preview.push_back(GetStateFrameRects(
         (screenW - STATEPREVIEW_SIZE / 2.0) - STATEPREVIEW_SIZE * 9,
-        (screenH - STATEPREVIEW_SIZE / 2.0) - STATEPREVIEW_SIZE * 6,
+        (STATEPREVIEW_SIZE / 2.0) + STATEPREVIEW_SIZE * 3,
         STATEPREVIEW_SIZE,
         STATEPREVIEW_SIZE
     ));
     state_preview.push_back(GetStateFrameRects(
         (screenW - STATEPREVIEW_SIZE / 2.0) - STATEPREVIEW_SIZE * 6,
-        (screenH - STATEPREVIEW_SIZE / 2.0) - STATEPREVIEW_SIZE * 6,
+        (STATEPREVIEW_SIZE / 2.0) + STATEPREVIEW_SIZE * 3,
         STATEPREVIEW_SIZE,
         STATEPREVIEW_SIZE
     ));
     state_preview.push_back(GetStateFrameRects(
         (screenW - STATEPREVIEW_SIZE / 2.0) - STATEPREVIEW_SIZE * 3,
-        (screenH - STATEPREVIEW_SIZE / 2.0) - STATEPREVIEW_SIZE * 6,
+        (STATEPREVIEW_SIZE / 2.0) + STATEPREVIEW_SIZE * 3,
         STATEPREVIEW_SIZE,
         STATEPREVIEW_SIZE
     ));
     state_preview.push_back(GetStateFrameRects(
         (screenW - STATEPREVIEW_SIZE / 2.0) - STATEPREVIEW_SIZE * 9,
-        (screenH - STATEPREVIEW_SIZE / 2.0) - STATEPREVIEW_SIZE * 3,
+        (STATEPREVIEW_SIZE / 2.0) + STATEPREVIEW_SIZE * 6,
         STATEPREVIEW_SIZE,
         STATEPREVIEW_SIZE
     ));
@@ -123,7 +123,7 @@ void Face::Init(cv::Mat* _frame, Vector2 videoSize, float _videoScale, Cube* _cu
     BeginTextureMode(pred_target);
     ClearBackground(BLANK);
 
-    draw_frame(screenW - PREDPREVIEW_SIZE * 3.5, PREDPREVIEW_SIZE * 0.5, PREDPREVIEW_SIZE, 3, false);
+    draw_frame(screenW - PREDPREVIEW_SIZE * 3.5, screenH - PREDPREVIEW_SIZE * 3.5, PREDPREVIEW_SIZE, 3, false);
 
     EndTextureMode();
     pred_frame = pred_target.texture;

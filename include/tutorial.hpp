@@ -29,7 +29,8 @@
 
 #define B_SIZE  7
 
-#define FONT_SIZE 48
+#define HEADER_SIZE 48
+#define INSTR_SIZE 32
 
 class Tutorial
 {
