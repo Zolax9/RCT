@@ -19,11 +19,17 @@
 #define ALG_PLLUA         std::vector<int>{ { 8, 1, 3, 10, 8, 4, 9, 1, 8 } }
 #define ALG_PLLUB         std::vector<int>{ { 8, 0, 3, 10, 8, 4, 9, 0, 8 } }
 
-#define K_PREV  0
-#define K_NEXT1 1
-#define K_FIN   2
-#define K_RESET 3
-#define K_NEXT2 4
+#define B_PREV  0
+#define B_NEXT1 1
+#define B_FIN1  2
+#define B_RESET 3
+#define B_NEXT2 4
+#define B_SKIP  5
+#define B_FFWD  6
+
+#define B_SIZE  7
+
+#define FONT_SIZE 48
 
 class Tutorial
 {
@@ -46,11 +52,18 @@ class Tutorial
         void set_front_face(int val); // sets front_face of cube3D as well
         void set_orient(int val); // sets orient of cube3D as well
 
-        std::array<bool, 5> buttons; // holds state (pressed or released) of all buttons
+        std::array<bool, B_SIZE> buttons; // holds state (pressed or released) of all buttons
+        std::vector<std::string> prompts; // instructions printed to user
+        bool prompt; // true = show prompt, false = hide prompt
+
         // 0 - 1 = previous, next
         // 2 = finish
         // 3 = reset step
         // 4 = next
+        // 5 = fast forward
+        // 6 = skip (toggle button; pressing switches between true and false)
+
+        // Step 0
         bool full_scan; // if whole cube is scanned (can press finish button)
 
         // Step 1

@@ -52,6 +52,7 @@ void Cube3D::Init(Cube* _cube)
     } };
     front_face = 2;
     orient = 0;
+
     front_face_new = -1;
     orient_new = -1;
     orig_state = cube->get_state();
@@ -65,15 +66,15 @@ void Cube3D::Init(Cube* _cube)
     angle_increment = 1;
 };
 
-void Cube3D::Update()
+void Cube3D::Update(bool fast_forward)
 {
-    angle_increment = IsKeyDown(KEY_SPACE) * 15 + 1;
+    angle_increment = fast_forward * 15 + 1;
 
     if (
         orbital &&
         move_buffer.size() == 0
     ) {
-        for (size_t i = 0; i < IsKeyDown(KEY_SPACE) * 15 + 1; ++i) { UpdateCamera(&camera, camera_mode); }
+        for (size_t i = 0; i < fast_forward * 15 + 1; ++i) { UpdateCamera(&camera, camera_mode); }
     }
 
     if (

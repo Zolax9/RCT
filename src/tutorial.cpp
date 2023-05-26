@@ -9,8 +9,6 @@
 
 #include "cube.hpp"
 
-#define FONT_SIZE 48
-
 void Tutorial::Init()
 {
     cube3D.Init(get_cube_pointer());
@@ -21,7 +19,9 @@ void Tutorial::Init()
     front_face = CUBE_GREEN;
     orient = 0;
 
-    buttons = make_array<5>(false);
+    buttons = make_array<B_SIZE>(false);
+    prompts = std::vector<std::string>{ "testing", "this should work", "line break\nworks\nlike this" };
+    prompt = false;
 
     petal_setup_alg = std::vector<int>();
     petal_move_alg = std::vector<int>();
@@ -101,27 +101,32 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
         if (IsKeyPressed(KEY_D)) { cube3D.Permute(std::vector<int>{ { M_D } }, front_face, orient); }
         if (IsKeyPressed(KEY_S)) { cube3D.Permute(std::vector<int>{ { M_DP } }, front_face, orient); }
         if (IsKeyPressed(KEY_X)) { cube3D.Permute(std::vector<int>{ { M_D2 } }, front_face, orient); }
-        if (IsKeyPressed(KEY_PERIOD)) { cube3D.Finish_move(); }
     }
 
 #endif
+    if (IsKeyPressed(KEY_SPACE)) { buttons[B_FFWD] = !buttons[B_FFWD]; }
     if (
-        buttons[K_RESET] ||
+        buttons[B_SKIP] ||
+        IsKeyPressed(KEY_PERIOD)
+    ) {
+        cube3D.Finish_move();
+    }
+    if (
+        buttons[B_RESET] ||
         IsKeyPressed(KEY_R)
     ) {
-        buttons[K_RESET] = false;
+        buttons[B_RESET] = false;
         cube3D.Clear_buffer();
         step = -1;
         next_step();
         return;
     }
-
     switch (step)
     {
         case 0:
             full_scan = (cur_face == CUBE_YELLOW && cube.get_sticker(cur_face, 0) != CUBE_ANY);
             if (
-                buttons[K_PREV] ||
+                buttons[B_PREV] ||
                 IsKeyPressed(KEY_BACKSPACE)
             ) {
                 if (
@@ -131,7 +136,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                 cube.set_face(cur_face, make_array<CUBE_FACE_SIZE>(CUBE_ANY));
             }
             else if (
-                buttons[K_NEXT1] ||
+                buttons[B_NEXT1] ||
                 IsKeyPressed(KEY_SPACE)
             ) {
                 cube.set_face(cur_face, pred_state);
@@ -140,7 +145,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
             }
             else if (
                 full_scan && (
-                    buttons[K_FIN] ||
+                    buttons[B_FIN1] ||
                     IsKeyPressed(KEY_RIGHT)
                 )
             ) {
@@ -154,9 +159,9 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
             break;
 
         case 1:
-            cube3D.Update();
+            cube3D.Update(buttons[B_FFWD]);
             if (
-                buttons[K_NEXT2] ||
+                buttons[B_NEXT2] ||
                 IsKeyPressed(KEY_RIGHT)
             ) {
                 if (petal_alg_shown == 0) { petal_alg_shown = 1; }
@@ -177,6 +182,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         if (petal_move_alg.size() == 0) { std::cout << "Petal alg not found!\n"; }
 
                         petal_alg_shown = 2;
+                        prompt = true;
                         break;
 
                     case 2:
@@ -185,6 +191,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         if (petals_count == 4) { next_step(); }
 
                         petal_alg_shown = 1;
+                        prompt = false;
                         break;
 
                 }
@@ -192,9 +199,9 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
             break;
 
         case 2:
-            cube3D.Update();
+            cube3D.Update(buttons[B_FFWD]);
             if (
-                buttons[K_NEXT2] ||
+                buttons[B_NEXT2] ||
                 IsKeyPressed(KEY_RIGHT)
             ) {
                 if (white_cross_alg_shown == 0) { white_cross_alg_shown = 1; }
@@ -208,6 +215,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         if (white_cross_alg.size() == 0) { std::cout << "White cross alg not found!\n"; }
 
                         white_cross_alg_shown = 2;
+                        prompt = true;
                         break;
 
                     case 2:
@@ -216,15 +224,16 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         if (white_cross_count == 4) { next_step(); }
 
                         white_cross_alg_shown = 1;
+                        prompt = false;
                         break;
                 }
             }
             break;
 
         case 3:
-            cube3D.Update();
+            cube3D.Update(buttons[B_FFWD]);
             if (
-                buttons[K_NEXT2] ||
+                buttons[B_NEXT2] ||
                 IsKeyPressed(KEY_RIGHT)
             ) {
                 if (top_layer_alg_shown == 0) { top_layer_alg_shown = 1; }
@@ -248,6 +257,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         }
 
                         top_layer_alg_shown = 2;
+                        prompt = true;
                         break;
 
                     case 2:
@@ -256,15 +266,16 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         if (top_layer_count == 4) { next_step(); }
 
                         top_layer_alg_shown = 1;
+                        prompt = false;
                         break;
                 }
             }
             break;
 
         case 4:
-            cube3D.Update();
+            cube3D.Update(buttons[B_FFWD]);
             if (
-                buttons[K_NEXT2] ||
+                buttons[B_NEXT2] ||
                 IsKeyPressed(KEY_RIGHT)
             ) {
                 if (middle_layer_alg_shown == 0) { middle_layer_alg_shown = 1; }
@@ -278,6 +289,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         if (middle_layer_move_algs.size() == 0) { std::cout << "Edge alg not found!\n"; }
 
                         middle_layer_alg_shown = 2;
+                        prompt = true;
                         break;
 
                     case 2:
@@ -286,15 +298,16 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         if (middle_layer_count == 4) { next_step(); }
 
                         middle_layer_alg_shown = 1;
+                        prompt = false;
                         break;
                 }
             }
             break;
 
         case 5:
-            cube3D.Update();
+            cube3D.Update(buttons[B_FFWD]);
             if (
-                buttons[K_NEXT2] ||
+                buttons[B_NEXT2] ||
                 IsKeyPressed(KEY_RIGHT)
             ) {
                 if (yellow_cross_alg_shown == 0) { yellow_cross_alg_shown = 1; }
@@ -307,10 +320,12 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         get_yellow_cross_alg();
 
                         yellow_cross_alg_shown = 2;
+                        prompt = true;
                         break;
 
                     case 2:
                         permute_yellow_cross();
+                        prompt = false;
                         next_step();
                         break;
                 }
@@ -318,9 +333,9 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
             break;
 
         case 6:
-            cube3D.Update();
+            cube3D.Update(buttons[B_FFWD]);
             if (
-                buttons[K_NEXT2] ||
+                buttons[B_NEXT2] ||
                 IsKeyPressed(KEY_RIGHT)
             ) {
                 if (yellow_corners_alg_shown == 0) { yellow_corners_alg_shown = 1; }
@@ -332,10 +347,12 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         set_front_face(yellow_corners_front_face);
 
                         yellow_corners_alg_shown = 2;
+                        prompt = true;
                         break;
 
                     case 2:
                         permute_yellow_corners();
+                        prompt = false;
                         next_step();
                         break;
                 }
@@ -343,9 +360,9 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
             break;
 
         case 7:
-            cube3D.Update();
+            cube3D.Update(buttons[B_FFWD]);
             if (
-                buttons[K_NEXT2] ||
+                buttons[B_NEXT2] ||
                 IsKeyPressed(KEY_RIGHT)
             ) {
                 if (pll_corners_alg_shown == 0) { pll_corners_alg_shown = 1; }
@@ -357,10 +374,12 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         set_front_face(pll_corners_front_face);
 
                         pll_corners_alg_shown = 2;
+                        prompt = true;
                         break;
 
                     case 2:
                         permute_pll_corners();
+                        prompt = false;
                         next_step();
                         break;
                 }
@@ -368,9 +387,9 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
             break;
 
         case 8:
-            cube3D.Update();
+            cube3D.Update(buttons[B_FFWD]);
             if (
-                buttons[K_NEXT2] ||
+                buttons[B_NEXT2] ||
                 IsKeyPressed(KEY_RIGHT)
             ) {
                 if (pll_edges_alg_shown == 0) { pll_edges_alg_shown = 1; }
@@ -388,10 +407,12 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         set_front_face(pll_edges_front_faces[0]);
 
                         pll_edges_alg_shown = 2;
+                        prompt = true;
                         break;
 
                     case 2:
                         permute_pll_edges();
+                        prompt = false;
                         next_step();
                         break;
                 }
@@ -399,28 +420,34 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
             break;
 
         case 9:
-            cube3D.Update();
+            cube3D.Update(buttons[B_FFWD]);
             break;
     }
 };
 
 void Tutorial::Draw()
 {
+    GuiSetState(STATE_NORMAL); // TODO: may be redundant (may be done each frame)
+
     if (step != 0)
     {
-        buttons[K_RESET] = GuiButton((Rectangle){ 20, screenH - 120, 100, 40 }, GuiIconText(ICON_REDO_FILL, "Reset"));
+        buttons[B_RESET] = GuiButton((Rectangle){ 20, screenH - 120, 100, 40 }, GuiIconText(ICON_REDO_FILL, "Reset"));
         if (step == 9) { GuiSetState(STATE_DISABLED); }
-        buttons[K_NEXT2] = GuiButton((Rectangle){ 20, screenH - 60, 100, 40 }, GuiIconText(ICON_ARROW_RIGHT_FILL, "Next"));
+        buttons[B_NEXT2] = GuiButton((Rectangle){ 20, screenH - 60, 100, 40 }, GuiIconText(ICON_ARROW_RIGHT_FILL, "Next"));
+        buttons[B_SKIP] = GuiButton((Rectangle){ 140, screenH - 60, 100, 40 }, GuiIconText(ICON_RESTART, "Skip"));
         if (step == 9) { GuiSetState(STATE_NORMAL); }
+        if (buttons[B_FFWD]) { GuiSetState(STATE_PRESSED); }
+        if (GuiButton((Rectangle){ 140, screenH - 120, 100, 40 }, GuiIconText(ICON_PLAYER_NEXT, "Fast-forward"))) { buttons[B_FFWD] = !buttons[B_FFWD]; }
+        if (buttons[B_FFWD]) { GuiSetState(STATE_NORMAL); }
     }
 
     switch (step)
     {
         case 0:
-            buttons[K_PREV] = GuiButton((Rectangle){ 20, screenH - 120, 100, 40 }, GuiIconText(ICON_ARROW_LEFT_FILL, "Previous"));
-            buttons[K_NEXT1] = GuiButton((Rectangle){ 20, screenH - 60, 100, 40 }, GuiIconText(ICON_ARROW_RIGHT_FILL, "Next"));
+            buttons[B_PREV] = GuiButton((Rectangle){ 20, screenH - 120, 100, 40 }, GuiIconText(ICON_ARROW_LEFT_FILL, "Previous"));
+            buttons[B_NEXT1] = GuiButton((Rectangle){ 20, screenH - 60, 100, 40 }, GuiIconText(ICON_ARROW_RIGHT_FILL, "Next"));
             if (!full_scan) { GuiSetState(STATE_DISABLED); }
-            buttons[K_FIN] = GuiButton((Rectangle){ 140, screenH - 60, 100, 40 }, GuiIconText(ICON_ARROW_RIGHT_FILL, "Finish"));
+            buttons[B_FIN1] = GuiButton((Rectangle){ 140, screenH - 60, 100, 40 }, GuiIconText(ICON_ARROW_RIGHT_FILL, "Finish"));
             if (!full_scan) { GuiSetState(STATE_NORMAL); }
 
             DrawText("Scan the cube", 8, 0, FONT_SIZE, DARKGRAY);
@@ -474,6 +501,14 @@ void Tutorial::Draw()
             Vector2{ screenW - renderTexture_cube3D.texture.width, 48 },
             WHITE
         );
+
+        if (prompt)
+        {
+            for (int i = 0; i < prompts.size(); ++i)
+            {
+                DrawText(prompts[i].c_str(), 8, (i + 1) * FONT_SIZE, FONT_SIZE, DARKGRAY);
+            }
+        }
     }
 };
 

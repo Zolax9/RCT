@@ -66,7 +66,7 @@ void Face::Init(cv::Mat* _frame, Vector2 videoSize, float _videoScale, Cube* _cu
 
     state_preview.push_back(GetStateFrameRects(
         (screenW - STATEPREVIEW_SIZE / 2.0) - STATEPREVIEW_SIZE * 9,
-        (screenH - STATEPREVIEW_SIZE / 2.0) - STATEPREVIEW_SIZE * 9,
+        (screenH - STATEPREVIEW_SIZE / 2.0),
         STATEPREVIEW_SIZE,
         STATEPREVIEW_SIZE
     ));

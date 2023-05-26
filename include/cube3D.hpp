@@ -19,7 +19,7 @@ class Cube3D
         Cube3D() { };
         void Init(Cube* _cube);
 
-        void Update();
+        void Update(bool fast_forward);
         void Draw(int _front_face = CUBE_GREEN, int _orient = 0);
 
         void Permute(std::vector<int> alg, int _front_face = CUBE_GREEN, int _orient = 0);
@@ -43,6 +43,7 @@ class Cube3D
         Camera camera;
         int camera_mode;
         bool orbital;
+        bool fast_forward; // is button or key being pressed to fast-forward
 
         RenderTexture2D renderTexture;
         Cube* cube;

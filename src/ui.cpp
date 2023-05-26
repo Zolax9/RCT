@@ -172,7 +172,7 @@ void UI::Draw()
                 buffer_index >= i
             ) {
                 DrawTextEx(font, Cube_notation_str(alg[buffer_index - i]).c_str(), Vector2{2, 104 - i * 32 }, 48, 0, BLUE);
-                DrawTextEx(font, get_command_string(buffer_index - i).c_str(), Vector2{ 48, 104 - i * 32 }, 48, 0, LIGHTGRAY);
+                DrawTextEx(font, get_command_string(buffer_index - i).c_str(), Vector2{ 48, 104 - i * 32 }, 48, 0, DARKGRAY);
             }
         }
         DrawTextEx(font, Cube_notation_str(alg[buffer_index]).c_str(), Vector2{ 2, 104 }, 48, 0, DARKBLUE);
@@ -184,7 +184,7 @@ void UI::Draw()
                 buffer_index < commands.size() - i
             ) {
                 DrawTextEx(font, Cube_notation_str(alg[buffer_index + i]).c_str(), Vector2{2, 104 + i * 32 }, 48, 0, BLUE);
-                DrawTextEx(font, get_command_string(buffer_index + i).c_str(), Vector2{ 48, 104 + i * 32 }, 48, 0, LIGHTGRAY);
+                DrawTextEx(font, get_command_string(buffer_index + i).c_str(), Vector2{ 48, 104 + i * 32 }, 48, 0, DARKGRAY);
             }
         }
     }
