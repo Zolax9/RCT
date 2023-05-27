@@ -15,6 +15,7 @@ void Tutorial::Init()
     renderTexture_cube3D = LoadRenderTexture(320, 320);
     step = -1;
     next_step();
+    text = { };
 
     front_face = CUBE_GREEN;
     orient = 0;
@@ -872,7 +873,8 @@ int Tutorial::get_petal_alg(Coord petal)
     {
         case 0:
             std::cout << "No setup alg as petal already at white face\n";
-            prompts.push_back("No setup alg as petal is ready to", "be moved to yellow face");
+            prompts.push_back("No setup alg as petal is ready to");
+            prompts.push_back("be moved to yellow face");
             break;
 
         default: 

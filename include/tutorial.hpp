@@ -3,6 +3,7 @@
 
 #include "cube.hpp"
 #include "cube3D.hpp"
+#include "text.hpp"
 
 #define ALG_PETAL1        std::vector<int>{ { 7, 9, 6, 10, 10, 16, 9 } }
 #define ALG_PETAL2        std::vector<int>{ { 3, 15, 4 } }
@@ -116,8 +117,9 @@ class Tutorial
         Cube cube;
         Cube3D cube3D;
         RenderTexture renderTexture_cube3D;
-        int cur_face;
+        Text text;
 
+        int cur_face;
         int front_face;
         int orient;
 
