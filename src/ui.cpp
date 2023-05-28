@@ -23,7 +23,8 @@ UI::UI()
     codepoints = LoadCodepoints(text, &codepointCount);
     font = LoadFontEx("data/terminus.ttf", 48, codepoints, codepointCount);
 
-    tutorial.Init();
+    text_wrap.Init(48, 48, 48, 300);
+    tutorial.Init(&text_wrap);
 
     cube = tutorial.get_cube_pointer();
     cur_face = tutorial.get_cur_face_pointer();

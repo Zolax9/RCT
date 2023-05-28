@@ -1,14 +1,15 @@
-#ifndef TEXT_HPP
-#define TEXT_HPP
+#ifndef TEXT_WRAP_HPP
+#define TEXT_WRAP_HPP
 
-#include <stdlib.h>
-#include <string>
 #include <vector>
+#include <string>
 
-class Text
+#include "raylib.h"
+
+class Text_wrap
 {
     public:
-        Text();
+        Text_wrap() { };
         void Init(int _font_width, int _font_height, int _font_size, int bounds_width);
 
         void Draw(int x, int y);
@@ -16,8 +17,6 @@ class Text
         void Set_text(std::string str); // converts string to formatted text
 
     private:
-        std::vector<std::string> text; // formatted text to draw
-
         int font_width; // width of a character
         int font_height; // height of a character
         int font_size;

@@ -9,13 +9,15 @@
 
 #include "cube.hpp"
 
-void Tutorial::Init()
+void Tutorial::Init(Text_wrap* text_wrap_pointer)
 {
     cube3D.Init(get_cube_pointer());
     renderTexture_cube3D = LoadRenderTexture(320, 320);
+    text_wrap = text_wrap_pointer;
+    text_wrap->Set_text("test");
+
     step = -1;
     next_step();
-    text = { };
 
     front_face = CUBE_GREEN;
     orient = 0;
@@ -429,6 +431,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 void Tutorial::Draw()
 {
     GuiSetState(STATE_NORMAL); // TODO: may be redundant (may be done each frame)
+    text_wrap->Draw(0, 0);
 
     if (step != 0)
     {

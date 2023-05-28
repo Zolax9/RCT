@@ -7,6 +7,7 @@
 #include "colour.hpp"
 #include "cube.hpp"
 #include "face.hpp"
+#include "text_wrap.hpp"
 #include "tutorial.hpp"
 #include "video.hpp"
 
@@ -23,6 +24,7 @@ class UI
         Font font;
         int* codepoints;
         int codepointCount;
+        Text_wrap text_wrap;
         Tutorial tutorial;
         Cube* cube;
         Video video;

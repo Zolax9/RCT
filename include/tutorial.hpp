@@ -3,7 +3,7 @@
 
 #include "cube.hpp"
 #include "cube3D.hpp"
-#include "text.hpp"
+#include "text_wrap.hpp"
 
 #define ALG_PETAL1        std::vector<int>{ { 7, 9, 6, 10, 10, 16, 9 } }
 #define ALG_PETAL2        std::vector<int>{ { 3, 15, 4 } }
@@ -37,7 +37,7 @@ class Tutorial
 {
     public:
         Tutorial() { };
-        void Init();
+        void Init(Text_wrap* text_wrap_pointer);
 
         void Update(std::array<int, CUBE_FACE_SIZE> pred_state);
         void Draw();
@@ -117,7 +117,7 @@ class Tutorial
         Cube cube;
         Cube3D cube3D;
         RenderTexture renderTexture_cube3D;
-        Text text;
+        Text_wrap* text_wrap;
 
         int cur_face;
         int front_face;
