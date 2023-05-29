@@ -10,6 +10,10 @@ LDFLAGS:=-L lib -L raylib -lm -lraylib -lraygui -lX11 -ldl -lopencv_core -lopenc
 CFLAGS:= -g -pedantic -Wall -Wextra -Wno-missing-field-initializers
 CFLAGS+= -std=c++17 -I ./include -I raylib -I /usr/include/opencv4
 
+ifeq ($(CAMERA),OFF)
+	CFLAGS+= -DNO_CAMERA
+endif
+
 SRC:=$(wildcard src/*.cpp)
 INC:=$(wildcard include/*.hpp)
 DBGOBJ:=$(SRC:src/%.cpp=obj/debug/%.o)

@@ -18,11 +18,14 @@ void Video::Init()
     frame_image.format = PIXELFORMAT_UNCOMPRESSED_R8G8B8;
     frame_image.mipmaps = 1;
 
+#ifdef NO_CAMERA
+    frame = cv::Mat(640, 480, CV_8UC1);
+#else
     cap.open(1);
-    // check if we succeeded
-    if (!cap.isOpened()) { std::cerr << "ERROR! Unable to open camera\n"; }
+    if (!cap.isOpened()) { std::cerr << "ERROR! Unable to open camera\n"; } // check if we succeeded
 
     cap.read(frame);
+#endif
     cv::cvtColor(frame, frame_rgb, cv::COLOR_BGR2RGB);
 
     frame_image.width = frame_rgb.cols;
@@ -42,11 +45,14 @@ void Video::Update()
     if (IsKeyPressed(KEY_LEFT_CONTROL)) { visible = !visible; }
     UnloadTexture(frame_texture2D);
     
+#ifdef NO_CAMERA
+    frame = cv::Mat(640, 480, CV_8UC1);
+#else
     cap.read(frame);
-    // check if we succeeded
-    if (frame.empty()) { std::cerr << "ERROR! blank frame grabbed\n"; }
-    
+    if (frame.empty()) { std::cerr << "ERROR! blank frame grabbed\n"; } // check if we succeeded
+#endif    
     cv::cvtColor(frame, frame_rgb, cv::COLOR_BGR2RGB);
+
     frame_image.data = (void*)(frame_rgb.data);
     frame_texture2D = LoadTextureFromImage(frame_image);
 };

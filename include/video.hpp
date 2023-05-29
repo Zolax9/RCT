@@ -25,7 +25,7 @@ class Video
         float scale;
         Vector2 pos;
 
-        cv::Mat frame;
+        cv::Mat frame; // if NO_CAMERA flag used, this is just an empty mat
         cv::Mat frame_rgb;
         cv::VideoCapture cap;
 

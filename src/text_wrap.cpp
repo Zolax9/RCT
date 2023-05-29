@@ -73,20 +73,4 @@ void Text_wrap::Set_text(std::string str)
                 break;
         }
     }
-    std::cout << "START\n";
-    for (size_t i = 0; i < prompt.size(); ++i)
-    {
-        std::cout << prompt[i] << '\n';
-    }
-    std::cout << "END\n";
 };
-
-/*
-The Maid and the Pocket Watch of 
-Blood. I wonder why the code 
-didn't work.
---------------------------------
-The Maid and the Pocket Watch of Blood. I wonder why the code didn't work.^I'm not too sure.
-
-I'll figure it out next time, I guess. Bye.
-*/
