@@ -46,7 +46,6 @@ void Text_wrap::Set_text(std::string str)
                     {
                         prompt.push_back(str.substr(s_line + 1, s_word - s_line - 1));
                         prompt.push_back(str.substr(s_word + 1, e_word - s_word - 1));
-                        std::cout << str.substr(s_word + 1, e_word - s_word - 1) << "\n\n\n";
                         s_line = e_word;
                         s_word = e_word;
                     } else {
@@ -57,7 +56,6 @@ void Text_wrap::Set_text(std::string str)
                 break;
 
             case ' ':
-                std::cout << str.substr(s_line + 1, e_word - s_line - 1) << " spaceeeeee\n";
                 if (s_line == e_word) // no word to measure, so don't measure
                 {
                     e_word = i;

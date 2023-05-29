@@ -186,6 +186,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 
                         petal_alg_shown = 2;
                         text_wrap.Set_text(prompt);
+                        std::cout << prompt << '\n';
                         show_prompt = true;
                         break;
 
@@ -220,6 +221,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 
                         white_cross_alg_shown = 2;
                         text_wrap.Set_text(prompt);
+                        std::cout << prompt << '\n';
                         show_prompt = true;
                         break;
 
@@ -263,6 +265,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 
                         top_layer_alg_shown = 2;
                         text_wrap.Set_text(prompt);
+                        std::cout << prompt << '\n';
                         show_prompt = true;
                         break;
 
@@ -296,6 +299,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 
                         middle_layer_alg_shown = 2;
                         text_wrap.Set_text(prompt);
+                        std::cout << prompt << '\n';
                         show_prompt = true;
                         break;
 
@@ -328,6 +332,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 
                         yellow_cross_alg_shown = 2;
                         text_wrap.Set_text(prompt);
+                        std::cout << prompt << '\n';
                         show_prompt = true;
                         break;
 
@@ -356,6 +361,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 
                         yellow_corners_alg_shown = 2;
                         text_wrap.Set_text(prompt);
+                        std::cout << prompt << '\n';
                         show_prompt = true;
                         break;
 
@@ -384,6 +390,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 
                         pll_corners_alg_shown = 2;
                         text_wrap.Set_text(prompt);
+                        std::cout << prompt << '\n';
                         show_prompt = true;
                         break;
 
@@ -418,6 +425,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 
                         pll_edges_alg_shown = 2;
                         text_wrap.Set_text(prompt);
+                        std::cout << prompt << '\n';
                         show_prompt = true;
                         break;
 
@@ -875,12 +883,10 @@ int Tutorial::get_petal_alg(Coord petal)
     switch (petal_setup_alg.size())
     {
         case 0:
-            std::cout << "No setup alg as petal already at white face\n";
             prompt = "No setup alg as petal is ready to be moved to yellow face";
             break;
 
         default: 
-            std::cout << "Move whole cube so front face is " << Cube_face_str(petal.f) << "\n\n";
             prompt = "Move the cube so the ";
             prompt.append(Cube_face_str(petal.f));
             prompt.append("face is facing you\nSetup algorithm:\n");
@@ -888,9 +894,7 @@ int Tutorial::get_petal_alg(Coord petal)
             break;
 
     }
-    std::cout << "Move whole cube so front face is " << Cube_face_str(loop(slot_edge + 2, CUBE_GREEN, CUBE_BLUE)) << "\n\n";
-    std::cout << "Move alg: " << Cube_notation_str(petal_move_alg) << "\n\n";
-    prompt = "Move the cube so the ";
+    prompt.append("\nMove the cube so the ");
     prompt.append(Cube_face_str(loop(slot_edge + 2, CUBE_GREEN, CUBE_BLUE)));
     prompt.append("face is facing you\nMove algorithm:\n");
     prompt.append(Cube_notation_str(petal_move_alg));
