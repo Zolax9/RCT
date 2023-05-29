@@ -55,8 +55,8 @@ class Tutorial
         void set_orient(int val); // sets orient of cube3D as well
 
         std::array<bool, B_SIZE> buttons; // holds state (pressed or released) of all buttons
-        std::vector<std::string> prompts; // instructions printed to user
-        bool prompt; // true = show prompt, false = hide prompt
+        std::string prompt; // instruction printed to user
+        bool show_prompt; // true = show prompt, false = hide prompt
 
         // 0 - 1 = previous, next
         // 2 = finish

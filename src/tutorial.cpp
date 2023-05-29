@@ -22,8 +22,9 @@ void Tutorial::Init(Text_wrap* text_wrap_pointer)
     orient = 0;
 
     buttons = make_array<B_SIZE>(false);
-    text_wrap.Set_text("Good salutations to the universe!");
-    prompt = false;
+    prompt = "N/A";
+    text_wrap.Set_text(prompt);
+    show_prompt = false;
 
     petal_setup_alg = std::vector<int>();
     petal_move_alg = std::vector<int>();
@@ -184,7 +185,8 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         if (petal_move_alg.size() == 0) { std::cout << "Petal alg not found!\n"; }
 
                         petal_alg_shown = 2;
-                        prompt = true;
+                        text_wrap.Set_text(prompt);
+                        show_prompt = true;
                         break;
 
                     case 2:
@@ -193,7 +195,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         if (petals_count == 4) { next_step(); }
 
                         petal_alg_shown = 1;
-                        prompt = false;
+                        show_prompt = false;
                         break;
 
                 }
@@ -217,7 +219,8 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         if (white_cross_alg.size() == 0) { std::cout << "White cross alg not found!\n"; }
 
                         white_cross_alg_shown = 2;
-                        prompt = true;
+                        text_wrap.Set_text(prompt);
+                        show_prompt = true;
                         break;
 
                     case 2:
@@ -226,7 +229,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         if (white_cross_count == 4) { next_step(); }
 
                         white_cross_alg_shown = 1;
-                        prompt = false;
+                        show_prompt = false;
                         break;
                 }
             }
@@ -259,7 +262,8 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         }
 
                         top_layer_alg_shown = 2;
-                        prompt = true;
+                        text_wrap.Set_text(prompt);
+                        show_prompt = true;
                         break;
 
                     case 2:
@@ -268,7 +272,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         if (top_layer_count == 4) { next_step(); }
 
                         top_layer_alg_shown = 1;
-                        prompt = false;
+                        show_prompt = false;
                         break;
                 }
             }
@@ -291,7 +295,8 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         if (middle_layer_move_algs.size() == 0) { std::cout << "Edge alg not found!\n"; }
 
                         middle_layer_alg_shown = 2;
-                        prompt = true;
+                        text_wrap.Set_text(prompt);
+                        show_prompt = true;
                         break;
 
                     case 2:
@@ -300,7 +305,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         if (middle_layer_count == 4) { next_step(); }
 
                         middle_layer_alg_shown = 1;
-                        prompt = false;
+                        show_prompt = false;
                         break;
                 }
             }
@@ -322,12 +327,13 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         get_yellow_cross_alg();
 
                         yellow_cross_alg_shown = 2;
-                        prompt = true;
+                        text_wrap.Set_text(prompt);
+                        show_prompt = true;
                         break;
 
                     case 2:
                         permute_yellow_cross();
-                        prompt = false;
+                        show_prompt = false;
                         next_step();
                         break;
                 }
@@ -349,12 +355,13 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         set_front_face(yellow_corners_front_face);
 
                         yellow_corners_alg_shown = 2;
-                        prompt = true;
+                        text_wrap.Set_text(prompt);
+                        show_prompt = true;
                         break;
 
                     case 2:
                         permute_yellow_corners();
-                        prompt = false;
+                        show_prompt = false;
                         next_step();
                         break;
                 }
@@ -376,12 +383,13 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         set_front_face(pll_corners_front_face);
 
                         pll_corners_alg_shown = 2;
-                        prompt = true;
+                        text_wrap.Set_text(prompt);
+                        show_prompt = true;
                         break;
 
                     case 2:
                         permute_pll_corners();
-                        prompt = false;
+                        show_prompt = false;
                         next_step();
                         break;
                 }
@@ -409,12 +417,13 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         set_front_face(pll_edges_front_faces[0]);
 
                         pll_edges_alg_shown = 2;
-                        prompt = true;
+                        text_wrap.Set_text(prompt);
+                        show_prompt = true;
                         break;
 
                     case 2:
                         permute_pll_edges();
-                        prompt = false;
+                        show_prompt = false;
                         next_step();
                         break;
                 }
@@ -867,35 +876,24 @@ int Tutorial::get_petal_alg(Coord petal)
     {
         case 0:
             std::cout << "No setup alg as petal already at white face\n";
-            /*
-            prompts.push_back("No setup alg as petal is ready to");
-            prompts.push_back("be moved to yellow face");
-            */
+            prompt = "No setup alg as petal is ready to be moved to yellow face";
             break;
 
         default: 
             std::cout << "Move whole cube so front face is " << Cube_face_str(petal.f) << "\n\n";
-            /*
-            prompts.push_back("Move the cube so the ");
-            prompts[0].append(Cube_face_str(petal.f));
-            prompts[0].append("face");
-            prompts.push_back("is facing you");
-            prompts.push_back("Setup algorithm:");
-            prompts.push_back(Cube_notation_str(petal_setup_alg));
-            */
+            prompt = "Move the cube so the ";
+            prompt.append(Cube_face_str(petal.f));
+            prompt.append("face is facing you\nSetup algorithm:\n");
+            prompt.append(Cube_notation_str(petal_setup_alg));
             break;
 
     }
     std::cout << "Move whole cube so front face is " << Cube_face_str(loop(slot_edge + 2, CUBE_GREEN, CUBE_BLUE)) << "\n\n";
     std::cout << "Move alg: " << Cube_notation_str(petal_move_alg) << "\n\n";
-    /*
-    prompts.push_back("Move the cube so the ");
-    prompts[prompts.size() - 1].append(Cube_face_str(loop(slot_edge + 2, CUBE_GREEN, CUBE_BLUE)));
-    prompts[prompts.size() - 1].append("face");
-    prompts.push_back("is facing you");
-    prompts.push_back("Move algorithm:");
-    prompts.push_back(Cube_notation_str(petal_move_alg));
-    */
+    prompt = "Move the cube so the ";
+    prompt.append(Cube_face_str(loop(slot_edge + 2, CUBE_GREEN, CUBE_BLUE)));
+    prompt.append("face is facing you\nMove algorithm:\n");
+    prompt.append(Cube_notation_str(petal_move_alg));
     return slot_edge;
 };
 void Tutorial::move_petal(int petal_edge, int slot_edge)
