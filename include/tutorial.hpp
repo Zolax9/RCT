@@ -117,7 +117,7 @@ class Tutorial
         Cube cube;
         Cube3D cube3D;
         RenderTexture renderTexture_cube3D;
-        Text_wrap* text_wrap;
+        Text_wrap text_wrap;
 
         int cur_face;
         int front_face;

@@ -13,8 +13,7 @@ void Tutorial::Init(Text_wrap* text_wrap_pointer)
 {
     cube3D.Init(get_cube_pointer());
     renderTexture_cube3D = LoadRenderTexture(320, 320);
-    text_wrap = text_wrap_pointer;
-    text_wrap->Set_text("test");
+    text_wrap.Init(INSTR_SIZE, INSTR_SIZE, 568);
 
     step = -1;
     next_step();
@@ -23,7 +22,7 @@ void Tutorial::Init(Text_wrap* text_wrap_pointer)
     orient = 0;
 
     buttons = make_array<B_SIZE>(false);
-    prompts = std::vector<std::string>{ "testing", "this should work", "line break\nworks\nlike this" };
+    text_wrap.Set_text("Good salutations to the universe!");
     prompt = false;
 
     petal_setup_alg = std::vector<int>();
@@ -431,7 +430,6 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 void Tutorial::Draw()
 {
     GuiSetState(STATE_NORMAL); // TODO: may be redundant (may be done each frame)
-    text_wrap->Draw(0, 0);
 
     if (step != 0)
     {
@@ -506,13 +504,7 @@ void Tutorial::Draw()
             WHITE
         );
 
-        if (prompt)
-        {
-            for (int i = 0; i < prompts.size(); ++i)
-            {
-                DrawText(prompts[i].c_str(), 8, HEADER_SIZE + i * INSTR_SIZE, INSTR_SIZE, DARKGRAY);
-            }
-        }
+        text_wrap.Draw(8, 48);
     }
 };
 
@@ -531,7 +523,6 @@ void Tutorial::next_step()
     int pll_edges_count;
     if (step == 0) { cube3D.Set_state(); } // cube3D has initial cube state if scanning just finished
     bool increment = true; // Whether or not to continue incrementing to next steps (may need to increment through multiple steps)
-    prompts = std::vector<std::string>();
 
     while (increment)
     {
@@ -876,29 +867,35 @@ int Tutorial::get_petal_alg(Coord petal)
     {
         case 0:
             std::cout << "No setup alg as petal already at white face\n";
+            /*
             prompts.push_back("No setup alg as petal is ready to");
             prompts.push_back("be moved to yellow face");
+            */
             break;
 
         default: 
             std::cout << "Move whole cube so front face is " << Cube_face_str(petal.f) << "\n\n";
+            /*
             prompts.push_back("Move the cube so the ");
             prompts[0].append(Cube_face_str(petal.f));
             prompts[0].append("face");
             prompts.push_back("is facing you");
             prompts.push_back("Setup algorithm:");
             prompts.push_back(Cube_notation_str(petal_setup_alg));
+            */
             break;
 
     }
     std::cout << "Move whole cube so front face is " << Cube_face_str(loop(slot_edge + 2, CUBE_GREEN, CUBE_BLUE)) << "\n\n";
     std::cout << "Move alg: " << Cube_notation_str(petal_move_alg) << "\n\n";
+    /*
     prompts.push_back("Move the cube so the ");
     prompts[prompts.size() - 1].append(Cube_face_str(loop(slot_edge + 2, CUBE_GREEN, CUBE_BLUE)));
     prompts[prompts.size() - 1].append("face");
     prompts.push_back("is facing you");
     prompts.push_back("Move algorithm:");
     prompts.push_back(Cube_notation_str(petal_move_alg));
+    */
     return slot_edge;
 };
 void Tutorial::move_petal(int petal_edge, int slot_edge)

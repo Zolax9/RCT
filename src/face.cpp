@@ -57,7 +57,7 @@ void Face::Init(cv::Mat* _frame, Vector2 videoSize, float _videoScale, Cube* _cu
             });
             pred_preview.push_back(Rectangle{
                 screenW - PREDPREVIEW_SIZE * 2 + (x - 1.5) * PREDPREVIEW_SIZE,
-                screenH - PREDPREVIEW_SIZE * 2 - (y - 1.5) * PREDPREVIEW_SIZE,
+                screenH - PREDPREVIEW_SIZE * 2 + (y - 1.5) * PREDPREVIEW_SIZE,
                 PREDPREVIEW_SIZE,
                 PREDPREVIEW_SIZE
             });
@@ -159,7 +159,7 @@ std::array<int, CUBE_FACE_SIZE> Face::Update()
         avgCols.push_back(cv::mean(roi));
     }
     predCols = Colour_getColours(avgCols);
-    predCols[4] = *cur_face;
+    predCols[4] = *cur_face; // centre piece
 
     return predCols;
 };
