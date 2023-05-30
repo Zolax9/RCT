@@ -508,3 +508,51 @@ std::string Cube_face_str(std::vector<int> f)
     }
     return str;
 };
+
+std::array<int, 2> Cube_invert_edge(int f, int i)
+{
+    switch (f)
+    {
+        case F_U:
+            return std::array<int, 2>{ {
+                4 - i,
+                0
+            } };
+
+        case F_L:
+            return std::array<int, 2>{ {
+                L_FACES[loop(4 - i, 0, 3)],
+                (i == 3) ? 1 : 3
+            } };
+
+        case F_F:
+            return std::array<int, 2>{ {
+                F_FACES[loop(4 - i, 0, 3)],
+                loop(i + 2, 0, 3)
+            } };
+
+        case F_R:
+            return std::array<int, 2>{ {
+                R_FACES[loop(4 - i, 0, 3)],
+                (i == 1) ? 3 : 1
+            } };
+
+        case F_B:
+            return std::array<int, 2>{ {
+                B_FACES[loop(4 - i, 0, 3)],
+                loop(4 - i, 0, 3)
+            } };
+
+        case F_D:
+            return std::array<int, 2>{ {
+                loop(i + 2, CUBE_ORANGE, CUBE_BLUE),
+                2
+            } };
+
+        default:
+            return std::array<int, 2>{ {
+                6,
+                4
+            } };
+    }
+};

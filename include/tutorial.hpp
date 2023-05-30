@@ -53,6 +53,7 @@ class Tutorial
         void next_step();
         void set_front_face(int val); // sets front_face of cube3D as well
         void set_orient(int val); // sets orient of cube3D as well
+        void set_prompt(); // wrapper for text_wrap(prompt) and std::cout prompt
 
         std::array<bool, B_SIZE> buttons; // holds state (pressed or released) of all buttons
         std::string prompt; // instruction printed to user

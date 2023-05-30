@@ -23,7 +23,7 @@ void Tutorial::Init(Text_wrap* text_wrap_pointer)
 
     buttons = make_array<B_SIZE>(false);
     prompt = "N/A";
-    text_wrap.Set_text(prompt);
+    set_prompt();
     show_prompt = false;
 
     petal_setup_alg = std::vector<int>();
@@ -174,19 +174,19 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         next_petal = find_petal();
                         if (next_petal.f == CUBE_SIZE)
                         {
-                            std::cout << "Petal not found!\n";
-                            std::cout << "Presuming the petal is already created.\n";
+                            prompt = "Petal not found!\nPresuming the petal is already created\n";
+                            set_prompt();
                             petals_count = 4;
                             next_step();
                             break;
                         }
+
                         petal_slot_edge = get_petal_alg(next_petal);
                         set_front_face(loop(petal_slot_edge + 2, 1, 4));
-                        if (petal_move_alg.size() == 0) { std::cout << "Petal alg not found!\n"; }
+                        if (petal_move_alg.size() == 0) { prompt = "Petal alg not found!\n"; }
 
                         petal_alg_shown = 2;
-                        text_wrap.Set_text(prompt);
-                        std::cout << prompt << '\n';
+                        set_prompt();
                         show_prompt = true;
                         break;
 
@@ -214,14 +214,13 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                 {
                     case 1:
                         next_white_cross = find_white_cross();
-                        if (next_white_cross == -1) { std::cout << "White sticker from petal not found!\n"; }
+                        if (next_white_cross == -1) { prompt = "White edge not found!\n"; }
                         white_cross_front_face = get_white_cross_alg(next_white_cross);
                         set_front_face(white_cross_front_face);
-                        if (white_cross_alg.size() == 0) { std::cout << "White cross alg not found!\n"; }
+                        if (white_cross_alg.size() == 0) { prompt = "White cross alg not found!\n"; }
 
                         white_cross_alg_shown = 2;
-                        text_wrap.Set_text(prompt);
-                        std::cout << prompt << '\n';
+                        set_prompt();
                         show_prompt = true;
                         break;
 
@@ -264,8 +263,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         }
 
                         top_layer_alg_shown = 2;
-                        text_wrap.Set_text(prompt);
-                        std::cout << prompt << '\n';
+                        set_prompt();
                         show_prompt = true;
                         break;
 
@@ -298,8 +296,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         if (middle_layer_move_algs.size() == 0) { std::cout << "Edge alg not found!\n"; }
 
                         middle_layer_alg_shown = 2;
-                        text_wrap.Set_text(prompt);
-                        std::cout << prompt << '\n';
+                        set_prompt();
                         show_prompt = true;
                         break;
 
@@ -331,8 +328,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         get_yellow_cross_alg();
 
                         yellow_cross_alg_shown = 2;
-                        text_wrap.Set_text(prompt);
-                        std::cout << prompt << '\n';
+                        set_prompt();
                         show_prompt = true;
                         break;
 
@@ -360,8 +356,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         set_front_face(yellow_corners_front_face);
 
                         yellow_corners_alg_shown = 2;
-                        text_wrap.Set_text(prompt);
-                        std::cout << prompt << '\n';
+                        set_prompt();
                         show_prompt = true;
                         break;
 
@@ -389,8 +384,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         set_front_face(pll_corners_front_face);
 
                         pll_corners_alg_shown = 2;
-                        text_wrap.Set_text(prompt);
-                        std::cout << prompt << '\n';
+                        set_prompt();
                         show_prompt = true;
                         break;
 
@@ -424,8 +418,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         set_front_face(pll_edges_front_faces[0]);
 
                         pll_edges_alg_shown = 2;
-                        text_wrap.Set_text(prompt);
-                        std::cout << prompt << '\n';
+                        set_prompt();
                         show_prompt = true;
                         break;
 
@@ -521,7 +514,7 @@ void Tutorial::Draw()
             WHITE
         );
 
-        text_wrap.Draw(8, 48);
+        text_wrap.Draw(8, HEADER_SIZE);
     }
 };
 
@@ -565,6 +558,8 @@ void Tutorial::next_step()
                     false
                 ).size() == 4)
                 {
+                    prompt = "Cross already created!\n";
+                    set_prompt();
                     ++step;
                     increment = true;
                     break;
@@ -580,15 +575,19 @@ void Tutorial::next_step()
                 ).size();
                 if (petals_count == 4)
                 {
+                    prompt = "Daisy already created!\n";
+                    set_prompt();
                     increment = true;
                     break;
                 }
+                prompt = "Move white edges into the petal\n";
+                prompt.append(std::to_string(petals_count));
+                prompt.append("/4 petals for the daisy already in yellow face");
+                set_prompt();
 
                 set_orient(2);
                 petal_alg_shown = 0;
                 cube3D.Set_orient(orient);
-                std::cout << petals_count << " petals already done\n";
-                std::cout << "Move whole cube so up (top) face is Yellow\n";
                 break;
 
             case 2:
@@ -603,14 +602,17 @@ void Tutorial::next_step()
                 ).size();
                 if (white_cross_count == 4)
                 {
+                    prompt = "White cross already created!\n";
+                    set_prompt();
                     increment = true;
                     break;
                 }
+                prompt = "Create white cross with the petal\n";
+                set_prompt();
 
                 set_orient(0);
                 white_cross_alg_shown = 0;
                 white_cross_count = 0;
-                std::cout << "Move whole cube so up (top) face is White\n\n";
                 break;
 
             case 3:
@@ -635,9 +637,15 @@ void Tutorial::next_step()
                 }
                 if (top_layer_count == 4)
                 {
+                    prompt = "White layer already done!\n";
+                    set_prompt();
                     increment = true;
                     break;
                 }
+                prompt = "Move white corners into white face\n";
+                prompt.append(std::to_string(top_layer_count));
+                prompt.append("/4 corners already in white face");
+                set_prompt();
 
                 set_orient(0);
                 top_layer_setup_alg = std::vector<int>();
@@ -661,9 +669,15 @@ void Tutorial::next_step()
                 }
                 if (middle_layer_count == 4)
                 {
+                    prompt = "Middle layer already done!\n";
+                    set_prompt();
                     increment = true;
                     break;
                 }
+                prompt = "Move correct corners into middle layer\n";
+                prompt.append(std::to_string(middle_layer_count));
+                prompt.append("/4 corners already in middle layer");
+                set_prompt();
 
                 set_orient(2);
                 middle_layer_setup_alg = std::vector<int>();
@@ -686,9 +700,13 @@ void Tutorial::next_step()
                     false
                 ).size() == 4)
                 {
+                    prompt = "Yellow cross already done!\n";
+                    set_prompt();
                     increment = true;
                     break;
                 }
+                prompt = "Create yellow cross\n";
+                set_prompt();
 
                 set_orient(2);
                 yellow_cross_setup_algs = std::vector<std::vector<int>>();
@@ -709,9 +727,13 @@ void Tutorial::next_step()
                     false
                 ).size() == 4)
                 {
+                    prompt = "Yellow layer already done!\n";
+                    set_prompt();
                     increment = true;
                     break;
                 }
+                prompt = "Orient yellow corners to finish yellow layer\n";
+                set_prompt();
 
                 set_orient(2);
                 yellow_corners_setup_algs = std::vector<std::vector<int>>();
@@ -734,9 +756,13 @@ void Tutorial::next_step()
                 }
                 if (pll_corners_count == 4)
                 {
+                    prompt = "Yellow corners already done!\n";
+                    set_prompt();
                     increment = true;
                     break;
                 }
+                prompt = "Permute yellow corners into correct positions\n";
+                set_prompt();
 
                 set_orient(2);
                 pll_corners_setup_alg = std::vector<int>();
@@ -790,11 +816,17 @@ void Tutorial::next_step()
                         pll_edges_front_faces.push_back(loop(front_face, 1, 4));
                         pll_edges_setup_algs.push_back(get_pll_edges_setup_alg(pll_edges_front_faces[0], cube.get_corner(pll_edges_front_faces[0], 2)));
 
-                        std::cout << "Move whole cube so front face is " << Cube_face_str(pll_edges_front_faces[0]) << '\n';
-                        std::cout << "Setup alg: " << Cube_notation_str(pll_edges_setup_algs[0]) << '\n';
+                        prompt = "Yellow layer already done!\n";
+                        prompt.append("Move the cube so the ");
+                        prompt.append(Cube_face_str(pll_edges_front_faces[0]));
+                        prompt.append("face is facing you\nSetup algorithm:\n");
+                        prompt.append(Cube_notation_str(pll_edges_setup_algs[0]));
+                        set_prompt();
                     }
                     // if size == 8, bottom, middle, and top layer is solved and one face as well, so cube is already solved
                 }
+                prompt = "Move yellow edges into correct positions\n";
+                set_prompt();
 
                 set_orient(2);
                 pll_edges_move_algs = std::vector<std::vector<int>>();
@@ -802,6 +834,9 @@ void Tutorial::next_step()
                 break;
 
             case 9:
+                prompt = "N/A";
+                set_prompt();
+
                 cube3D.Set_orbital(true);
                 break;
         }
@@ -823,6 +858,11 @@ void Tutorial::set_orient(int val)
         cube3D.Set_orient(val);
     }
     orient = val;
+};
+void Tutorial::set_prompt()
+{
+    text_wrap.Set_text(prompt);
+    std::cout << prompt << '\n';
 };
 
 Coord Tutorial::find_petal()
@@ -846,6 +886,7 @@ int Tutorial::get_petal_alg(Coord petal)
     int petal_edge = Cube_to_edge(petal);
     std::array<int, 4> edges = cube.get_edges(CUBE_YELLOW);
     int slot_edge; // edge index of empty petal at yellow face (not white)
+    std::array<int, 2> invert_edge; // opposite edge (used in prompt)
 
     for (slot_edge = 0; slot_edge < 4; ++slot_edge)
     {
@@ -879,15 +920,20 @@ int Tutorial::get_petal_alg(Coord petal)
             move_petal(4 - petal.f, slot_edge);
             break;
     }
+    
+    invert_edge = Cube_invert_edge(petal.f, petal_edge);
 
+    prompt = "Insert the White-";
+    prompt.append(Cube_face_str(cube.get_edge(invert_edge[0], invert_edge[1])));
+    prompt.append("edge to the daisy in the yellow face:\n");
     switch (petal_setup_alg.size())
     {
         case 0:
-            prompt = "No setup alg as petal is ready to be moved to yellow face";
+            prompt.append("No setup algorithm needed as petal is ready to be moved to yellow face");
             break;
 
         default: 
-            prompt = "Move the cube so the ";
+            prompt.append("Move the cube so the ");
             prompt.append(Cube_face_str(petal.f));
             prompt.append("face is facing you\nSetup algorithm:\n");
             prompt.append(Cube_notation_str(petal_setup_alg));
@@ -938,28 +984,30 @@ int Tutorial::get_white_cross_alg(int white_cross_edge)
     int white_cross_front_face; // Front face to do alg at
     int slot_edge; // edge index of empty edge for cross at white face
 
-    white_cross_front_face = cube.get_edge(loop(white_cross_edge + 2, 1, 4), 2);
+    white_cross_front_face = cube.get_edge(loop(white_cross_edge + 2, CUBE_WHITE, CUBE_YELLOW), 2);
     slot_edge = 4 - white_cross_front_face;
-
-    std::cout << "White cross front face: " << white_cross_front_face << '\n';
-    std::cout << "Slot edge: " << slot_edge << "\n\n";
-
     move_white_cross(white_cross_edge, slot_edge);
-    std::cout << "Move whole cube so front face is " << Cube_face_str(white_cross_front_face) << "\n\n";
+
+    prompt = "Insert the White-";
+    prompt.append(Cube_face_str(white_cross_front_face));
+    prompt.append("edge to the white cross:\nMove the cube so the ");
+    prompt.append(Cube_face_str(white_cross_front_face));
+    prompt.append("face is facing you\n");
     
     switch (white_cross_alg.size())
     {
         case 0:
-            std::cout << "No setup alg as white sticker of cross already directly under correct position\n";
+            prompt.append("No setup algorithm needed as white edge is ready to be moved to white cross");
             break;
 
         default: 
-            std::cout << "Setup alg: " << Cube_notation_str(white_cross_alg) << '\n';
+            prompt.append("Setup algorithm: ");
+            prompt.append(Cube_notation_str(white_cross_alg));
             break;
     }
 
     white_cross_alg.push_back(M_F2);
-    std::cout << "Move alg: F2\n\n";
+    prompt.append("\nMove algorithm: F2");
 
     return white_cross_front_face;
 };
