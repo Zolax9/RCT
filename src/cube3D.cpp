@@ -601,4 +601,8 @@ void Cube3D::new_orientation()
     }
 };
 
-void Cube3D::Set_orbital(bool val) { orbital = val; }
+void Cube3D::Set_orbital(bool val)
+{
+    orbital = val;
+    if (!orbital) { camera.position = (Vector3){ 0.0f, 3.75f, 5.0f }; }
+}

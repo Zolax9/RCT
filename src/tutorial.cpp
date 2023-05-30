@@ -118,7 +118,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
         IsKeyPressed(KEY_R)
     ) {
         buttons[B_RESET] = false;
-        cube3D.Clear_buffer();
+        cube3D.Finish_move();
         step = -1;
         next_step();
         return;
