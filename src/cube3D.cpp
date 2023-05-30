@@ -91,7 +91,6 @@ void Cube3D::Update(bool fast_forward)
                 buffer_index = -1;
 
                 Clear_buffer();
-                new_orientation();
             } else {
                 buffer_index = -1;
                 front_face = front_faces[alg_index];

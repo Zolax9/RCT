@@ -22,9 +22,8 @@ void Tutorial::Init(Text_wrap* text_wrap_pointer)
     orient = 0;
 
     buttons = make_array<B_SIZE>(false);
-    prompt = "N/A";
+    prompt = "";
     set_prompt();
-    show_prompt = false;
 
     petal_setup_alg = std::vector<int>();
     petal_move_alg = std::vector<int>();
@@ -174,7 +173,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         next_petal = find_petal();
                         if (next_petal.f == CUBE_SIZE)
                         {
-                            prompt = "Petal not found!\nPresuming the petal is already created\n";
+                            prompt = "Petal not found!\nPresuming the petal is already created";
                             set_prompt();
                             petals_count = 4;
                             next_step();
@@ -183,11 +182,10 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 
                         petal_slot_edge = get_petal_alg(next_petal);
                         set_front_face(loop(petal_slot_edge + 2, 1, 4));
-                        if (petal_move_alg.size() == 0) { prompt = "Petal alg not found!\n"; }
+                        if (petal_move_alg.size() == 0) { prompt = "Algorithm not found!"; }
 
                         petal_alg_shown = 2;
                         set_prompt();
-                        show_prompt = true;
                         break;
 
                     case 2:
@@ -196,7 +194,6 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         if (petals_count == 4) { next_step(); }
 
                         petal_alg_shown = 1;
-                        show_prompt = false;
                         break;
 
                 }
@@ -214,14 +211,17 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                 {
                     case 1:
                         next_white_cross = find_white_cross();
-                        if (next_white_cross == -1) { prompt = "White edge not found!\n"; }
+                        if (next_white_cross == -1)
+                        {
+                            prompt = "White edge not found!";
+                            break;
+                        }
                         white_cross_front_face = get_white_cross_alg(next_white_cross);
                         set_front_face(white_cross_front_face);
-                        if (white_cross_alg.size() == 0) { prompt = "White cross alg not found!\n"; }
+                        if (white_cross_alg.size() == 0) { prompt = "Algorithm not found!"; }
 
                         white_cross_alg_shown = 2;
                         set_prompt();
-                        show_prompt = true;
                         break;
 
                     case 2:
@@ -230,7 +230,6 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         if (white_cross_count == 4) { next_step(); }
 
                         white_cross_alg_shown = 1;
-                        show_prompt = false;
                         break;
                 }
             }
@@ -248,9 +247,13 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                     case 1:
                         top_layer_intermediate_face = -1;
                         find_top_layer();
-                        if (next_top_layer.f == 6) { std::cout << "White corner not found!\n"; }
+                        if (next_top_layer.f == 6)
+                        {
+                            prompt = "White corner not found!";
+                            break;
+                        }
                         get_top_layer_alg();
-                        if (top_layer_move_alg.size() == 0) { std::cout << "White corner alg not found!\n"; }
+                        if (top_layer_move_alg.size() == 0) { prompt = "Algorithm not found!"; }
                         switch (top_layer_intermediate_face)
                         {
                             case -1:
@@ -264,7 +267,6 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 
                         top_layer_alg_shown = 2;
                         set_prompt();
-                        show_prompt = true;
                         break;
 
                     case 2:
@@ -273,7 +275,6 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         if (top_layer_count == 4) { next_step(); }
 
                         top_layer_alg_shown = 1;
-                        show_prompt = false;
                         break;
                 }
             }
@@ -290,14 +291,17 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                 {
                     case 1:
                         find_middle_layer();
-                        if (next_middle_layer.f == 6) { std::cout << "Edge not found!\n"; }
+                        if (next_middle_layer.f == 6)
+                        {
+                            prompt = "Middle edge not found!";
+                            break;
+                        }
                         set_front_face(next_middle_layer.f);
                         get_middle_layer_alg();
-                        if (middle_layer_move_algs.size() == 0) { std::cout << "Edge alg not found!\n"; }
+                        if (middle_layer_move_algs.size() == 0) { prompt = "Middle edge algorithm not found!"; }
 
                         middle_layer_alg_shown = 2;
                         set_prompt();
-                        show_prompt = true;
                         break;
 
                     case 2:
@@ -306,7 +310,6 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         if (middle_layer_count == 4) { next_step(); }
 
                         middle_layer_alg_shown = 1;
-                        show_prompt = false;
                         break;
                 }
             }
@@ -323,18 +326,20 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                 {
                     case 1:
                         find_yellow_cross();
-                        if (yellow_cross_case == -1) { std::cout << "Case not found!\n"; }
+                        if (yellow_cross_case == -1)
+                        {
+                            prompt = "Case not found!";
+                            break;
+                        }
                         set_front_face(yellow_cross_front_face);
                         get_yellow_cross_alg();
 
                         yellow_cross_alg_shown = 2;
                         set_prompt();
-                        show_prompt = true;
                         break;
 
                     case 2:
                         permute_yellow_cross();
-                        show_prompt = false;
                         next_step();
                         break;
                 }
@@ -357,12 +362,10 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 
                         yellow_corners_alg_shown = 2;
                         set_prompt();
-                        show_prompt = true;
                         break;
 
                     case 2:
                         permute_yellow_corners();
-                        show_prompt = false;
                         next_step();
                         break;
                 }
@@ -385,12 +388,10 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 
                         pll_corners_alg_shown = 2;
                         set_prompt();
-                        show_prompt = true;
                         break;
 
                     case 2:
                         permute_pll_corners();
-                        show_prompt = false;
                         next_step();
                         break;
                 }
@@ -419,12 +420,10 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 
                         pll_edges_alg_shown = 2;
                         set_prompt();
-                        show_prompt = true;
                         break;
 
                     case 2:
                         permute_pll_edges();
-                        show_prompt = false;
                         next_step();
                         break;
                 }
@@ -558,7 +557,7 @@ void Tutorial::next_step()
                     false
                 ).size() == 4)
                 {
-                    prompt = "Cross already created!\n";
+                    prompt = "Cross already created!";
                     set_prompt();
                     ++step;
                     increment = true;
@@ -575,7 +574,7 @@ void Tutorial::next_step()
                 ).size();
                 if (petals_count == 4)
                 {
-                    prompt = "Daisy already created!\n";
+                    prompt = "Daisy already created!";
                     set_prompt();
                     increment = true;
                     break;
@@ -602,12 +601,12 @@ void Tutorial::next_step()
                 ).size();
                 if (white_cross_count == 4)
                 {
-                    prompt = "White cross already created!\n";
+                    prompt = "White cross already created!";
                     set_prompt();
                     increment = true;
                     break;
                 }
-                prompt = "Create white cross with the petal\n";
+                prompt = "Create white cross with the petal";
                 set_prompt();
 
                 set_orient(0);
@@ -637,7 +636,7 @@ void Tutorial::next_step()
                 }
                 if (top_layer_count == 4)
                 {
-                    prompt = "White layer already done!\n";
+                    prompt = "White layer already done!";
                     set_prompt();
                     increment = true;
                     break;
@@ -669,7 +668,7 @@ void Tutorial::next_step()
                 }
                 if (middle_layer_count == 4)
                 {
-                    prompt = "Middle layer already done!\n";
+                    prompt = "Middle layer already done!";
                     set_prompt();
                     increment = true;
                     break;
@@ -700,12 +699,12 @@ void Tutorial::next_step()
                     false
                 ).size() == 4)
                 {
-                    prompt = "Yellow cross already done!\n";
+                    prompt = "Yellow cross already done!";
                     set_prompt();
                     increment = true;
                     break;
                 }
-                prompt = "Create yellow cross\n";
+                prompt = "Create yellow cross";
                 set_prompt();
 
                 set_orient(2);
@@ -727,12 +726,12 @@ void Tutorial::next_step()
                     false
                 ).size() == 4)
                 {
-                    prompt = "Yellow layer already done!\n";
+                    prompt = "Yellow layer already done!";
                     set_prompt();
                     increment = true;
                     break;
                 }
-                prompt = "Orient yellow corners to finish yellow layer\n";
+                prompt = "Orient yellow corners to finish yellow layer";
                 set_prompt();
 
                 set_orient(2);
@@ -756,12 +755,12 @@ void Tutorial::next_step()
                 }
                 if (pll_corners_count == 4)
                 {
-                    prompt = "Yellow corners already done!\n";
+                    prompt = "Yellow corners already done!";
                     set_prompt();
                     increment = true;
                     break;
                 }
-                prompt = "Permute yellow corners into correct positions\n";
+                prompt = "Permute yellow corners into correct positions";
                 set_prompt();
 
                 set_orient(2);
@@ -825,7 +824,7 @@ void Tutorial::next_step()
                     }
                     // if size == 8, bottom, middle, and top layer is solved and one face as well, so cube is already solved
                 }
-                prompt = "Move yellow edges into correct positions\n";
+                prompt = "Move yellow edges into correct positions";
                 set_prompt();
 
                 set_orient(2);
@@ -834,7 +833,7 @@ void Tutorial::next_step()
                 break;
 
             case 9:
-                prompt = "N/A";
+                prompt = "";
                 set_prompt();
 
                 cube3D.Set_orbital(true);
@@ -862,7 +861,7 @@ void Tutorial::set_orient(int val)
 void Tutorial::set_prompt()
 {
     text_wrap.Set_text(prompt);
-    std::cout << prompt << '\n';
+    std::cout << prompt << "\n\n";
 };
 
 Coord Tutorial::find_petal()
@@ -984,7 +983,7 @@ int Tutorial::get_white_cross_alg(int white_cross_edge)
     int white_cross_front_face; // Front face to do alg at
     int slot_edge; // edge index of empty edge for cross at white face
 
-    white_cross_front_face = cube.get_edge(loop(white_cross_edge + 2, CUBE_WHITE, CUBE_YELLOW), 2);
+    white_cross_front_face = cube.get_edge(loop(white_cross_edge + 2, CUBE_ORANGE, CUBE_BLUE), 2);
     slot_edge = 4 - white_cross_front_face;
     move_white_cross(white_cross_edge, slot_edge);
 

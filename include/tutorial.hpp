@@ -57,7 +57,6 @@ class Tutorial
 
         std::array<bool, B_SIZE> buttons; // holds state (pressed or released) of all buttons
         std::string prompt; // instruction printed to user
-        bool show_prompt; // true = show prompt, false = hide prompt
 
         // 0 - 1 = previous, next
         // 2 = finish
