@@ -861,7 +861,7 @@ void Tutorial::set_orient(int val)
 void Tutorial::set_prompt()
 {
     text_wrap.Set_text(prompt);
-    std::cout << prompt << "\n\n";
+    if (prompt != "") { std::cout << prompt << "\n\n"; } // while output two new lines instead; somewhat ugly formatting
 };
 
 Coord Tutorial::find_petal()
