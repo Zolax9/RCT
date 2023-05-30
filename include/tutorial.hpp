@@ -5,20 +5,18 @@
 #include "cube3D.hpp"
 #include "text_wrap.hpp"
 
-#define ALG_PETAL1        std::vector<int>{ { 7, 9, 6, 10, 10, 16, 9 } }
-#define ALG_PETAL2        std::vector<int>{ { 3, 15, 4 } }
-#define ALG_PETAL3        std::vector<int>{ { 6, 10, 16, 9 } }
-#define ALG_PETAL4        std::vector<int>{ { 10, 16, 9 } }
+#define ALG_PETAL1        std::vector<int>{ { M_FP, M_R, M_F, M_RP, M_RP, M_DP, M_R } }
+#define ALG_PETAL2        std::vector<int>{ { M_L, M_D, M_LP } }
+#define ALG_PETAL3        std::vector<int>{ { M_F, M_RP, M_DP, M_R } }
+#define ALG_PETAL4        std::vector<int>{ { M_RP, M_DP, M_R } }
 #define ALG_MIDDLE_LAYER1 std::vector<int>{ { M_U, M_R, M_UP, M_RP, M_UP, M_FP, M_U, M_F } }
 #define ALG_MIDDLE_LAYER2 std::vector<int>{ { M_UP, M_LP, M_U, M_L, M_U, M_F, M_UP, M_FP } }
-#define ALG_MIDDLE_LAYER3 std::vector<int>{ { M_U, M_R, M_UP, M_RP, M_UP, M_FP, M_U, M_F } }
-#define ALG_MIDDLE_LAYER4 std::vector<int>{ { M_U, M_R, M_UP, M_RP, M_UP, M_FP, M_U, M_F } }
-#define ALG_OLL45         std::vector<int>{ { 6, 9, 0, 10, 1, 7 } }
-#define ALG_OLL44         std::vector<int>{ { 6, 0, 9, 1, 10, 7 } }
-#define ALG_SUNE          std::vector<int>{ { 9, 0, 10, 0, 9, 2, 10 } }
-#define ALG_PLLAA         std::vector<int>{ { 10, 6, 10, 14, 9, 7, 10, 14, 11 } }
-#define ALG_PLLUA         std::vector<int>{ { 8, 1, 3, 10, 8, 4, 9, 1, 8 } }
-#define ALG_PLLUB         std::vector<int>{ { 8, 0, 3, 10, 8, 4, 9, 0, 8 } }
+#define ALG_OLL45         std::vector<int>{ { M_F, M_R, M_U, M_RP, M_UP, M_FP } }
+#define ALG_OLL44         std::vector<int>{ { M_F, M_U, M_R, M_UP, M_RP, M_FP } }
+#define ALG_SUNE          std::vector<int>{ { M_R, M_U, M_RP, M_U, M_R, M_U2, M_RP } }
+#define ALG_PLLAA         std::vector<int>{ { M_RP, M_F, M_RP, M_B2, M_R, M_FP, M_RP, M_B2, M_R2 } }
+#define ALG_PLLUA         std::vector<int>{ { M_F2, M_UP, M_L, M_RP, M_F2, M_LP, M_R, M_UP, M_F2 } }
+#define ALG_PLLUB         std::vector<int>{ { M_F2, M_U, M_L, M_RP, M_F2, M_LP, M_R, M_U, M_F2 } }
 
 #define B_PREV  0
 #define B_NEXT1 1
