@@ -40,8 +40,7 @@ class UI
         // index 2 = double move? (0 = no, 1 = yes)
         std::vector<int> alg;
         std::vector<int> temp_alg; // used to hold alg directly from cube3D object
-        int buffer_index;
-        int temp_buffer_index; // used to hold buffer_index directly from cube3D object
+        int move_index;
 };
 
 #endif

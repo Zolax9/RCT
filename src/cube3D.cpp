@@ -60,6 +60,7 @@ void Cube3D::Init(Cube* _cube)
 
     Clear_buffer();
     alg_index = 0;
+    set_index = 0;
     buffer_index = -1;
     cur_move = -1;
     angle = 0;
@@ -82,24 +83,36 @@ void Cube3D::Update(bool fast_forward)
         move_buffer.size() != 0
     ) {
         ++buffer_index;
-        if (buffer_index == move_buffer[alg_index].size())
+        if (buffer_index == move_buffer[alg_index][set_index].size())
         {
-            ++alg_index;
-            if (alg_index == move_buffer.size())
+            ++set_index;
+            if (set_index == move_buffer[alg_index].size())
             {
-                alg_index = 0;
-                buffer_index = -1;
+                ++alg_index;
+                if (alg_index == move_buffer.size())
+                {
+                    alg_index = 0;
+                    set_index = 0;
+                    buffer_index = -1;
 
-                Clear_buffer();
+                    Clear_buffer();
+                } else {
+                    set_index = 0;
+                    buffer_index = -1;
+                    front_face = front_faces[alg_index][set_index];
+                    orient = orients[alg_index][set_index];
+
+                    Set_orientation();
+                }
             } else {
                 buffer_index = -1;
-                front_face = front_faces[alg_index];
-                orient = orients[alg_index];
+                front_face = front_faces[alg_index][set_index];
+                orient = orients[alg_index][set_index];
 
                 Set_orientation();
             }
         } else {
-            cur_move = move_buffer[alg_index][buffer_index];
+            cur_move = move_buffer[alg_index][set_index][buffer_index];
         }
     }
     if (cur_move != -1)
@@ -401,9 +414,9 @@ void Cube3D::Draw(int _front_face, int _orient)
     EndMode3D();
 };
 
-void Cube3D::Permute(std::vector<int> alg, int _front_face, int _orient)
+void Cube3D::Permute(std::vector<std::vector<int>> alg, std::vector<int> _front_faces, std::vector<int> _orients)
 {
-    Append_move_buffer(alg, _front_face, _orient);
+    Append_move_buffer(alg, _front_faces, _orients);
     Set_orientation();
 };
 
@@ -508,45 +521,61 @@ void Cube3D::Set_orientation()
     Update_pieces();
 };
 
-void Cube3D::Append_move_buffer(std::vector<int> alg, int _front_face, int _orient)
+void Cube3D::Append_move_buffer(std::vector<std::vector<int>> alg, std::vector<int> _front_faces, std::vector<int> _orients)
 {
     if (move_buffer.size() == 0)
     {
-        front_face = _front_face;
-        orient = _orient;
+        front_face = _front_faces[0];
+        orient = _orients[0];
     }
     move_buffer.push_back(alg);
-    front_faces.push_back(_front_face);
-    orients.push_back(_orient);
+    front_faces.push_back(_front_faces);
+    orients.push_back(_orients);
 };
 
 void Cube3D::Finish_move()
 {
     std::vector<int> alg;
+    std::vector<int> set;
     int i;
+    int j;
 
     if (move_buffer.size() != 0)
     {
-        if (cur_move != -1) { orig_state = Cube_permute(orig_state, std::vector<int>{ cur_move }, front_face, orient); }
-        if (buffer_index + 1 < move_buffer[alg_index].size()) // if last move (if no move before, then first move in alg) is not last move in current alg
+        if (cur_move != -1) { orig_state = Cube_permute(orig_state, std::vector<int>{ cur_move }, front_face, orient); } // TODO: remove this line and increment from buffer_index instead of buffer_index + 1
+        if (buffer_index + 1 < move_buffer[alg_index][set_index].size()) // if last move (if no move before, then first move in set) is not last move in current set
         {
-            // permutes rest of alg by creating temp alg vector with rest of alg not executed
-            alg = std::vector<int>();
-            for (i = buffer_index + 1; i < move_buffer[alg_index].size(); ++i) { alg.push_back(move_buffer[alg_index][i]); }
-            orig_state = Cube_permute(orig_state, alg, front_face, orient); 
+            // permutes rest of set by creating temp set vector with rest of set not executed
+            set = std::vector<int>();
+            for (i = buffer_index + 1; i < move_buffer[alg_index][set_index].size(); ++i) { set.push_back(move_buffer[alg_index][set_index][i]); }
+            orig_state = Cube_permute(orig_state, set, front_face, orient); 
+        }
+        if (set_index + 1 < move_buffer[alg_index].size()) // if last move (if no move before, then first move in set) is not last move in current set
+        {
+            // permutes rest of alg by creating temp set vector with rest of alg not executed
+            for (i = set_index + 1; i < move_buffer[alg_index].size(); ++i) { orig_state = Cube_permute(orig_state, move_buffer[alg_index][i], front_faces[alg_index][i], orients[alg_index][i]); }
+            // sets front_face and orient to front_face and orient of last executed set in alg
+            front_face = front_faces[alg_index][i - 1];
+            orient = orients[alg_index][i - 1];
         }
         if (alg_index + 1 < move_buffer.size()) // if last alg (if no alg before, then first alg) is last alg in move buffer
         {
-            for (i = alg_index + 1; i < move_buffer.size(); ++i) { orig_state = Cube_permute(orig_state, move_buffer[i], front_faces[i], orients[i]); }
-            // sets front_face and orient to front_face and orient of last executed alg in move buffer
-            i = move_buffer.size() - 1;
-            front_face = front_faces[i];
-            orient = orients[i];
+            for (i = alg_index + 1; i < move_buffer.size(); ++i)
+            {
+                for (j = 0; j < move_buffer[i].size(); ++j)
+                {
+                    orig_state = Cube_permute(orig_state, move_buffer[i][j], front_faces[i][j], orients[i][j]);
+                }
+            }
+            // sets front_face and orient to front_face and orient of last executed set of last executed alg in move buffer
+            front_face = front_faces[i - 1][j - 1];
+            orient = orients[i - 1][j - 1];
         }
         Set_orientation();
 
         Clear_buffer();
         alg_index = 0;
+        set_index = 0;
         buffer_index = -1;
         cur_move = -1;
         angle = 0;
@@ -556,10 +585,23 @@ void Cube3D::Finish_move()
 
 std::vector<int> Cube3D::get_alg()
 {
-    if (move_buffer.size() != 0) { return move_buffer[alg_index]; }
+    std::vector<int> alg;
+    if ((move_buffer.size()) && (move_buffer[alg_index].size()))
+    {
+        for (size_t i = 0; i < move_buffer[alg_index].size(); ++i)
+        {
+            alg.insert(alg.end(), move_buffer[alg_index][i].begin(), move_buffer[alg_index][i].end());
+        }
+        return alg;
+    }
     return std::vector<int>();
 };
-int Cube3D::get_buffer_index() { return buffer_index; }
+int Cube3D::get_move_index()
+{
+    size_t move_index = 0;
+    for (size_t i = 0; i < set_index; ++i) { move_index += move_buffer[alg_index][i].size(); }
+    return move_index + buffer_index;
+}
 
 void Cube3D::Set_front_face(int val)
 {
@@ -574,9 +616,9 @@ void Cube3D::Set_orient(int val)
 
 void Cube3D::Clear_buffer()
 {
-    move_buffer = std::vector<std::vector<int>>();
-    front_faces = std::vector<int>();
-    orients = std::vector<int>();
+    move_buffer = std::vector<std::vector<std::vector<int>>>();
+    front_faces = std::vector<std::vector<int>>();
+    orients = std::vector<std::vector<int>>();
 };
 
 void Cube3D::new_orientation()

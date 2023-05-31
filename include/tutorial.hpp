@@ -25,7 +25,6 @@
 #define B_NEXT2 4
 #define B_SKIP  5
 #define B_FFWD  6
-
 #define B_SIZE  7
 
 #define HEADER_SIZE 48
@@ -44,11 +43,12 @@ class Tutorial
         Cube* get_cube_pointer();
         int* get_cur_face_pointer();
         std::vector<int> get_alg(); // gets currently executed alg (Cube3D)
-        int get_buffer_index(); // gets buffer_index (Cube3D)
+        int get_move_index(); // gets move_index (Cube3D)
 
     private:
-        void permute(std::vector<int> alg, int _front_face = 2, int _orient = 0);
         void next_step();
+        void append_permute(std::vector<int> set, int _front_face = 2, int _orient = 0); // adds set to algorithm to be executed
+        void flush_permute(); // sends algorithm of sets to Cube and Cube3D
         void set_front_face(int val); // sets front_face of cube3D as well
         void set_orient(int val); // sets orient of cube3D as well
         void set_prompt(); // wrapper for text_wrap(prompt) and std::cout prompt
@@ -120,6 +120,9 @@ class Tutorial
         int cur_face;
         int front_face;
         int orient;
+        std::vector<std::vector<int>> alg; // alg to be executed once flushed
+        std::vector<int> front_faces; // front_faces of alg
+        std::vector<int> orients; // orients of alg
 
         int step;
         // Step 0 = Scan cube

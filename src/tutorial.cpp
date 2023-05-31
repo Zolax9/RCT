@@ -85,24 +85,24 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 #ifdef DEBUG
     if (step > 0)
     {
-        if (IsKeyPressed(KEY_U)) { cube3D.Permute(std::vector<int>{ { M_U } }, front_face, orient); }
-        if (IsKeyPressed(KEY_Y)) { cube3D.Permute(std::vector<int>{ { M_UP } }, front_face, orient); }
-        if (IsKeyPressed(KEY_I)) { cube3D.Permute(std::vector<int>{ { M_U2 } }, front_face, orient); }
-        if (IsKeyPressed(KEY_L)) { cube3D.Permute(std::vector<int>{ { M_L } }, front_face, orient); }
-        if (IsKeyPressed(KEY_K)) { cube3D.Permute(std::vector<int>{ { M_LP } }, front_face, orient); }
-        if (IsKeyPressed(KEY_SEMICOLON)) { cube3D.Permute(std::vector<int>{ { M_L2 } }, front_face, orient); }
-        if (IsKeyPressed(KEY_F)) { cube3D.Permute(std::vector<int>{ { M_F } }, front_face, orient); }
-        if (IsKeyPressed(KEY_C)) { cube3D.Permute(std::vector<int>{ { M_FP } }, front_face, orient); }
-        if (IsKeyPressed(KEY_G)) { cube3D.Permute(std::vector<int>{ { M_F2 } }, front_face, orient); }
-        if (IsKeyPressed(KEY_FOUR)) { cube3D.Permute(std::vector<int>{ { M_R } }, front_face, orient); }
-        if (IsKeyPressed(KEY_E)) { cube3D.Permute(std::vector<int>{ { M_RP } }, front_face, orient); }
-        if (IsKeyPressed(KEY_T)) { cube3D.Permute(std::vector<int>{ { M_R2 } }, front_face, orient); }
-        if (IsKeyPressed(KEY_B)) { cube3D.Permute(std::vector<int>{ { M_B } }, front_face, orient); }
-        if (IsKeyPressed(KEY_V)) { cube3D.Permute(std::vector<int>{ { M_BP } }, front_face, orient); }
-        if (IsKeyPressed(KEY_N)) { cube3D.Permute(std::vector<int>{ { M_B2 } }, front_face, orient); }
-        if (IsKeyPressed(KEY_D)) { cube3D.Permute(std::vector<int>{ { M_D } }, front_face, orient); }
-        if (IsKeyPressed(KEY_S)) { cube3D.Permute(std::vector<int>{ { M_DP } }, front_face, orient); }
-        if (IsKeyPressed(KEY_X)) { cube3D.Permute(std::vector<int>{ { M_D2 } }, front_face, orient); }
+        if (IsKeyPressed(KEY_U)) { cube3D.Permute(std::vector<std::vector<int>>{ { std::vector<int>{ { M_U } } } }, std::vector<int>{ { front_face } }, std::vector<int>{ { orient } }); }
+        if (IsKeyPressed(KEY_Y)) { cube3D.Permute(std::vector<std::vector<int>>{ { std::vector<int>{ { M_UP } } } }, std::vector<int>{ { front_face } }, std::vector<int>{ { orient } }); }
+        if (IsKeyPressed(KEY_I)) { cube3D.Permute(std::vector<std::vector<int>>{ { std::vector<int>{ { M_U2 } } } }, std::vector<int>{ { front_face } }, std::vector<int>{ { orient } }); }
+        if (IsKeyPressed(KEY_L)) { cube3D.Permute(std::vector<std::vector<int>>{ { std::vector<int>{ { M_L } } } }, std::vector<int>{ { front_face } }, std::vector<int>{ { orient } }); }
+        if (IsKeyPressed(KEY_K)) { cube3D.Permute(std::vector<std::vector<int>>{ { std::vector<int>{ { M_LP } } } }, std::vector<int>{ { front_face } }, std::vector<int>{ { orient } }); }
+        if (IsKeyPressed(KEY_SEMICOLON)) { cube3D.Permute(std::vector<std::vector<int>>{ { std::vector<int>{ { M_L2 } } } }, std::vector<int>{ { front_face } }, std::vector<int>{ { orient } }); }
+        if (IsKeyPressed(KEY_F)) { cube3D.Permute(std::vector<std::vector<int>>{ { std::vector<int>{ { M_F } } } }, std::vector<int>{ { front_face } }, std::vector<int>{ { orient } }); }
+        if (IsKeyPressed(KEY_C)) { cube3D.Permute(std::vector<std::vector<int>>{ { std::vector<int>{ { M_FP } } } }, std::vector<int>{ { front_face } }, std::vector<int>{ { orient } }); }
+        if (IsKeyPressed(KEY_G)) { cube3D.Permute(std::vector<std::vector<int>>{ { std::vector<int>{ { M_F2 } } } }, std::vector<int>{ { front_face } }, std::vector<int>{ { orient } }); }
+        if (IsKeyPressed(KEY_FOUR)) { cube3D.Permute(std::vector<std::vector<int>>{ { std::vector<int>{ { M_R } } } }, std::vector<int>{ { front_face } }, std::vector<int>{ { orient } }); }
+        if (IsKeyPressed(KEY_E)) { cube3D.Permute(std::vector<std::vector<int>>{ { std::vector<int>{ { M_RP } } } }, std::vector<int>{ { front_face } }, std::vector<int>{ { orient } }); }
+        if (IsKeyPressed(KEY_T)) { cube3D.Permute(std::vector<std::vector<int>>{ { std::vector<int>{ { M_R2 } } } }, std::vector<int>{ { front_face } }, std::vector<int>{ { orient } }); }
+        if (IsKeyPressed(KEY_B)) { cube3D.Permute(std::vector<std::vector<int>>{ { std::vector<int>{ { M_B } } } }, std::vector<int>{ { front_face } }, std::vector<int>{ { orient } }); }
+        if (IsKeyPressed(KEY_V)) { cube3D.Permute(std::vector<std::vector<int>>{ { std::vector<int>{ { M_BP } } } }, std::vector<int>{ { front_face } }, std::vector<int>{ { orient } }); }
+        if (IsKeyPressed(KEY_N)) { cube3D.Permute(std::vector<std::vector<int>>{ { std::vector<int>{ { M_B2 } } } }, std::vector<int>{ { front_face } }, std::vector<int>{ { orient } }); }
+        if (IsKeyPressed(KEY_D)) { cube3D.Permute(std::vector<std::vector<int>>{ { std::vector<int>{ { M_D } } } }, std::vector<int>{ { front_face } }, std::vector<int>{ { orient } }); }
+        if (IsKeyPressed(KEY_S)) { cube3D.Permute(std::vector<std::vector<int>>{ { std::vector<int>{ { M_DP } } } }, std::vector<int>{ { front_face } }, std::vector<int>{ { orient } }); }
+        if (IsKeyPressed(KEY_X)) { cube3D.Permute(std::vector<std::vector<int>>{ { std::vector<int>{ { M_D2 } } } }, std::vector<int>{ { front_face } }, std::vector<int>{ { orient } }); }
     }
 
 #endif
@@ -190,6 +190,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 
                     case 2:
                         permute_petal(next_petal, petal_slot_edge);
+                        flush_permute();
                         ++petals_count;
                         if (petals_count == 4) { next_step(); }
 
@@ -226,6 +227,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 
                     case 2:
                         permute_white_cross(white_cross_front_face);
+                        flush_permute();
                         ++white_cross_count;
                         if (white_cross_count == 4) { next_step(); }
 
@@ -271,6 +273,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 
                     case 2:
                         permute_top_layer();
+                        flush_permute();
                         ++top_layer_count;
                         if (top_layer_count == 4) { next_step(); }
 
@@ -306,6 +309,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 
                     case 2:
                         permute_middle_layer();
+                        flush_permute();
                         ++middle_layer_count;
                         if (middle_layer_count == 4) { next_step(); }
 
@@ -340,6 +344,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 
                     case 2:
                         permute_yellow_cross();
+                        flush_permute();
                         next_step();
                         break;
                 }
@@ -366,6 +371,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 
                     case 2:
                         permute_yellow_corners();
+                        flush_permute();
                         next_step();
                         break;
                 }
@@ -392,6 +398,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 
                     case 2:
                         permute_pll_corners();
+                        flush_permute();
                         next_step();
                         break;
                 }
@@ -410,7 +417,8 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                     case 1:
                         if (pll_edges_setup_algs.size() == 1)
                         { // top layer just needs orienting (see next_step()), otherwise vector should be empty
-                            permute(pll_edges_setup_algs[0], pll_edges_front_faces[0], 2);
+                            append_permute(pll_edges_setup_algs[0], pll_edges_front_faces[0], 2);
+                            flush_permute();
                             next_step();
                             break;
                         }
@@ -424,6 +432,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 
                     case 2:
                         permute_pll_edges();
+                        flush_permute();
                         next_step();
                         break;
                 }
@@ -515,14 +524,6 @@ void Tutorial::Draw()
 
         text_wrap.Draw(8, HEADER_SIZE);
     }
-};
-
-void Tutorial::permute(std::vector<int> alg, int _front_face, int _orient)
-{
-    front_face = _front_face;
-    orient = _orient;
-    cube.Permute(alg, front_face, orient);
-    cube3D.Permute(alg, front_face, orient);
 };
 
 void Tutorial::next_step()
@@ -842,6 +843,26 @@ void Tutorial::next_step()
     }
 };
 
+void Tutorial::append_permute(std::vector<int> set, int _front_face, int _orient)
+{
+    alg.push_back(set);
+    front_faces.push_back(_front_face);
+    orients.push_back(_orient);
+};
+void Tutorial::flush_permute()
+{
+    if (alg.size() != 0) // TODO: CHANGE LATER TO REMOVE != 0 <-----------
+    {
+        for (size_t i = 0; i < alg.size(); ++i) { cube.Permute(alg[i], front_faces[i], orients[i]); }
+        cube3D.Permute(alg, front_faces, orients);
+        front_face = front_faces[front_faces.size() - 1];
+        orient = orients[orients.size() - 1];
+        alg.clear();
+        front_faces.clear();
+        orients.clear();
+    }
+};
+
 void Tutorial::set_front_face(int val)
 {
     if (front_face != val)
@@ -962,10 +983,10 @@ void Tutorial::move_petal(int petal_edge, int slot_edge)
 };
 void Tutorial::permute_petal(Coord petal, int slot_edge)
 {
-    if (petal.f != 0) { permute(petal_setup_alg, petal.f, 2); } // setups petal so white sticker on white face
+    if (petal.f != 0) { append_permute(petal_setup_alg, petal.f, 2); } // setups petal so white sticker on white face
 
     // cube is viewed yellow face up
-    permute(petal_move_alg, loop(slot_edge + 2, 1, 4), 2);
+    append_permute(petal_move_alg, loop(slot_edge + 2, 1, 4), 2);
 };
 
 int Tutorial::find_white_cross()
@@ -1025,7 +1046,7 @@ void Tutorial::move_white_cross(int white_cross_edge, int slot_edge)
 };
 void Tutorial::permute_white_cross(int white_cross_front_face)
 {
-    permute(white_cross_alg, white_cross_front_face, 0);
+    append_permute(white_cross_alg, white_cross_front_face, 0);
 };
 
 bool Tutorial::check_top_layer_case(int c)
@@ -1253,15 +1274,15 @@ void Tutorial::permute_top_layer()
         switch (top_layer_intermediate_face)
         {
             case -1:
-                permute(top_layer_setup_alg, top_layer_front_face, 0);
+                append_permute(top_layer_setup_alg, top_layer_front_face, 0);
                 break;
 
             default:
-                permute(top_layer_setup_alg, top_layer_intermediate_face, 0);
+                append_permute(top_layer_setup_alg, top_layer_intermediate_face, 0);
                 break;
         }
     }
-    permute(top_layer_move_alg, top_layer_target_face, 0);
+    append_permute(top_layer_move_alg, top_layer_target_face, 0);
 };
 
 bool Tutorial::check_middle_layer_case(int c)
@@ -1418,12 +1439,12 @@ void Tutorial::permute_middle_layer()
     // if cases 2-3, order is move, setup, move
     if (middle_layer_case < 2)
     {
-        if (middle_layer_setup_alg.size() != 0) { permute(middle_layer_setup_alg, middle_layer_front_face, 2); }
-        permute(middle_layer_move_algs[0], middle_layer_target_face, 2);
+        if (middle_layer_setup_alg.size() != 0) { append_permute(middle_layer_setup_alg, middle_layer_front_face, 2); }
+        append_permute(middle_layer_move_algs[0], middle_layer_target_face, 2);
     } else {
-        permute(middle_layer_move_algs[0], middle_layer_front_face, 2);
-        if (middle_layer_setup_alg.size() != 0) { permute(middle_layer_setup_alg, middle_layer_target_face, 2); }
-        permute(middle_layer_move_algs[1], middle_layer_target_face, 2);
+        append_permute(middle_layer_move_algs[0], middle_layer_front_face, 2);
+        if (middle_layer_setup_alg.size() != 0) { append_permute(middle_layer_setup_alg, middle_layer_target_face, 2); }
+        append_permute(middle_layer_move_algs[1], middle_layer_target_face, 2);
     }
 };
 
@@ -1545,8 +1566,8 @@ void Tutorial::permute_yellow_cross()
 {
     for (int i = 0; i < yellow_cross_setup_algs.size(); ++i)
     {
-        if (yellow_cross_setup_algs[i].size() != 0) { permute(yellow_cross_setup_algs[i], yellow_cross_front_face, 2); }
-        permute(yellow_cross_move_algs[i], yellow_cross_front_face, 2);
+        if (yellow_cross_setup_algs[i].size() != 0) { append_permute(yellow_cross_setup_algs[i], yellow_cross_front_face, 2); }
+        append_permute(yellow_cross_move_algs[i], yellow_cross_front_face, 2);
     }
 };
 
@@ -1706,11 +1727,11 @@ void Tutorial::get_yellow_corners_alg()
 };
 void Tutorial::permute_yellow_corners()
 {
-    permute(ALG_SUNE, yellow_corners_front_face, 2);
+    append_permute(ALG_SUNE, yellow_corners_front_face, 2);
     for (int i = 0; i < yellow_corners_setup_algs.size(); ++i)
     {
-        if (yellow_corners_setup_algs[i].size() != 0) { permute(yellow_corners_setup_algs[i], yellow_corners_front_face, 2); }
-        permute(ALG_SUNE, yellow_corners_front_face, 2);
+        if (yellow_corners_setup_algs[i].size() != 0) { append_permute(yellow_corners_setup_algs[i], yellow_corners_front_face, 2); }
+        append_permute(ALG_SUNE, yellow_corners_front_face, 2);
     }
 };
 
@@ -1730,11 +1751,11 @@ void Tutorial::get_pll_corners_alg()
 };
 void Tutorial::permute_pll_corners()
 {
-    permute(ALG_PLLAA, pll_corners_front_face, 2);
+    append_permute(ALG_PLLAA, pll_corners_front_face, 2);
     if (pll_corners_setup_alg.size() != 0)
     {
-        permute(pll_corners_setup_alg, pll_corners_front_face, 2);
-        permute(ALG_PLLAA, pll_corners_front_face, 2);
+        append_permute(pll_corners_setup_alg, pll_corners_front_face, 2);
+        append_permute(ALG_PLLAA, pll_corners_front_face, 2);
     }
 };
 
@@ -1815,8 +1836,8 @@ void Tutorial::permute_pll_edges()
 {
     for (int i = 0; i < pll_edges_setup_algs.size(); ++i)
     {
-        permute(pll_edges_setup_algs[i], pll_edges_front_faces[i], 2);
-        permute(pll_edges_move_algs[i], pll_edges_front_faces[i], 2);
+        append_permute(pll_edges_setup_algs[i], pll_edges_front_faces[i], 2);
+        append_permute(pll_edges_move_algs[i], pll_edges_front_faces[i], 2);
     }
 };
 
@@ -1824,4 +1845,4 @@ int* Tutorial::get_step_pointer() { return &step; }
 Cube* Tutorial::get_cube_pointer() { return &cube; }
 int* Tutorial::get_cur_face_pointer() { return &cur_face; }
 std::vector<int> Tutorial::get_alg() { return cube3D.get_alg(); }
-int Tutorial::get_buffer_index() { return cube3D.get_buffer_index(); }
+int Tutorial::get_move_index() { return cube3D.get_move_index(); }

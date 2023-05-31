@@ -22,24 +22,26 @@ class Cube3D
         void Update(bool fast_forward);
         void Draw(int _front_face = CUBE_GREEN, int _orient = 0);
 
-        void Permute(std::vector<int> alg, int _front_face = CUBE_GREEN, int _orient = 0);
+        void Permute(std::vector<std::vector<int>> alg, std::vector<int> _front_faces, std::vector<int> _orients);
         void Update_pieces(); // updates position of stickers w/ state
         void Set_state(); // updates state of cube in Cube3D to state in Cube
-        void Set_orientation(); // changes set state to reflect change in cube (different front face, orient, or permutation and Update_pieces()
-        void Append_move_buffer(std::vector<int> alg, int _front_face = CUBE_GREEN, int _orient = 0);
+        void Set_orientation(); // changes set state to reflect change in cube (different front face, orient, or permutation) and Update_pieces()
+        void Append_move_buffer(std::vector<std::vector<int>> alg, std::vector<int> _front_faces, std::vector<int> _orients);
         void Clear_buffer(); // clears move_buffer, front_faces, and orients
         void Finish_move(); // finishes ongoing and buffered moves (skips animation)
 
-        std::vector<int> get_alg(); // gets currently executed alg
-        int get_buffer_index(); // gets buffer_index
+        // these functions are used by UI only:
+        std::vector<int> get_alg(); // gets currently executed alg joined in one vector
+        int get_move_index(); // gets buffer_index as if alg was one set
 
         void Set_front_face(int val); // sets front_face (once move_buffer empty)
         void Set_orient(int val); // sets orient (once move_buffer empty)
 
-        void Set_orbital(bool val);
+        void Set_orbital(bool val); // spin cube around
 
     private:
         void new_orientation(); // sets front_face and orient to respective "new" variables (if they != -1 and move_buffer is empty)
+
         Camera camera;
         int camera_mode;
         bool orbital;
@@ -60,13 +62,14 @@ class Cube3D
         int front_face_new; // new front_face to be set (once move_buffer empty)
         int orient_new; // new orient to be set (once move_buffer empty)
 
-        // buffered moves to be executed (animated):
-        // when an alg is fully animated, the next alg is animated
+        // everu set (moves in same position) in each algorithm is animated
+        // every algorithm is animated as well
         // once finished, move_buffer is reset
-        std::vector<std::vector<int>> move_buffer; // buffered moves to be executed (animated)
-        std::vector<int> front_faces; // front_face per alg in move_buffer (front_faces index 0 = move_buffer index 0's front face)
-        std::vector<int> orients; // orient per alg in move_buffer (orients index 0 = move_buffer index 0's orient)
-        int alg_index; // current ongoing move by alg
+        std::vector<std::vector<std::vector<int>>> move_buffer; // buffered moves to be executed (animated)
+        std::vector<std::vector<int>> front_faces; // front_face per set in each alg in move_buffer
+        std::vector<std::vector<int>> orients; // orient per set in each alg in move_buffer
+        int alg_index; // current ongoing algorithm
+        int set_index; // current ongoing set in alg
         int buffer_index; // current ongoing move by index (within alg)
         int cur_move; // current ongoing move (-1 = none)
         int angle; // current rotating angle (only used if move ongoing)
