@@ -25,7 +25,8 @@
 #define B_NEXT2 4
 #define B_SKIP  5
 #define B_FFWD  6
-#define B_SIZE  7
+#define B_RPLY  7
+#define B_SIZE  8
 
 #define HEADER_SIZE 48
 #define INSTR_SIZE 32

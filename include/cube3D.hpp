@@ -29,6 +29,7 @@ class Cube3D
         void Append_move_buffer(std::vector<std::vector<int>> alg, std::vector<int> _front_faces, std::vector<int> _orients);
         void Clear_buffer(); // clear move_buffer, front_faces, and orients
         void Finish_move(); // finish ongoing and buffered moves (skips animation)
+        void Replay(); // 
 
         // these 2 functions are used by UI only:
         std::vector<int> get_alg(); // get currently executed alg joined in one vector
@@ -51,6 +52,9 @@ class Cube3D
         Cube* cube;
         std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE> orig_state; // state w/o change of front face and orientation
         std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE> state; // state w/ change of front face and orientation
+        // backup of state before last alg. used to replay last alg
+        std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE> last_orig_state; // last state w/o change of front face and orientation
+        std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE> last_state; // last state w/ change of front face and orientation
 
         // position of all pieces (before rotations)
         std::array<Vector3, CUBE_FACE_SIZE * 3> piece_pos; 
@@ -68,6 +72,10 @@ class Cube3D
         std::vector<std::vector<std::vector<int>>> move_buffer; // buffered moves to be executed (animated)
         std::vector<std::vector<int>> front_faces; // front_face per set in each alg in move_buffer
         std::vector<std::vector<int>> orients; // orient per set in each alg in move_buffer
+        // backup of move_buffer, front_faces, and orients before last alg. used to replay last alg
+        std::vector<std::vector<int>> last_alg; // last executed alg of move_buffer
+        std::vector<int> last_front_faces; // front_faces of last alg
+        std::vector<int> last_orients; // orients of last alg
         int alg_index; // current ongoing algorithm
         int set_index; // current ongoing set in alg
         int buffer_index; // current ongoing move by index (within alg)

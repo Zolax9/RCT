@@ -58,6 +58,9 @@ void Cube3D::Init(Cube* _cube)
     orig_state = cube->get_state();
     state = orig_state;
 
+    last_alg = std::vector<std::vector<int>>();
+    last_front_faces = std::vector<int>();
+    last_orients = std::vector<int>();
     Clear_buffer();
     alg_index = 0;
     set_index = 0;
@@ -101,6 +104,11 @@ void Cube3D::Update(bool fast_forward)
                     buffer_index = -1;
                     front_face = front_faces[alg_index][set_index];
                     orient = orients[alg_index][set_index];
+                    last_alg = move_buffer[alg_index];
+                    last_front_faces = front_faces[alg_index];
+                    last_orients = orients[alg_index];
+                    last_orig_state = orig_state;
+                    last_state = state;
 
                     Set_orientation();
                 }
@@ -516,17 +524,22 @@ void Cube3D::Set_state()
 void Cube3D::Set_orientation()
 {
     state = orig_state;
-    if (front_face != 2) { state = Cube_set_front_face(state, front_face); }
-    if (orient != 0) { state = Cube_set_orient(state, orient); }
+    if (front_face != CUBE_GREEN) { state = Cube_set_front_face(state, front_face); }
+    if (orient != 0) { state = Cube_set_orient(state, orient); } // uses != 0 as more consistent and clearer to its meaning
     Update_pieces();
 };
 
 void Cube3D::Append_move_buffer(std::vector<std::vector<int>> alg, std::vector<int> _front_faces, std::vector<int> _orients)
 {
-    if (move_buffer.size() == 0)
+    if (!move_buffer.size())
     {
         front_face = _front_faces[0];
         orient = _orients[0];
+        last_alg = alg;
+        last_front_faces = _front_faces;
+        last_orients = _orients;
+        last_orig_state = orig_state;
+        last_state = state;
     }
     move_buffer.push_back(alg);
     front_faces.push_back(_front_faces);
@@ -562,6 +575,18 @@ void Cube3D::Finish_move()
         {
             for (i = alg_index + 1; i < move_buffer.size(); ++i)
             {
+                if (i == move_buffer.size() - 1) // if iterating through last alg, then assign values for last_* variables
+                {
+                    last_alg = move_buffer[i];
+                    last_front_faces = front_faces[i];
+                    last_orients = orients[i];
+                    last_orig_state = orig_state;
+                    // just Set_orientation() but for last_orig_state and last_state
+                    // can't just last_state = state as Finish_move() uses Set_orientation() after finishing moves
+                    last_state = last_orig_state;
+                    if (last_front_faces[0] != CUBE_GREEN) { last_state = Cube_set_front_face(last_state, last_front_faces[0]); }
+                    if (last_orients[0] != 0) { last_state = Cube_set_orient(last_state, last_orients[0]); } // uses != 0 as more consistent and clearer to its meaning
+                }
                 for (j = 0; j < move_buffer[i].size(); ++j)
                 {
                     orig_state = Cube_permute(orig_state, move_buffer[i][j], front_faces[i][j], orients[i][j]);
@@ -581,6 +606,16 @@ void Cube3D::Finish_move()
         angle = 0;
     }
     new_orientation();
+};
+void Cube3D::Replay()
+{
+    if (!move_buffer.size()) // move_buffer must be empty to replay
+    {
+        orig_state = last_orig_state;
+        state = last_state;
+        Update_pieces();
+        Append_move_buffer(last_alg, last_front_faces, last_orients);
+    }
 };
 
 std::vector<int> Cube3D::get_alg()

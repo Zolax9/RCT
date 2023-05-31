@@ -123,6 +123,11 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
         next_step();
         return;
     }
+    if (buttons[B_RPLY])
+    {
+        cube3D.Replay();
+    }
+
     switch (step)
     {
         case 0:
@@ -451,7 +456,8 @@ void Tutorial::Draw()
 
     if (step != 0)
     {
-        buttons[B_RESET] = GuiButton((Rectangle){ 20, screenH - 120, 100, 40 }, GuiIconText(ICON_REDO_FILL, "Reset"));
+        buttons[B_RESET] = GuiButton((Rectangle){ 20, screenH - 120, 100, 40 }, GuiIconText(ICON_UNDO_FILL, "Reset"));
+        buttons[B_RPLY] = GuiButton((Rectangle){ 260, screenH - 60, 100, 40 }, GuiIconText(ICON_REDO_FILL, "Replay"));
         if (step == 9) { GuiSetState(STATE_DISABLED); }
         buttons[B_NEXT2] = GuiButton((Rectangle){ 20, screenH - 60, 100, 40 }, GuiIconText(ICON_ARROW_RIGHT_FILL, "Next"));
         buttons[B_SKIP] = GuiButton((Rectangle){ 140, screenH - 60, 100, 40 }, GuiIconText(ICON_RESTART, "Skip"));
