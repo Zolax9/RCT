@@ -23,24 +23,24 @@ class Cube3D
         void Draw(int _front_face = CUBE_GREEN, int _orient = 0);
 
         void Permute(std::vector<std::vector<int>> alg, std::vector<int> _front_faces, std::vector<int> _orients);
-        void Update_pieces(); // updates position of stickers w/ state
-        void Set_state(); // updates state of cube in Cube3D to state in Cube
-        void Set_orientation(); // changes set state to reflect change in cube (different front face, orient, or permutation) and Update_pieces()
+        void Update_pieces(); // update position of stickers w/ state
+        void Set_state(); // update state of cube in Cube3D to state in Cube
+        void Set_orientation(); // change set state to reflect change in cube (different front face, orient, or permutation) and Update_pieces()
         void Append_move_buffer(std::vector<std::vector<int>> alg, std::vector<int> _front_faces, std::vector<int> _orients);
-        void Clear_buffer(); // clears move_buffer, front_faces, and orients
-        void Finish_move(); // finishes ongoing and buffered moves (skips animation)
+        void Clear_buffer(); // clear move_buffer, front_faces, and orients
+        void Finish_move(); // finish ongoing and buffered moves (skips animation)
 
-        // these functions are used by UI only:
-        std::vector<int> get_alg(); // gets currently executed alg joined in one vector
-        int get_move_index(); // gets buffer_index as if alg was one set
+        // these 2 functions are used by UI only:
+        std::vector<int> get_alg(); // get currently executed alg joined in one vector
+        int get_move_index(); // get buffer_index as if alg was one set
 
-        void Set_front_face(int val); // sets front_face (once move_buffer empty)
-        void Set_orient(int val); // sets orient (once move_buffer empty)
+        void Set_front_face(int val); // set front_face (once move_buffer empty)
+        void Set_orient(int val); // set orient (once move_buffer empty)
 
         void Set_orbital(bool val); // spin cube around
 
     private:
-        void new_orientation(); // sets front_face and orient to respective "new" variables (if they != -1 and move_buffer is empty)
+        void new_orientation(); // set front_face and orient to respective "new" variables (if they != -1 and move_buffer is empty)
 
         Camera camera;
         int camera_mode;
