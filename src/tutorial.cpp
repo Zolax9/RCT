@@ -402,6 +402,8 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                 switch (pll_corners_alg_shown)
                 {
                     case 1:
+                        yellow_corners_alg_shown = -1; // prevent fish from drawing if step is skipped
+
                         get_pll_corners_alg();
                         if (pll_corners_case == -1)
                         {
@@ -784,7 +786,7 @@ void Tutorial::next_step()
                 // prompt is quite big, so font size temporarily halved
                 text_wrap.Set_font_height((int)(INSTR_SIZE * 0.82));
                 text_wrap.Set_font_size((int)(INSTR_SIZE * 0.82));
-                prompt = "This step is intuitive, so you must repeatedly use the OLL27 (R U R' U R U2 R') algorithm at any orientation (while keeping the yellow face at the top) until a yellow \"fish\" (as shown below) appears on the yellow face, upon which you must keep using the OLL27 algorithm so the fish is looking towards the bottom-left corner once or twice so the top face is yellow-only.\n\nThe following instructions will show you a solution, but it is recommended that you try yourself and then use the \"Reset\" button to sync your cube with the tutorial.";
+                prompt = "This step is intuitive, so you must repeatedly use the OLL27 (R U R' U R U2 R') algorithm at any orientation (while keeping the yellow face at the top) until a yellow \"fish\" (as shown below) appears on the yellow face, upon which you must keep using the OLL27 algorithm so the fish is looking towards the bottom-left corner once or twice so the top face is yellow-only.\n\nThe following instructions will show you a solution, but it is recommended that you try yourself and then use the \"Reset\" button to sync your cube with the tutorial";
                 set_prompt();
 
                 set_orient(2);
@@ -825,7 +827,7 @@ void Tutorial::next_step()
                         // prompt is quite big, so font size temporarily halved
                         text_wrap.Set_font_height((int)(INSTR_SIZE * 0.95));
                         text_wrap.Set_font_size((int)(INSTR_SIZE * 0.95));
-                        prompt = "As no face exists where the top-left and top-right corner have the same colour, you can hold the cube at any orientation (as long as top face is yellow). Use the PLLAa (R' F R' B2 R F' R' B2 R2) algorithm once, upon which a face should have a matching top-left and top-right corner. Hold the cube so that face is at the back, and use the PLLAa algorithm again\n";
+                        prompt = "As no face exists where the top-left and top-right corner have the same colour, you can hold the cube at any orientation (as long as top face is yellow). Use the PLLAa (R' F R' B2 R F' R' B2 R2) algorithm once, upon which a face should have a matching top-left and top-right corner. Hold the cube so that face is at the back, and use the PLLAa algorithm again";
                         break;
 
                     default:
@@ -833,7 +835,7 @@ void Tutorial::next_step()
                         // revert text_wrap to normal text size
                         text_wrap.Set_font_height(INSTR_SIZE);
                         text_wrap.Set_font_size(INSTR_SIZE);
-                        prompt = "Hold the cube so the face which has a colour-matching top-left and top-right corner is at the back\nUse the PLLAa (R' F R' B2 R F' R' B2 R2) algorithm once to swap the yellow corners to their correct positions\n";
+                        prompt = "Hold the cube so the face which has a colour-matching top-left and top-right corner is at the back\nUse the PLLAa (R' F R' B2 R F' R' B2 R2) algorithm once to swap the yellow corners to their correct positions";
                         break;
                 }
                 set_prompt();
@@ -875,7 +877,7 @@ void Tutorial::next_step()
                     ).size() != 8)
                     { // G/R/B/O faces can be picked too
                         // top layer is done, but needs to be setup with rest of cube (U, U', or U2 needed only)
-                        pll_edges_front_faces.push_back(loop(front_face, 1, 4));
+                        pll_edges_front_faces.push_back(loop(front_face, CUBE_ORANGE, CUBE_BLUE)); // any front face fine, but W/Y excluded
                         pll_edges_setup_algs.push_back(get_pll_edges_setup_alg(pll_edges_front_faces[0], cube.get_corner(pll_edges_front_faces[0], 2)));
 
                         prompt = "Yellow layer already done!\n";
@@ -883,9 +885,15 @@ void Tutorial::next_step()
                         prompt.append(Cube_face_str(pll_edges_front_faces[0]));
                         prompt.append("face is facing you\nSetup algorithm: ");
                         prompt.append(Cube_notation_str(pll_edges_setup_algs[0]));
-                        set_prompt();
                     }
                     // if size == 8, bottom, middle, and top layer is solved and one face as well, so cube is already solved
+                } else if (pll_edges_count == 0) // only used for prompt
+                {
+                    prompt = "As no face exists with matching top stickers - needed for a solvable case - use the PLLUa (F2 U' L R' F2 L' R U' F2) or PLLUb (F2 U L R' F2 L' R U F2) algorithm at any orientation to create a case which can be solved\nA face should then exist with matching top stickers, so move the top layer so the colours match up, and hold the cube so that this face is at the back, before using either the PLLUa or PLLUb algorithm to rotate the yellow edges counter-clockwise and clockwise respectively";
+                    set_prompt();
+                } else {
+                    prompt = "A face exists with matching top stickers, so move the top layer so the colours match up, and hold the cube so that this face is at the back, before using either the PLLUa or PLLUb algorithm to rotate the yellow edges counter-clockwise and clockwise respectively";
+                    set_prompt();
                 }
 
                 set_orient(2);
@@ -908,7 +916,7 @@ void Tutorial::append_permute(std::vector<int> set, int _front_face, int _orient
 };
 void Tutorial::flush_permute()
 {
-    if (alg.size() != 0) // TODO: CHANGE LATER TO REMOVE != 0 <-----------
+    if (alg.size())
     {
         for (size_t i = 0; i < alg.size(); ++i) { cube.Permute(alg[i], front_faces[i], orients[i]); }
         cube3D.Permute(alg, front_faces, orients);
@@ -1915,11 +1923,13 @@ void Tutorial::get_pll_edges_alg()
             // case 0 (3-edge orient)
             pll_edges_front_faces.push_back(loop(cube.get_edge(pll_edges_back_face, 2) + 2, 1, 4));
             pll_edges_setup_algs.push_back(get_pll_edges_setup_alg(pll_edges_back_face, cube.get_edge(pll_edges_back_face, 2)));
+
             if (cube.get_corner(loop(pll_edges_back_face + 1, 1, 4), 2) == cube.get_edge(loop(pll_edges_back_face + 2, 1, 4), 2))
             {
+                prompt = "Use the PLLUa (F2 U' L R' F2 L' R U' F2) algorithm to swap the yellow edges counter-clockwise:\nHold the cube so the ";
                 pll_edges_move_algs.push_back(ALG_PLLUA);
-            } else
-            {
+            } else {
+                prompt = "Use the PLLUb (F2 U L R' F2 L' R U F2) algorithm to swap the yellow edges clockwise:\nHold the cube so the ";
                 pll_edges_move_algs.push_back(ALG_PLLUB);
             }
             break;
@@ -1953,11 +1963,17 @@ void Tutorial::get_pll_edges_alg()
         break;
     }
 
-    for (int i = 0; i < pll_edges_setup_algs.size(); ++i)
+    prompt.append(Cube_face_str(pll_edges_front_faces[0]));
+    prompt.append("face is facing you\nSetup algorithm: ");
+    prompt.append(Cube_notation_str(pll_edges_setup_algs[0]));
+    prompt.append("\nMove algorithm: ");
+    prompt.append(Cube_notation_str(pll_edges_move_algs[0]));
+    if (pll_edges_setup_algs.size() == 2)
     {
-        std::cout << "Move whole cube so front face is " << Cube_face_str(pll_edges_front_faces[i]) << '\n';
-        std::cout << "Setup alg: " << Cube_notation_str(pll_edges_setup_algs[i]) << '\n';
-        std::cout << "Move alg: " << Cube_notation_str(pll_edges_move_algs[i]) << "\n\n";
+        prompt.append("\nHold the cube so the ");
+        prompt.append(Cube_face_str(pll_edges_front_faces[1]));
+        prompt.append("\nMove algorithm: ");
+        prompt.append(Cube_notation_str(pll_edges_move_algs[1]));
     }
 };
 std::vector<int> Tutorial::get_pll_edges_setup_alg(int front_face, int target_face)
