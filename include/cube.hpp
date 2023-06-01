@@ -89,6 +89,6 @@ std::string Cube_notation_str(std::vector<int> n);
 std::string Cube_face_str(int f);
 std::string Cube_face_str(std::vector<int> f);
 
-std::array<int, 2> Cube_invert_edge(int f, int i);
+std::array<int, 2> Cube_invert_edge(int f, int i); // get other sticker in edge
 
 #endif

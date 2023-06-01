@@ -187,7 +187,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
 
                         petal_slot_edge = get_petal_alg(next_petal);
                         set_front_face(loop(petal_slot_edge + 2, 1, 4));
-                        if (petal_move_alg.size() == 0) { prompt = "Algorithm not found!"; }
+                        if (petal_move_alg.size() == 0) { prompt = "Petal algorithm not found!"; }
 
                         petal_alg_shown = 2;
                         set_prompt();
@@ -220,11 +220,12 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         if (next_white_cross == -1)
                         {
                             prompt = "White edge not found!";
+                            set_prompt();
                             break;
                         }
                         white_cross_front_face = get_white_cross_alg(next_white_cross);
                         set_front_face(white_cross_front_face);
-                        if (white_cross_alg.size() == 0) { prompt = "Algorithm not found!"; }
+                        if (white_cross_alg.size() == 0) { prompt = "White cross algorithm not found!"; }
 
                         white_cross_alg_shown = 2;
                         set_prompt();
@@ -257,10 +258,11 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         if (next_top_layer.f == 6)
                         {
                             prompt = "White corner not found!";
+                            set_prompt();
                             break;
                         }
                         get_top_layer_alg();
-                        if (top_layer_move_alg.size() == 0) { prompt = "Algorithm not found!"; }
+                        if (top_layer_move_alg.size() == 0) { prompt = "Top layer algorithm not found!"; }
                         switch (top_layer_intermediate_face)
                         {
                             case -1:
@@ -302,6 +304,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         if (next_middle_layer.f == 6)
                         {
                             prompt = "Middle edge not found!";
+                            set_prompt();
                             break;
                         }
                         set_front_face(next_middle_layer.f);
@@ -337,7 +340,8 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                         find_yellow_cross();
                         if (yellow_cross_case == -1)
                         {
-                            prompt = "Case not found!";
+                            prompt = "Yellow cross case not found!";
+                            set_prompt();
                             break;
                         }
                         set_front_face(yellow_cross_front_face);
@@ -367,7 +371,12 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                 {
                     case 1:
                         get_yellow_corners_alg();
-                        if (yellow_corners_case == -1) { std::cout << "Case not found!\n"; }
+                        if (yellow_corners_case == -1)
+                        {
+                            prompt = "Yellow corners case not found!";
+                            set_prompt();
+                            break;
+                        }
                         set_front_face(yellow_corners_front_face);
 
                         yellow_corners_alg_shown = 2;
@@ -394,7 +403,12 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                 {
                     case 1:
                         get_pll_corners_alg();
-                        if (pll_corners_case == -1) { std::cout << "Case not found!\n"; }
+                        if (pll_corners_case == -1)
+                        {
+                            prompt = "PLL corners case not found!";
+                            set_prompt();
+                            break;
+                        }
                         set_front_face(pll_corners_front_face);
 
                         pll_corners_alg_shown = 2;
@@ -428,7 +442,7 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                             break;
                         }
                         get_pll_edges_alg();
-                        if (pll_edges_setup_algs.size() == 0) { std::cout << "Alg not found!\n"; }
+                        if (pll_edges_setup_algs.size() == 0) { prompt = "PLL edges algorithm not found!"; }
                         set_front_face(pll_edges_front_faces[0]);
 
                         pll_edges_alg_shown = 2;
@@ -951,7 +965,7 @@ int Tutorial::get_petal_alg(Coord petal)
 
     prompt = "Insert the White-";
     prompt.append(Cube_face_str(cube.get_edge(invert_edge[0], invert_edge[1])));
-    prompt.append("edge to the daisy in the yellow face:\n");
+    prompt.append("edge into the daisy in the yellow face:\n");
     switch (petal_setup_alg.size())
     {
         case 0:
@@ -1016,7 +1030,7 @@ int Tutorial::get_white_cross_alg(int white_cross_edge)
 
     prompt = "Insert the White-";
     prompt.append(Cube_face_str(white_cross_front_face));
-    prompt.append("edge to the white cross:\nMove the cube so the ");
+    prompt.append("edge into the white cross:\nMove the cube so the ");
     prompt.append(Cube_face_str(white_cross_front_face));
     prompt.append("face is facing you\n");
     
@@ -1058,6 +1072,9 @@ void Tutorial::permute_white_cross(int white_cross_front_face)
 bool Tutorial::check_top_layer_case(int c)
 {
     std::vector<int> white_corners;
+    std::array<std::array<int, 2>, 2> corners; // other corners of next_top_layer
+    std::string corner_1; // first other corner
+    std::string corner_2; // second other corner
     int f;
     int i;
 
@@ -1072,6 +1089,14 @@ bool Tutorial::check_top_layer_case(int c)
                     top_layer_case = 0;
                     top_layer_front_face = f;
                     next_top_layer = Coord{ f, 8 };
+
+                    corner_1 = Cube_face_str(cube.get_corner(loop(top_layer_front_face + 1, CUBE_ORANGE, CUBE_BLUE), 3));
+                    corner_2 = Cube_face_str(cube.get_corner(CUBE_YELLOW, top_layer_front_face - 1));
+                    prompt = "Insert the White-";
+                    prompt.append(corner_1.substr(0, corner_1.size() - 1)); // uses substr to remove space from Cube_face_str()
+                    prompt.append("-");
+                    prompt.append(corner_2);
+                    prompt.append("into the top layer:\n");
                     return true;
                 }
             }
@@ -1085,6 +1110,14 @@ bool Tutorial::check_top_layer_case(int c)
                     top_layer_case = 1;
                     top_layer_front_face = f;
                     next_top_layer = Coord{ f, 6 };
+
+                    corner_1 = Cube_face_str(cube.get_corner(CUBE_YELLOW, loop(top_layer_front_face, 2, 5) - 2));
+                    corner_2 = Cube_face_str(cube.get_corner(loop(top_layer_front_face - 1, CUBE_ORANGE, CUBE_BLUE), 2));
+                    prompt = "Insert the White-";
+                    prompt.append(corner_1.substr(0, corner_1.size() - 1));
+                    prompt.append("-");
+                    prompt.append(corner_2);
+                    prompt.append("into the top layer:\n");
                     return true;
                 }
             }
@@ -1098,6 +1131,14 @@ bool Tutorial::check_top_layer_case(int c)
                     top_layer_case = 2;
                     top_layer_front_face = f;
                     next_top_layer = Coord{ f, 2 };
+
+                    corner_1 = Cube_face_str(cube.get_corner(CUBE_WHITE, 4 - top_layer_front_face));
+                    corner_2 = Cube_face_str(cube.get_corner(loop(top_layer_front_face + 1, CUBE_ORANGE, CUBE_BLUE), 0));
+                    prompt = "Insert the White-";
+                    prompt.append(corner_1.substr(0, corner_1.size() - 1));
+                    prompt.append("-");
+                    prompt.append(corner_2);
+                    prompt.append("into the top layer:\n");
                     return true;
                 }
             }
@@ -1111,6 +1152,14 @@ bool Tutorial::check_top_layer_case(int c)
                     top_layer_case = 3;
                     top_layer_front_face = f;
                     next_top_layer = Coord{ f, 0 };
+
+                    corner_1 = Cube_face_str(cube.get_corner(loop(top_layer_front_face - 1, CUBE_ORANGE, CUBE_BLUE), 1));
+                    corner_2 = Cube_face_str(cube.get_corner(CUBE_WHITE, loop(5 - top_layer_front_face, 0, 3)));
+                    prompt = "Insert the White-";
+                    prompt.append(corner_1.substr(0, corner_1.size() - 1));
+                    prompt.append("-");
+                    prompt.append(corner_2);
+                    prompt.append("into the top layer:\n");
                     return true;
                 }
             }
@@ -1133,6 +1182,14 @@ bool Tutorial::check_top_layer_case(int c)
                 top_layer_case = 4;
                 top_layer_front_face = white_corners[0] + 1;
                 next_top_layer = Coord{ CUBE_YELLOW, Cube_corner_to_index(white_corners[0]) };
+
+                corner_1 = Cube_face_str(cube.get_corner(top_layer_front_face, 2));
+                corner_2 = Cube_face_str(cube.get_corner(loop(top_layer_front_face + 1, CUBE_ORANGE, CUBE_BLUE), 3));
+                prompt = "Insert the White-";
+                prompt.append(corner_1.substr(0, corner_1.size() - 1));
+                prompt.append("-");
+                prompt.append(corner_2);
+                prompt.append("into the top layer:\n");
                 return true;
             }
             break;
@@ -1158,6 +1215,14 @@ bool Tutorial::check_top_layer_case(int c)
                     top_layer_front_face = 4 - white_corners[i];
                     top_layer_case = 5;
                     next_top_layer = Coord{ CUBE_WHITE, Cube_corner_to_index(white_corners[i]) };
+
+                    corner_1 = Cube_face_str(cube.get_corner(loop(top_layer_front_face + 1, CUBE_ORANGE, CUBE_BLUE), 0));
+                    corner_2 = Cube_face_str(cube.get_corner(top_layer_front_face, 1));
+                    prompt = "Insert the White-";
+                    prompt.append(corner_1.substr(0, corner_1.size() - 1));
+                    prompt.append("-");
+                    prompt.append(corner_2);
+                    prompt.append("into the top layer:");
                     return true;
                 }
             }
@@ -1182,55 +1247,45 @@ void Tutorial::get_top_layer_alg()
         case 0:
             top_layer_target_face = cube.get_corner(CUBE_YELLOW, top_layer_front_face - 1);
             get_top_layer_setup_alg(top_layer_front_face, top_layer_target_face);
-            top_layer_move_alg = std::vector<int> { {
-                M_DP, M_RP, M_D, M_R
-            } };
+            top_layer_move_alg = ALG_TOP_LAYER1;
             break;
 
         case 1:
             top_layer_target_face = cube.get_corner(CUBE_YELLOW, loop(top_layer_front_face, 2, 5) - 2);
             get_top_layer_setup_alg(top_layer_front_face, top_layer_target_face);
-            top_layer_move_alg = std::vector<int> { {
-                M_D, M_L, M_DP, M_LP
-            } };
+            top_layer_move_alg = ALG_TOP_LAYER2;
             break;
 
         case 2:
-            top_layer_target_face = cube.get_corner(loop(top_layer_front_face + 1, 1, 4), 0);
+            top_layer_target_face = cube.get_corner(loop(top_layer_front_face + 1, CUBE_ORANGE, CUBE_BLUE), 0);
             top_layer_setup_alg.push_back(M_RP);
             top_layer_setup_alg.push_back(M_D);
             top_layer_setup_alg.push_back(M_R);
             get_top_layer_setup_alg(top_layer_front_face, top_layer_target_face);
-            top_layer_move_alg = std::vector<int> { {
-                M_DP, M_RP, M_D, M_R
-            } };
+            top_layer_move_alg = ALG_TOP_LAYER1;
             break;
 
         case 3:
-            top_layer_target_face = cube.get_corner(loop(top_layer_front_face - 1, 1, 4), 1);
+            top_layer_target_face = cube.get_corner(loop(top_layer_front_face - 1, CUBE_ORANGE, CUBE_BLUE), 1);
             top_layer_setup_alg.push_back(M_L);
             top_layer_setup_alg.push_back(M_DP);
             top_layer_setup_alg.push_back(M_LP);
             get_top_layer_setup_alg(top_layer_front_face, top_layer_target_face);
-            top_layer_move_alg = std::vector<int> { {
-                M_D, M_L, M_DP, M_LP
-            } };
+            top_layer_move_alg = ALG_TOP_LAYER2;
             break;
 
         case 4:
-            // unlike other cases, one of the algorithms used (R' D2 R) must be done under an empty slot (non-white corner) of white face.
-            // to make coding easier, the same slot that the corner would be inserted in is used.
-            // for this reason, get_top_layer_setup_alg() is called twice to move the corner under the empty slot (right side) and the left side
+            /* unlike other cases, one of the algorithms used (R' D2 R) must be done under an empty slot (non-white corner) of white face.
+               to make coding easier, the same slot that the corner would be inserted in is used.
+               for this reason, get_top_layer_setup_alg() is called twice to move the corner under the empty slot (right side) and the left side */
             top_layer_target_face = cube.get_corner(top_layer_front_face, 2);
-            top_layer_intermediate_face = loop(top_layer_target_face - 1, 1, 4); // used to do first alg (R' D2 R) without disturbing any other corners
+            top_layer_intermediate_face = loop(top_layer_target_face - 1, CUBE_ORANGE, CUBE_BLUE); // used to do first alg (R' D2 R) without disturbing any other corners
             get_top_layer_setup_alg(top_layer_front_face, top_layer_intermediate_face);
             top_layer_setup_alg.push_back(M_RP);
             top_layer_setup_alg.push_back(M_D2);
             top_layer_setup_alg.push_back(M_R);
             get_top_layer_setup_alg(top_layer_intermediate_face, top_layer_target_face);
-            top_layer_move_alg = std::vector<int> { {
-                M_D, M_L, M_DP, M_LP
-            } };
+            top_layer_move_alg = ALG_TOP_LAYER2;
             break;
 
         case 5:
@@ -1240,25 +1295,21 @@ void Tutorial::get_top_layer_alg()
             top_layer_setup_alg.push_back(M_R);
             top_layer_setup_alg.push_back(M_D);
             get_top_layer_setup_alg(top_layer_front_face, top_layer_target_face);
-            top_layer_move_alg = std::vector<int> { {
-                M_DP, M_RP, M_D, M_R
-            } };
+            top_layer_move_alg = ALG_TOP_LAYER1;
             break;
     }
 
-    switch (top_layer_intermediate_face)
+    if (top_layer_setup_alg.size())
     {
-        case -1:
-            std::cout << "Move whole cube so front face is " << Cube_face_str(top_layer_front_face) << '\n';
-            break;
-
-        default:
-            std::cout << "Move whole cube so front face is " << Cube_face_str(top_layer_intermediate_face) << '\n';
-            break;
+        prompt.append("Move the cube so the ");
+        prompt.append(Cube_face_str((top_layer_intermediate_face == -1) ? top_layer_front_face : top_layer_intermediate_face));
+        prompt.append("face is facing you\nSetup algorithm: ");
+        prompt.append(Cube_notation_str(top_layer_setup_alg));
     }
-    std::cout << "Setup alg: " << Cube_notation_str(top_layer_setup_alg) << "\n\n";
-    std::cout << "Move whole cube so front face is " << Cube_face_str(top_layer_target_face) << '\n';
-    std::cout << "Move alg: " << Cube_notation_str(top_layer_move_alg) << "\n\n";
+    prompt.append("\nMove the cube so the ");
+    prompt.append(Cube_face_str(top_layer_target_face));
+    prompt.append("face is facing you\nMove algorithm: ");
+    prompt.append(Cube_notation_str(top_layer_move_alg));
 };
 void Tutorial::get_top_layer_setup_alg(int front_face, int target_face)
 {

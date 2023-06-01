@@ -581,8 +581,8 @@ void Cube3D::Finish_move()
                     last_front_faces = front_faces[i];
                     last_orients = orients[i];
                     last_orig_state = orig_state;
-                    // just Set_orientation() but for last_orig_state and last_state
-                    // can't just last_state = state as Finish_move() uses Set_orientation() after finishing moves
+                    /* just Set_orientation() but for last_orig_state and last_state
+                       can't just last_state = state as Finish_move() uses Set_orientation() after finishing moves */
                     last_state = last_orig_state;
                     if (last_front_faces[0] != CUBE_GREEN) { last_state = Cube_set_front_face(last_state, last_front_faces[0]); }
                     if (last_orients[0] != 0) { last_state = Cube_set_orient(last_state, last_orients[0]); } // uses != 0 as more consistent and clearer to its meaning

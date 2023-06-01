@@ -9,6 +9,8 @@
 #define ALG_PETAL2        std::vector<int>{ { M_L, M_D, M_LP } }
 #define ALG_PETAL3        std::vector<int>{ { M_F, M_RP, M_DP, M_R } }
 #define ALG_PETAL4        std::vector<int>{ { M_RP, M_DP, M_R } }
+#define ALG_TOP_LAYER1    std::vector<int>{ { M_DP, M_RP, M_D, M_R } }
+#define ALG_TOP_LAYER2    std::vector<int>{ { M_D, M_L, M_DP, M_LP } }
 #define ALG_MIDDLE_LAYER1 std::vector<int>{ { M_U, M_R, M_UP, M_RP, M_UP, M_FP, M_U, M_F } }
 #define ALG_MIDDLE_LAYER2 std::vector<int>{ { M_UP, M_LP, M_U, M_L, M_U, M_F, M_UP, M_FP } }
 #define ALG_OLL45         std::vector<int>{ { M_F, M_R, M_U, M_RP, M_UP, M_FP } }
