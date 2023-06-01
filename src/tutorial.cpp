@@ -370,6 +370,9 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                 switch (yellow_corners_alg_shown)
                 {
                     case 1:
+                        text_wrap.Set_font_height(INSTR_SIZE);
+                        text_wrap.Set_font_size(INSTR_SIZE);
+
                         get_yellow_corners_alg();
                         if (yellow_corners_case == -1)
                         {
@@ -402,6 +405,8 @@ void Tutorial::Update(std::array<int, CUBE_FACE_SIZE> pred_state)
                 switch (pll_corners_alg_shown)
                 {
                     case 1:
+                        text_wrap.Set_font_height(INSTR_SIZE);
+                        text_wrap.Set_font_size(INSTR_SIZE);
                         yellow_corners_alg_shown = -1; // prevent fish from drawing if step is skipped
 
                         get_pll_corners_alg();
@@ -783,7 +788,6 @@ void Tutorial::next_step()
                     increment = true;
                     break;
                 }
-                // prompt is quite big, so font size temporarily halved
                 text_wrap.Set_font_height((int)(INSTR_SIZE * 0.82));
                 text_wrap.Set_font_size((int)(INSTR_SIZE * 0.82));
                 prompt = "This step is intuitive, so you must repeatedly use the OLL27 (R U R' U R U2 R') algorithm at any orientation (while keeping the yellow face at the top) until a yellow \"fish\" (as shown below) appears on the yellow face, upon which you must keep using the OLL27 algorithm so the fish is looking towards the bottom-left corner once or twice so the top face is yellow-only.\n\nThe following instructions will show you a solution, but it is recommended that you try yourself and then use the \"Reset\" button to sync your cube with the tutorial";
@@ -824,7 +828,7 @@ void Tutorial::next_step()
                     case -1:
                         pll_corners_case = 1;
                         pll_corners_front_face = loop(front_face, CUBE_ORANGE, CUBE_BLUE); // any front face can be used, but keeping previous front face (not W/Y) makes more sense
-                        // prompt is quite big, so font size temporarily halved
+                        // prompt is quite big, so font size temporarily decreased
                         text_wrap.Set_font_height((int)(INSTR_SIZE * 0.95));
                         text_wrap.Set_font_size((int)(INSTR_SIZE * 0.95));
                         prompt = "As no face exists where the top-left and top-right corner have the same colour, you can hold the cube at any orientation (as long as top face is yellow). Use the PLLAa (R' F R' B2 R F' R' B2 R2) algorithm once, upon which a face should have a matching top-left and top-right corner. Hold the cube so that face is at the back, and use the PLLAa algorithm again";
@@ -1014,7 +1018,7 @@ int Tutorial::get_petal_alg(Coord petal)
     switch (petal_setup_alg.size())
     {
         case 0:
-            prompt.append("No setup algorithm needed as petal is ready to be moved to yellow face");
+            prompt.append("No setup algorithm as petal is ready to be moved to yellow face");
             break;
 
         default: 
@@ -1082,7 +1086,7 @@ int Tutorial::get_white_cross_alg(int white_cross_edge)
     switch (white_cross_alg.size())
     {
         case 0:
-            prompt.append("No setup algorithm needed as white edge is ready to be moved to white cross");
+            prompt.append("No setup algorithm as white edge is ready to be moved to white cross");
             break;
 
         default: 
@@ -1506,6 +1510,7 @@ void Tutorial::get_middle_layer_alg()
     int middle_layer_intermediate_face; // if case is 2 or 3, this is the face the edge is moved to after first move alg
     middle_layer_setup_alg = std::vector<int>();
     middle_layer_move_algs = std::vector<std::vector<int>>();
+    std::string alg_notation; // holds notation of an alg to remove the space at the end (prevents Text_wrap from cutting off space at the end with a new line)
 
     switch (middle_layer_case)
     {
@@ -1538,27 +1543,49 @@ void Tutorial::get_middle_layer_alg()
             break;
     }
 
+    alg_notation = Cube_notation_str(middle_layer_move_algs[0]);
     if (middle_layer_case < 2)
     {
         prompt.append("Hold the cube so the ");
         prompt.append(Cube_face_str(middle_layer_front_face));
-        prompt.append("face is facing you\nSetup algorithm: ");
-        prompt.append(Cube_notation_str(middle_layer_setup_alg));
+        prompt.append("face is facing you\n");
+        switch (middle_layer_setup_alg.size())
+        {
+            case 0:
+                prompt.append("No setup algorithm as any edge can be inserted into middle layer");
+                break;
+
+            default:
+                prompt.append("Setup algorithm: ");
+                prompt.append(Cube_notation_str(middle_layer_setup_alg));
+                break;
+        }
         prompt.append("\nMove whole cube so front face is ");
         prompt.append(Cube_face_str(middle_layer_target_face));
         prompt.append("\nMove algorithm: ");
-        prompt.append(Cube_notation_str(middle_layer_move_algs[0]));
+        prompt.append(alg_notation.substr(0, alg_notation.size() - 1));
     } else {
         prompt.append("Hold the cube so the ");
         prompt.append(Cube_face_str(middle_layer_front_face));
         prompt.append("face is facing you\nMove algorithm: ");
-        prompt.append(Cube_notation_str(middle_layer_move_algs[0]));
-        prompt.append("\nMove whole cube so front face is ");
+        prompt.append(alg_notation.substr(0, alg_notation.size() - 1));
+        prompt.append("\nHold the cube so the ");
         prompt.append(Cube_face_str(middle_layer_target_face));
-        prompt.append("face is facing you\nSetup algorithm: ");
-        prompt.append(Cube_notation_str(middle_layer_setup_alg));
-        prompt.append("face is facing you\nMove algorithm: ");
-        prompt.append(Cube_notation_str(middle_layer_move_algs[1]));
+        prompt.append("face is facing you\n");
+        switch (middle_layer_setup_alg.size())
+        {
+            case 0:
+                prompt.append("No setup algorithm");
+                break;
+
+            default:
+                prompt.append("Setup algorithm: ");
+                prompt.append(Cube_notation_str(middle_layer_setup_alg));
+                break;
+        }
+        alg_notation = Cube_notation_str(middle_layer_move_algs[1]);
+        prompt.append("\nMove algorithm: ");
+        prompt.append(alg_notation.substr(0, alg_notation.size() - 1));
     }
 };
 void Tutorial::get_middle_layer_setup_alg(int front_face, int target_face)
@@ -1699,7 +1726,7 @@ void Tutorial::get_yellow_cross_alg()
         switch (yellow_cross_setup_algs[i].size())
         {
             case 0:
-                prompt.append("\nNo setup algorithm needed");
+                prompt.append("\nNo setup algorithm");
                 break;
 
             default:
