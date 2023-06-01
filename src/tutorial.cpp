@@ -540,7 +540,7 @@ void Tutorial::Draw()
 
         case 7:
             DrawText("Permute the yellow corners", 8, 0, HEADER_SIZE, DARKGRAY);
-            if (pll_corners_alg_shown == 0) // shows face of fish until Right button/key pressd
+            if (yellow_corners_alg_shown != -1) // shows face of fish until Right button/key pressd
             {
                 DrawTextureRec(
                     fish,
@@ -777,6 +777,7 @@ void Tutorial::next_step()
                 {
                     prompt = "Yellow layer already done!";
                     set_prompt();
+                    yellow_corners_alg_shown = -1; // prevent fish from drawing if step is skipped
                     increment = true;
                     break;
                 }
@@ -820,10 +821,11 @@ void Tutorial::next_step()
                 {
                     case -1:
                         pll_corners_case = 1;
-                        pll_corners_front_face = loop(front_face, 1, 4); // any front face can be used, but keeps previous front face (if not W/Y) for ease of use
-                        // large prompt for this case too
-                        text_wrap.Set_font_height((int)(INSTR_SIZE * 0.82));
-                        text_wrap.Set_font_size((int)(INSTR_SIZE * 0.82));
+                        pll_corners_front_face = loop(front_face, CUBE_ORANGE, CUBE_BLUE); // any front face can be used, but keeping previous front face (not W/Y) makes more sense
+                        // prompt is quite big, so font size temporarily halved
+                        text_wrap.Set_font_height((int)(INSTR_SIZE * 0.95));
+                        text_wrap.Set_font_size((int)(INSTR_SIZE * 0.95));
+                        prompt = "As no face exists where the top-left and top-right corner have the same colour, you can hold the cube at any orientation (as long as top face is yellow). Use the PLLAa (R' F R' B2 R F' R' B2 R2) algorithm once, upon which a face should have a matching top-left and top-right corner. Hold the cube so that face is at the back, and use the PLLAa algorithm again\n";
                         break;
 
                     default:
@@ -831,8 +833,10 @@ void Tutorial::next_step()
                         // revert text_wrap to normal text size
                         text_wrap.Set_font_height(INSTR_SIZE);
                         text_wrap.Set_font_size(INSTR_SIZE);
+                        prompt = "Hold the cube so the face which has a colour-matching top-left and top-right corner is at the back\nUse the PLLAa (R' F R' B2 R F' R' B2 R2) algorithm once to swap the yellow corners to their correct positions\n";
                         break;
                 }
+                set_prompt();
                 break;
 
             case 8:
@@ -1879,8 +1883,7 @@ void Tutorial::get_pll_corners_alg()
 {
     pll_corners_setup_alg = std::vector<int>();
 
-    prompt = (pll_corners_case == 0) ? "Hold the cube so the face which has a colour-matching top-left and top-right corner is at the back\nUse the PLLAa (R' F R' B2 R F' R' B2 R2) algorithm once to swap the yellow corners to their correct positions:\n" : "As no face exists where the top-left and top-right corner have the same colour, you can hold the cube at any orientation (as long as top face is yellow). Use the PLLAa (R' F R' B2 R F' R' B2 R2) algorithm once, upon which a face should have a matching top-left and top-right corner. Hold the cube so that face is at the back, and use the PLLAa algorithm again:\n";
-    prompt.append("Hold the cube so the ");
+    prompt = "Hold the cube so the ";
     prompt.append(Cube_face_str(pll_corners_front_face));
     prompt.append("face is facing you\nMove algorithm: R' F R' B2 R F' R' B2 R2");
     // nothing for case 0 (no setup algs needed)
