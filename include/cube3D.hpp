@@ -80,8 +80,8 @@ class Cube3D
         int set_index; // current ongoing set in alg
         int buffer_index; // current ongoing move by index (within alg)
         int cur_move; // current ongoing move (-1 = none)
-        int angle; // current rotating angle (only used if move ongoing)
-        int angle_increment; // change in angle per frame (if moving)
+        float angle; // current rotating angle (only used if move ongoing)
+        float angle_increment; // change in angle per frame (if moving)
 };
 
 Color Cube3D_get_Colour(int cube_col); // converts Cube colour to Raylib colour

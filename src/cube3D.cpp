@@ -72,7 +72,7 @@ void Cube3D::Init(Cube* _cube)
 
 void Cube3D::Update(bool fast_forward)
 {
-    angle_increment = fast_forward * 15 + 1;
+    angle_increment = fast_forward * 15 + 0.5f;
 
     if (
         orbital &&
