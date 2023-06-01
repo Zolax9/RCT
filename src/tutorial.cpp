@@ -1504,7 +1504,7 @@ void Tutorial::get_middle_layer_alg()
         prompt.append("\nMove algorithm: ");
         prompt.append(Cube_notation_str(middle_layer_move_algs[0]));
     } else {
-        prompt.append("Move whole cube so front face is ");
+        prompt.append("Move the cube so the ");
         prompt.append(Cube_face_str(middle_layer_front_face));
         prompt.append("face is facing you\nMove algorithm: ");
         prompt.append(Cube_notation_str(middle_layer_move_algs[0]));
@@ -1564,7 +1564,8 @@ bool Tutorial::check_yellow_cross_case(int c)
             if (matches.size() == 4)
             {
                 yellow_cross_case = 0;
-                yellow_cross_front_face = CUBE_GREEN; // any (except W/Y) is fine
+                yellow_cross_front_face = loop(middle_layer_target_face, CUBE_ORANGE, CUBE_BLUE); // any front_face (except W/Y) is fine
+                prompt = "Use the OLL45 and OLL44 algorithm:\n";
                 return true;
             }
             break;
@@ -1584,6 +1585,7 @@ bool Tutorial::check_yellow_cross_case(int c)
             {
                 yellow_cross_case = 1;
                 yellow_cross_front_face = loop(matches[4], 1, 4);
+                prompt = "Hold the cube so the yellow \"backwards L\" on the top layer is at the top-left corner and use the OLL44 algorithm:\n";
                 return true;
             }
             break;
@@ -1603,6 +1605,7 @@ bool Tutorial::check_yellow_cross_case(int c)
             {
                 yellow_cross_case = 2;
                 yellow_cross_front_face = loop(matches[4] + 2, 1, 4);
+                prompt = "Hold the cube so the yellow \"line\" on the top layer is horizontal and use the OLL45 algorithm:\n";
                 return true;
             }
             break;
@@ -1642,20 +1645,25 @@ void Tutorial::get_yellow_cross_alg()
             break;
     }
 
-    std::cout << "Move whole cube so front face is " << Cube_face_str(yellow_cross_front_face) << '\n';
-    for (int i = 0; i < yellow_cross_setup_algs.size(); ++i)
+    prompt.append("Move the cube so the ");
+    prompt.append(Cube_face_str(yellow_cross_front_face));
+    prompt.append("face is facing you\nMove algorithm: ");
+    prompt.append(Cube_notation_str(yellow_cross_move_algs[0]));
+    for (int i = 1; i < yellow_cross_setup_algs.size(); ++i)
     {
         switch (yellow_cross_setup_algs[i].size())
         {
             case 0:
-                std::cout << "No setup alg needed\n\n";
+                prompt.append("\nNo setup algorithm needed");
                 break;
 
             default:
-                std::cout << "Setup alg: " << Cube_notation_str(yellow_cross_setup_algs[i]) << "\n\n";
+                prompt.append("\nSetup algorithm: ");
+                prompt.append(Cube_notation_str(yellow_cross_setup_algs[i]));
                 break;
         }
-        std::cout << "Move alg: " << Cube_notation_str(yellow_cross_move_algs[i]) << "\n\n";
+        prompt.append("\nMove algorithm: ");
+        prompt.append(Cube_notation_str(yellow_cross_move_algs[i]));
     } 
 };
 void Tutorial::permute_yellow_cross()
