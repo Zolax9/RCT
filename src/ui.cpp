@@ -89,7 +89,7 @@ void UI::Update()
     {
         if (IsKeyPressed(KEY_Q))
         {
-            *cur_face = 5;
+            *cur_face = CUBE_YELLOW;
             cube->set_state(
                 std::array<std::array<int, CUBE_FACE_SIZE>, CUBE_SIZE>{ {
                     std::array<int, CUBE_FACE_SIZE>{ {

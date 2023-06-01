@@ -794,10 +794,6 @@ void Tutorial::next_step()
                 break;
 
             case 7:
-                // revert text_wrap to normal text size
-                text_wrap.Set_font_height(INSTR_SIZE);
-                text_wrap.Set_font_size(INSTR_SIZE);
-
                 pll_corners_count = 0;
                 pll_corners_front_face = -1;
 
@@ -806,7 +802,7 @@ void Tutorial::next_step()
                     if (cube.get_corner(i, 2) == cube.get_corner(i, 3))
                     {
                         ++pll_corners_count;
-                        pll_corners_front_face = loop(i + 2, 1, 4); // if step not already done (pll_corners_count != 4), i will be front face
+                        pll_corners_front_face = loop(i + 2, CUBE_ORANGE, CUBE_BLUE); // if step not already done (pll_corners_count != 4), i will be front face
                     }
                 }
                 if (pll_corners_count == 4)
@@ -825,15 +821,24 @@ void Tutorial::next_step()
                     case -1:
                         pll_corners_case = 1;
                         pll_corners_front_face = loop(front_face, 1, 4); // any front face can be used, but keeps previous front face (if not W/Y) for ease of use
+                        // large prompt for this case too
+                        text_wrap.Set_font_height((int)(INSTR_SIZE * 0.82));
+                        text_wrap.Set_font_size((int)(INSTR_SIZE * 0.82));
                         break;
 
                     default:
                         pll_corners_case = 0;
+                        // revert text_wrap to normal text size
+                        text_wrap.Set_font_height(INSTR_SIZE);
+                        text_wrap.Set_font_size(INSTR_SIZE);
                         break;
                 }
                 break;
 
             case 8:
+                text_wrap.Set_font_height(INSTR_SIZE);
+                text_wrap.Set_font_size(INSTR_SIZE);
+
                 pll_edges_count = 0;
                 pll_edges_front_faces = std::vector<int>();
                 pll_edges_back_face = -1;
@@ -870,7 +875,7 @@ void Tutorial::next_step()
                         pll_edges_setup_algs.push_back(get_pll_edges_setup_alg(pll_edges_front_faces[0], cube.get_corner(pll_edges_front_faces[0], 2)));
 
                         prompt = "Yellow layer already done!\n";
-                        prompt.append("Move the cube so the ");
+                        prompt.append("Hold the cube so the ");
                         prompt.append(Cube_face_str(pll_edges_front_faces[0]));
                         prompt.append("face is facing you\nSetup algorithm: ");
                         prompt.append(Cube_notation_str(pll_edges_setup_algs[0]));
@@ -1001,14 +1006,14 @@ int Tutorial::get_petal_alg(Coord petal)
             break;
 
         default: 
-            prompt.append("Move the cube so the ");
+            prompt.append("Hold the cube so the ");
             prompt.append(Cube_face_str(petal.f));
             prompt.append("face is facing you\nSetup algorithm:\n");
             prompt.append(Cube_notation_str(petal_setup_alg));
             break;
 
     }
-    prompt.append("\nMove the cube so the ");
+    prompt.append("\nHold the cube so the ");
     prompt.append(Cube_face_str(loop(slot_edge + 2, CUBE_GREEN, CUBE_BLUE)));
     prompt.append("face is facing you\nMove algorithm:\n");
     prompt.append(Cube_notation_str(petal_move_alg));
@@ -1058,7 +1063,7 @@ int Tutorial::get_white_cross_alg(int white_cross_edge)
 
     prompt = "Insert the White-";
     prompt.append(Cube_face_str(white_cross_front_face));
-    prompt.append("edge into the white cross:\nMove the cube so the ");
+    prompt.append("edge into the white cross:\nHold the cube so the ");
     prompt.append(Cube_face_str(white_cross_front_face));
     prompt.append("face is facing you\n");
     
@@ -1328,12 +1333,12 @@ void Tutorial::get_top_layer_alg()
 
     if (top_layer_setup_alg.size())
     {
-        prompt.append("Move the cube so the ");
+        prompt.append("Hold the cube so the ");
         prompt.append(Cube_face_str((top_layer_intermediate_face == -1) ? top_layer_front_face : top_layer_intermediate_face));
         prompt.append("face is facing you\nSetup algorithm: ");
         prompt.append(Cube_notation_str(top_layer_setup_alg));
     }
-    prompt.append("\nMove the cube so the ");
+    prompt.append("\nHold the cube so the ");
     prompt.append(Cube_face_str(top_layer_target_face));
     prompt.append("face is facing you\nMove algorithm: ");
     prompt.append(Cube_notation_str(top_layer_move_alg));
@@ -1523,7 +1528,7 @@ void Tutorial::get_middle_layer_alg()
 
     if (middle_layer_case < 2)
     {
-        prompt.append("Move the cube so the ");
+        prompt.append("Hold the cube so the ");
         prompt.append(Cube_face_str(middle_layer_front_face));
         prompt.append("face is facing you\nSetup algorithm: ");
         prompt.append(Cube_notation_str(middle_layer_setup_alg));
@@ -1532,7 +1537,7 @@ void Tutorial::get_middle_layer_alg()
         prompt.append("\nMove algorithm: ");
         prompt.append(Cube_notation_str(middle_layer_move_algs[0]));
     } else {
-        prompt.append("Move the cube so the ");
+        prompt.append("Hold the cube so the ");
         prompt.append(Cube_face_str(middle_layer_front_face));
         prompt.append("face is facing you\nMove algorithm: ");
         prompt.append(Cube_notation_str(middle_layer_move_algs[0]));
@@ -1673,7 +1678,7 @@ void Tutorial::get_yellow_cross_alg()
             break;
     }
 
-    prompt.append("Move the cube so the ");
+    prompt.append("Hold the cube so the ");
     prompt.append(Cube_face_str(yellow_cross_front_face));
     prompt.append("face is facing you\nMove algorithm: ");
     prompt.append(Cube_notation_str(yellow_cross_move_algs[0]));
@@ -1711,7 +1716,7 @@ void Tutorial::get_yellow_corners_alg()
 
     yellow_corners_setup_algs = std::vector<std::vector<int>>();
 
-    while (true) // uses a loop to skip other cases w/o leaving function (need to std::cout after); has a return command so infinite loop impossible
+    while (true) // uses a loop to skip other cases w/o leaving function (need to append to prompt after); has a return command so infinite loop impossible
     {
         if (cube.match_pattern_face(
             CUBE_YELLOW,
@@ -1849,7 +1854,7 @@ void Tutorial::get_yellow_corners_alg()
         return;
     }
 
-    prompt = "Move the cube so the ";
+    prompt = "Hold the cube so the ";
     prompt.append(Cube_face_str(yellow_corners_front_face));
     prompt.append("face is facing you\nMove algorithm: R U R' U R U2 R'");
     for (int i = 0; i < yellow_corners_setup_algs.size(); ++i)
@@ -1874,14 +1879,15 @@ void Tutorial::get_pll_corners_alg()
 {
     pll_corners_setup_alg = std::vector<int>();
 
-    std::cout << "Move whole cube so front face is " << Cube_face_str(pll_corners_front_face) << '\n';
-    std::cout << "Move alg: R' F R' B2 R F' R' B2 R2 \n\n";
-    // Nothing for case 0 (no setup algs needed)
+    prompt = (pll_corners_case == 0) ? "Hold the cube so the face which has a colour-matching top-left and top-right corner is at the back\nUse the PLLAa (R' F R' B2 R F' R' B2 R2) algorithm once to swap the yellow corners to their correct positions:\n" : "As no face exists where the top-left and top-right corner have the same colour, you can hold the cube at any orientation (as long as top face is yellow). Use the PLLAa (R' F R' B2 R F' R' B2 R2) algorithm once, upon which a face should have a matching top-left and top-right corner. Hold the cube so that face is at the back, and use the PLLAa algorithm again:\n";
+    prompt.append("Hold the cube so the ");
+    prompt.append(Cube_face_str(pll_corners_front_face));
+    prompt.append("face is facing you\nMove algorithm: R' F R' B2 R F' R' B2 R2");
+    // nothing for case 0 (no setup algs needed)
     if (pll_corners_case == 1)
     {
         pll_corners_setup_alg.push_back(M_U);
-        std::cout << "Setup alg: U \n";
-        std::cout << "Move alg: R' F R' B2 R F' R' B2 R2 \n\n";
+        prompt.append("\nSetup algorithm: U\nMove algorithm: R' F R' B2 R F' R' B2 R2");
     }
 };
 void Tutorial::permute_pll_corners()
