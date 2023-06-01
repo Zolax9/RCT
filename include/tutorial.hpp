@@ -15,7 +15,7 @@
 #define ALG_MIDDLE_LAYER2 std::vector<int>{ { M_UP, M_LP, M_U, M_L, M_U, M_F, M_UP, M_FP } }
 #define ALG_OLL45         std::vector<int>{ { M_F, M_R, M_U, M_RP, M_UP, M_FP } }
 #define ALG_OLL44         std::vector<int>{ { M_F, M_U, M_R, M_UP, M_RP, M_FP } }
-#define ALG_SUNE          std::vector<int>{ { M_R, M_U, M_RP, M_U, M_R, M_U2, M_RP } }
+#define ALG_OLL27         std::vector<int>{ { M_R, M_U, M_RP, M_U, M_R, M_U2, M_RP } }
 #define ALG_PLLAA         std::vector<int>{ { M_RP, M_F, M_RP, M_B2, M_R, M_FP, M_RP, M_B2, M_R2 } }
 #define ALG_PLLUA         std::vector<int>{ { M_F2, M_UP, M_L, M_RP, M_F2, M_LP, M_R, M_UP, M_F2 } }
 #define ALG_PLLUB         std::vector<int>{ { M_F2, M_U, M_L, M_RP, M_F2, M_LP, M_R, M_U, M_F2 } }
@@ -32,6 +32,7 @@
 
 #define HEADER_SIZE 48
 #define INSTR_SIZE 32
+#define INSTR_WIDTH 568 // used by Text_wrap
 
 class Tutorial
 {

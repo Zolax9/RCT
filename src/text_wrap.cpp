@@ -72,3 +72,6 @@ void Text_wrap::Set_text(std::string str)
         }
     }
 };
+void Text_wrap::Set_font_height(int val) { font_height = val; }
+void Text_wrap::Set_font_size(int val) { font_size = val; }
+void Text_wrap::Set_bounds_width(int val) { bounds_width = val; }

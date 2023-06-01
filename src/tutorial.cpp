@@ -13,7 +13,7 @@ void Tutorial::Init(Text_wrap* text_wrap_pointer)
 {
     cube3D.Init(get_cube_pointer());
     renderTexture_cube3D = LoadRenderTexture(320, 320);
-    text_wrap.Init(INSTR_SIZE, INSTR_SIZE, 568);
+    text_wrap.Init(INSTR_SIZE, INSTR_SIZE, INSTR_WIDTH);
 
     step = -1;
     next_step();
@@ -725,8 +725,6 @@ void Tutorial::next_step()
                     increment = true;
                     break;
                 }
-                prompt = "Create yellow cross";
-                set_prompt();
 
                 set_orient(2);
                 yellow_cross_setup_algs = std::vector<std::vector<int>>();
@@ -752,7 +750,10 @@ void Tutorial::next_step()
                     increment = true;
                     break;
                 }
-                prompt = "Orient yellow corners to finish yellow layer";
+                // prompt is quite big, so font size temporarily halved
+                text_wrap.Set_font_height((int)(INSTR_SIZE * 0.82));
+                text_wrap.Set_font_size((int)(INSTR_SIZE * 0.82));
+                prompt = "This step is intuitive, so you must repeatedly use the OLL27 (R U R' U R U2 R') algorithm at any orientation (while keeping the yellow face at the top) until a yellow \"fish\" appears on the yellow face, upon which you must keep using the OLL27 algorithm so the fish is looking towards the bottom-left corner once or twice so the top face is yellow-only.\n\nThe following instructions will show you a solution, but it is recommended that you try yourself and then use the \"Reset\" button to sync your cube with the tutorial.";
                 set_prompt();
 
                 set_orient(2);
@@ -763,6 +764,10 @@ void Tutorial::next_step()
                 break;
 
             case 7:
+                // revert text_wrap to normal text size
+                text_wrap.Set_font_height(INSTR_SIZE);
+                text_wrap.Set_font_size(INSTR_SIZE);
+
                 pll_corners_count = 0;
                 pll_corners_front_face = -1;
 
@@ -781,8 +786,6 @@ void Tutorial::next_step()
                     increment = true;
                     break;
                 }
-                prompt = "Permute yellow corners into correct positions";
-                set_prompt();
 
                 set_orient(2);
                 pll_corners_setup_alg = std::vector<int>();
@@ -839,14 +842,12 @@ void Tutorial::next_step()
                         prompt = "Yellow layer already done!\n";
                         prompt.append("Move the cube so the ");
                         prompt.append(Cube_face_str(pll_edges_front_faces[0]));
-                        prompt.append("face is facing you\nSetup algorithm:\n");
+                        prompt.append("face is facing you\nSetup algorithm: ");
                         prompt.append(Cube_notation_str(pll_edges_setup_algs[0]));
                         set_prompt();
                     }
                     // if size == 8, bottom, middle, and top layer is solved and one face as well, so cube is already solved
                 }
-                prompt = "Move yellow edges into correct positions";
-                set_prompt();
 
                 set_orient(2);
                 pll_edges_move_algs = std::vector<std::vector<int>>();
@@ -854,9 +855,6 @@ void Tutorial::next_step()
                 break;
 
             case 9:
-                prompt = "";
-                set_prompt();
-
                 cube3D.Set_orbital(true);
                 break;
         }
@@ -1565,7 +1563,7 @@ bool Tutorial::check_yellow_cross_case(int c)
             {
                 yellow_cross_case = 0;
                 yellow_cross_front_face = loop(middle_layer_target_face, CUBE_ORANGE, CUBE_BLUE); // any front_face (except W/Y) is fine
-                prompt = "Use the OLL45 and OLL44 algorithm:\n";
+                prompt = "Use the OLL45 (F U R U' R' F') algorithm and then (same case as the \"backwards L\") the OLL44 (F U R U' R' F') algorithm:\n";
                 return true;
             }
             break;
@@ -1585,7 +1583,7 @@ bool Tutorial::check_yellow_cross_case(int c)
             {
                 yellow_cross_case = 1;
                 yellow_cross_front_face = loop(matches[4], 1, 4);
-                prompt = "Hold the cube so the yellow \"backwards L\" on the top layer is at the top-left corner and use the OLL44 algorithm:\n";
+                prompt = "Hold the cube so the yellow \"backwards L\" on the top layer is at the top-left corner and use the OLL44 (F U R U' R' F') algorithm:\n";
                 return true;
             }
             break;
@@ -1605,7 +1603,7 @@ bool Tutorial::check_yellow_cross_case(int c)
             {
                 yellow_cross_case = 2;
                 yellow_cross_front_face = loop(matches[4] + 2, 1, 4);
-                prompt = "Hold the cube so the yellow \"line\" on the top layer is horizontal and use the OLL45 algorithm:\n";
+                prompt = "Hold the cube so the yellow \"line\" on the top layer is horizontal and use the OLL45 (F R U R' U' F') algorithm:\n";
                 return true;
             }
             break;
@@ -1820,22 +1818,25 @@ void Tutorial::get_yellow_corners_alg()
         if (yellow_corners_case != -1) { break; }
         return;
     }
-    std::cout << "Move whole cube so front face is " << Cube_face_str(yellow_corners_front_face) << '\n';
-    std::cout << "Move alg: R U R' U R U2 R' \n\n";
+
+    prompt = "Move the cube so the ";
+    prompt.append(Cube_face_str(yellow_corners_front_face));
+    prompt.append("face is facing you\nMove algorithm: R U R' U R U2 R'");
     for (int i = 0; i < yellow_corners_setup_algs.size(); ++i)
     {
-        std::cout << "Setup alg: " << Cube_notation_str(yellow_corners_setup_algs[i]) << '\n';
-        std::cout << "Move alg: R U R' U R U2 R' \n\n";
+        prompt.append("\nSetup algorithm: ");
+        prompt.append(Cube_notation_str(yellow_corners_setup_algs[i]));
+        prompt.append("\nMove algorithm: R U R' U R U2 R'");
     }
     return;
 };
 void Tutorial::permute_yellow_corners()
 {
-    append_permute(ALG_SUNE, yellow_corners_front_face, 2);
+    append_permute(ALG_OLL27, yellow_corners_front_face, 2);
     for (int i = 0; i < yellow_corners_setup_algs.size(); ++i)
     {
         if (yellow_corners_setup_algs[i].size() != 0) { append_permute(yellow_corners_setup_algs[i], yellow_corners_front_face, 2); }
-        append_permute(ALG_SUNE, yellow_corners_front_face, 2);
+        append_permute(ALG_OLL27, yellow_corners_front_face, 2);
     }
 };
 

@@ -17,6 +17,9 @@ class Text_wrap
         void Draw(int x, int y);
 
         void Set_text(std::string str); // converts string to formatted text
+        void Set_font_height(int val);
+        void Set_font_size(int val);
+        void Set_bounds_width(int val);
 
     private:
         std::vector<std::string> prompt;
