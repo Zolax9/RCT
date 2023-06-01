@@ -615,6 +615,7 @@ void Cube3D::Replay()
         state = last_state;
         Update_pieces();
         Append_move_buffer(last_alg, last_front_faces, last_orients);
+        if (orbital) { camera.position = (Vector3){ 0.0f, 3.75f, 5.0f }; } // if Tutorial finished, Cube3D will replay at an angle rather than normal viewing point
     }
 };
 
