@@ -1,10 +1,4 @@
-#include <stdlib.h>
-#include <cstdio>
-#include <iostream>
-#include <vector>
-
 #include "colour.hpp"
-#include "rgbhsv.hpp"
 
 #include "raylib.h"
 
@@ -41,7 +35,7 @@ int Colour_getPredColour(hsv col)
     return -1;
 };
 
-std::array<int, CUBE_FACE_SIZE> Colour_getColours(std::vector<cv::Scalar> avgRGBCols)
+std::array<int, CUBE_FACE_SIZE> Colour_getColours(std::array<cv::Scalar, CUBE_FACE_SIZE> avgRGBCols)
 {
     std::array<int, CUBE_FACE_SIZE> predCols;
     std::array<hsv, CUBE_FACE_SIZE> avgHSVCols;

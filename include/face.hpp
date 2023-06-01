@@ -22,17 +22,15 @@ class Face
         std::array<int, CUBE_FACE_SIZE> Update();
         void Draw();
 
-    private:
         void draw_frame(float x, float y, float l, int thickness, bool outline);
-        std::vector<Rectangle> GetStateFrameRects(float x, float y, float l, int thickness);
-
-        std::vector<std::vector<cv::Point>> points;
-        std::vector<cv::Rect> rects;
-        std::vector<Rectangle> live_preview;
-        std::vector<Rectangle> pred_preview;
-        std::vector<cv::Scalar> avgCols;
+        std::array<Rectangle, CUBE_FACE_SIZE> GetStateFrameRects(float x, float y, float l);
+    private:
+        std::array<cv::Rect, CUBE_FACE_SIZE> rects;
+        std::array<Rectangle, CUBE_FACE_SIZE> live_preview;
+        std::array<Rectangle, CUBE_FACE_SIZE> pred_preview;
+        std::array<cv::Scalar, CUBE_FACE_SIZE> avgCols;
         std::array<int, CUBE_FACE_SIZE> predCols;
-        std::vector<std::vector<Rectangle>> state_preview;
+        std::array<std::array<Rectangle, CUBE_FACE_SIZE>, CUBE_SIZE> state_preview;
 
         int videoW;
         int videoH;

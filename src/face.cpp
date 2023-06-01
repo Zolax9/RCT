@@ -27,21 +27,18 @@ void Face::Init(cv::Mat* _frame, Vector2 videoSize, float _videoScale, Cube* _cu
     STATEPREVIEW_SIZE = (int)(smallLength * 0.035);
     FACE_SIZE = (int)(smallLength * 0.14);
 
-    rects = std::vector<cv::Rect>();
-    live_preview = std::vector<Rectangle>();
-    pred_preview = std::vector<Rectangle>();
     float piece_len = FACE_SIZE / videoScale;
 
     for (size_t y = 0; y < 3; ++y)
     {
         for (size_t x = 0; x < 3; ++x)
         {
-            rects.push_back(cv::Rect(
+            rects[y * 3 + x] = cv::Rect(
                 videoW / 2.0 + (x - 1.5) * piece_len,
                 videoH / 2.0 + (y - 1.5) * piece_len,
                 piece_len,
                 piece_len 
-            ));
+            );
         }
     }
 
@@ -49,57 +46,51 @@ void Face::Init(cv::Mat* _frame, Vector2 videoSize, float _videoScale, Cube* _cu
     {
         for (size_t x = 0; x < 3; ++x)
         {
-            live_preview.push_back(Rectangle{
+            live_preview[y * 3 + x] = Rectangle{
                 LIVEPREVIEW_SIZE * 2 + (x - 1.5) * LIVEPREVIEW_SIZE,
                 LIVEPREVIEW_SIZE * 2 + (y - 1.5) * LIVEPREVIEW_SIZE,
                 LIVEPREVIEW_SIZE,
                 LIVEPREVIEW_SIZE
-            });
-            pred_preview.push_back(Rectangle{
+            };
+            pred_preview[y * 3 + x] = Rectangle{
                 screenW - PREDPREVIEW_SIZE * 2 + (x - 1.5) * PREDPREVIEW_SIZE,
                 screenH - PREDPREVIEW_SIZE * 2 + (y - 1.5) * PREDPREVIEW_SIZE,
                 PREDPREVIEW_SIZE,
                 PREDPREVIEW_SIZE
-            });
+            };
         }
     }
 
-    state_preview.push_back(GetStateFrameRects(
+    state_preview[0] = GetStateFrameRects(
         (screenW - STATEPREVIEW_SIZE / 2.0) - STATEPREVIEW_SIZE * 9,
         STATEPREVIEW_SIZE / 2.0,
-        STATEPREVIEW_SIZE,
         STATEPREVIEW_SIZE
-    ));
-    state_preview.push_back(GetStateFrameRects(
+    );
+    state_preview[1] = GetStateFrameRects(
         (screenW - STATEPREVIEW_SIZE / 2.0) - STATEPREVIEW_SIZE * 12,
         (STATEPREVIEW_SIZE / 2.0) + STATEPREVIEW_SIZE * 3,
-        STATEPREVIEW_SIZE,
         STATEPREVIEW_SIZE
-    ));
-    state_preview.push_back(GetStateFrameRects(
+    );
+    state_preview[2] = GetStateFrameRects(
         (screenW - STATEPREVIEW_SIZE / 2.0) - STATEPREVIEW_SIZE * 9,
         (STATEPREVIEW_SIZE / 2.0) + STATEPREVIEW_SIZE * 3,
-        STATEPREVIEW_SIZE,
         STATEPREVIEW_SIZE
-    ));
-    state_preview.push_back(GetStateFrameRects(
+    );
+    state_preview[3] = GetStateFrameRects(
         (screenW - STATEPREVIEW_SIZE / 2.0) - STATEPREVIEW_SIZE * 6,
         (STATEPREVIEW_SIZE / 2.0) + STATEPREVIEW_SIZE * 3,
-        STATEPREVIEW_SIZE,
         STATEPREVIEW_SIZE
-    ));
-    state_preview.push_back(GetStateFrameRects(
+    );
+    state_preview[4] = GetStateFrameRects(
         (screenW - STATEPREVIEW_SIZE / 2.0) - STATEPREVIEW_SIZE * 3,
         (STATEPREVIEW_SIZE / 2.0) + STATEPREVIEW_SIZE * 3,
-        STATEPREVIEW_SIZE,
         STATEPREVIEW_SIZE
-    ));
-    state_preview.push_back(GetStateFrameRects(
+    );
+    state_preview[5] = GetStateFrameRects(
         (screenW - STATEPREVIEW_SIZE / 2.0) - STATEPREVIEW_SIZE * 9,
         (STATEPREVIEW_SIZE / 2.0) + STATEPREVIEW_SIZE * 6,
-        STATEPREVIEW_SIZE,
         STATEPREVIEW_SIZE
-    ));
+    );
 
     RenderTexture2D face_target = LoadRenderTexture(screenW, screenH);
     BeginTextureMode(face_target);
@@ -132,7 +123,6 @@ void Face::Init(cv::Mat* _frame, Vector2 videoSize, float _videoScale, Cube* _cu
     BeginTextureMode(state_target);
     ClearBackground(BLANK);
 
-
     for (size_t i = 0; i < state_preview.size(); ++i)
     {
         draw_frame(
@@ -152,14 +142,13 @@ std::array<int, CUBE_FACE_SIZE> Face::Update()
 {
     cv::Mat roi;
 
-    avgCols = std::vector<cv::Scalar>();
-    for (size_t i = 0; i < 9; ++i)
+    for (size_t i = 0; i < CUBE_FACE_SIZE; ++i)
     {
         roi = (*frame)(rects[i]);
-        avgCols.push_back(cv::mean(roi));
+        avgCols[i] = cv::mean(roi);
     }
     predCols = Colour_getColours(avgCols);
-    predCols[4] = *cur_face; // centre piece
+    predCols[(CUBE_FACE_SIZE - 1) / 2] = *cur_face; // centre piece
 
     return predCols;
 };
@@ -191,7 +180,7 @@ void Face::Draw()
                 relativeFacesCols[*cur_face][2]
             );
 
-            int i = 0;
+            size_t i = 0;
             for (size_t y = 0; y < 3; ++y)
             {
                 for (size_t x = 0; x < 3; ++x)
@@ -250,7 +239,7 @@ void Face::Draw()
 
     for (size_t i = 0; i < state_preview.size(); ++i)
     {
-        for (size_t j = 0; j < 9; ++j)
+        for (size_t j = 0; j < CUBE_FACE_SIZE; ++j)
         {
             DrawRectangleRec(
                 state_preview[i][j],
@@ -337,22 +326,21 @@ void Face::draw_frame(float x, float y, float l, int thickness, bool outline)
     }
 };
 
-std::vector<Rectangle> Face::GetStateFrameRects(float x, float y, float l, int thickness)
+std::array<Rectangle, CUBE_FACE_SIZE> Face::GetStateFrameRects(float x, float y, float l)
 {
-    std::vector<Rectangle> stateFrame;
+    std::array<Rectangle, CUBE_FACE_SIZE> stateFrame;
 
     for (size_t Y = 0; Y < 3; ++Y)
     {
         for (size_t X = 0; X < 3; ++X)
         {
-            stateFrame.push_back(Rectangle{
-                x + STATEPREVIEW_SIZE * X,
-                y + STATEPREVIEW_SIZE * Y,
-                STATEPREVIEW_SIZE,
-                STATEPREVIEW_SIZE
-            });
+            stateFrame[Y * 3 + X] = Rectangle{
+                x + l * X,
+                y + l * Y,
+                l,
+                l
+            };
         }
     }
-    
     return stateFrame;
 };

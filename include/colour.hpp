@@ -3,14 +3,15 @@
 
 #include <stdlib.h>
 #include <array>
+#include <iostream>
 #include <vector>
 #include "common.hpp"
 
 #include "raylib.h"
 
-#include "rgbhsv.hpp"
-
 #include "opencv2/opencv.hpp"
+
+#include "rgbhsv.hpp"
 
 #define COL_WHITE  Color{255, 255, 255, 255}
 #define COL_RED    Color{185, 0, 0, 255}
@@ -53,6 +54,6 @@ const std::vector<std::vector<Color>> relativeFacesCols { {
 } };
 
 int Colour_getPredColour(hsv col);
-std::array<int, CUBE_FACE_SIZE> Colour_getColours(std::vector<cv::Scalar> avgCols);
+std::array<int, CUBE_FACE_SIZE> Colour_getColours(std::array<cv::Scalar, CUBE_FACE_SIZE> avgCols);
 
 #endif

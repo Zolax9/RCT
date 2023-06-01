@@ -515,10 +515,40 @@ void Tutorial::Draw()
 
         case 6:
             DrawText("Orient the yellow corners", 8, 0, HEADER_SIZE, DARKGRAY);
+            // draws face of fish
+            switch (yellow_corners_alg_shown)
+            {
+                case 0:
+                    DrawTextureRec(
+                        fish,
+                        Rectangle{ 0, 0, fish.width, fish.height * -1 },
+                        Vector2{ 260 + 100 + 8, screenH - 8 - fish.height },
+                        WHITE
+                    );
+                    break;
+
+                default:
+                    DrawTextureRec(
+                        fish,
+                        Rectangle{ 0, 0, fish.width, fish.height * -1 },
+                        Vector2{ 20, screenH - 120 - 8 - fish.height },
+                        WHITE
+                    );
+                    break;
+            }
             break;
 
         case 7:
             DrawText("Permute the yellow corners", 8, 0, HEADER_SIZE, DARKGRAY);
+            if (pll_corners_alg_shown == 0) // shows face of fish until Right button/key pressd
+            {
+                DrawTextureRec(
+                    fish,
+                    Rectangle{ 0, 0, fish.width, fish.height * -1 },
+                    Vector2{ 20, screenH - 120 - 8 - fish.height },
+                    WHITE
+                );
+            }
             break;
 
         case 8:
@@ -753,7 +783,7 @@ void Tutorial::next_step()
                 // prompt is quite big, so font size temporarily halved
                 text_wrap.Set_font_height((int)(INSTR_SIZE * 0.82));
                 text_wrap.Set_font_size((int)(INSTR_SIZE * 0.82));
-                prompt = "This step is intuitive, so you must repeatedly use the OLL27 (R U R' U R U2 R') algorithm at any orientation (while keeping the yellow face at the top) until a yellow \"fish\" appears on the yellow face, upon which you must keep using the OLL27 algorithm so the fish is looking towards the bottom-left corner once or twice so the top face is yellow-only.\n\nThe following instructions will show you a solution, but it is recommended that you try yourself and then use the \"Reset\" button to sync your cube with the tutorial.";
+                prompt = "This step is intuitive, so you must repeatedly use the OLL27 (R U R' U R U2 R') algorithm at any orientation (while keeping the yellow face at the top) until a yellow \"fish\" (as shown below) appears on the yellow face, upon which you must keep using the OLL27 algorithm so the fish is looking towards the bottom-left corner once or twice so the top face is yellow-only.\n\nThe following instructions will show you a solution, but it is recommended that you try yourself and then use the \"Reset\" button to sync your cube with the tutorial.";
                 set_prompt();
 
                 set_orient(2);
@@ -1951,3 +1981,5 @@ Cube* Tutorial::get_cube_pointer() { return &cube; }
 int* Tutorial::get_cur_face_pointer() { return &cur_face; }
 std::vector<int> Tutorial::get_alg() { return cube3D.get_alg(); }
 int Tutorial::get_move_index() { return cube3D.get_move_index(); }
+
+void Tutorial::Set_fish(Texture2D val) { fish = val; }

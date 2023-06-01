@@ -49,6 +49,8 @@ class Tutorial
         std::vector<int> get_alg(); // gets currently executed alg (Cube3D)
         int get_move_index(); // gets move_index (Cube3D)
 
+        void Set_fish(Texture2D val);
+
     private:
         void next_step();
         void append_permute(std::vector<int> set, int _front_face = 2, int _orient = 0); // adds set to algorithm to be executed
@@ -119,6 +121,7 @@ class Tutorial
         Cube cube;
         Cube3D cube3D;
         RenderTexture renderTexture_cube3D;
+        Texture2D fish;
         Text_wrap text_wrap;
 
         int cur_face;
