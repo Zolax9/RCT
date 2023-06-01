@@ -178,7 +178,7 @@ class Tutorial
         //     if orange edge is @ yellow face, edge needs to be permuted to right side
         // 1 = edge @ yellow face for edge @ left side (eg. O/G edge:)
         //     if green edge is @ yellow face, edge needs to be permuted to left side
-        // 2 = edge @ middle layer (between white and yellow face) @ right side (permuted incorrectly:) that will need to be permuted to right side after permuting out middle layer (eg. O/G edge:)
+        // 2 = edge @ middle layer (between white and yellow face) @ right side (permuted incorrectly) that will need to be permuted to right side after permuting out middle layer (eg. O/G edge:)
         //     if O/G edge is @ right side (orange @ front face, green @ right face), edge will need to be permuted to right side
         // 3 = edge @ middle layer (between white and yellow face) @ right side (permuted incorrectly) that will need to be permuted to left side after permuting out middle layer (eg. O/G edge:)
         //     if O/G edge is @ right side (green @ front face, orange @ right face), edge will need to be permuted to left side

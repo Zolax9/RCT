@@ -1072,9 +1072,8 @@ void Tutorial::permute_white_cross(int white_cross_front_face)
 bool Tutorial::check_top_layer_case(int c)
 {
     std::vector<int> white_corners;
-    std::array<std::array<int, 2>, 2> corners; // other corners of next_top_layer
-    std::string corner_1; // first other corner
-    std::string corner_2; // second other corner
+    std::string corner_1; // first other piece of corner
+    std::string corner_2; // second other piece of corner
     int f;
     int i;
 
@@ -1326,18 +1325,9 @@ void Tutorial::get_top_layer_setup_alg(int front_face, int target_face)
 };
 void Tutorial::permute_top_layer()
 {
-    if (top_layer_setup_alg.size() != 0)
+    if (top_layer_setup_alg.size())
     {
-        switch (top_layer_intermediate_face)
-        {
-            case -1:
-                append_permute(top_layer_setup_alg, top_layer_front_face, 0);
-                break;
-
-            default:
-                append_permute(top_layer_setup_alg, top_layer_intermediate_face, 0);
-                break;
-        }
+        append_permute(top_layer_setup_alg, (top_layer_intermediate_face == -1) ? top_layer_front_face : top_layer_intermediate_face, 0);
     }
     append_permute(top_layer_move_alg, top_layer_target_face, 0);
 };
@@ -1421,9 +1411,49 @@ bool Tutorial::check_middle_layer_case(int c)
 
 void Tutorial::find_middle_layer()
 {
+    std::string edge_1; // first other piece of edge
+    std::string edge_2; // second other piece of edge
+
     for (int c = 0; c < 4; ++c)
     {
-        if (check_middle_layer_case(c)) { return; }
+        if (check_middle_layer_case(c))
+        {
+            if (middle_layer_case < 2)
+            {
+                edge_1 = Cube_face_str(cube.get_edge(middle_layer_front_face, 2));
+                edge_2 = Cube_face_str(cube.get_edge(CUBE_YELLOW, loop(middle_layer_front_face - 2, 0, 3)));
+                prompt = "Insert the ";
+                prompt.append(edge_1.substr(0, edge_1.size() - 1));
+                prompt.append("-");
+                prompt.append(edge_2);
+                prompt.append("edge into the centre-");
+                prompt.append((middle_layer_case == 0) ? "right" : "left");
+                prompt.append(" edge of the middle layer:\n");
+            } else {
+                switch (middle_layer_case)
+                {
+                    case 2:
+                        edge_1 = Cube_face_str(cube.get_edge(loop(middle_layer_front_face - 1, CUBE_ORANGE, CUBE_BLUE), 1));
+                        edge_2 = Cube_face_str(cube.get_edge(middle_layer_front_face, 3));
+                        break;
+
+                    case 3:
+                        edge_1 = Cube_face_str(cube.get_edge(loop(middle_layer_front_face + 1, CUBE_ORANGE, CUBE_BLUE), 3));
+                        edge_2 = Cube_face_str(cube.get_edge(middle_layer_front_face, 1));
+                        break;
+                }
+                prompt = "Remove the ";
+                prompt.append(edge_1.substr(0, edge_1.size() - 1));
+                prompt.append("-");
+                prompt.append(edge_2);
+                prompt.append("edge from the centre-");
+                prompt.append((middle_layer_case == 2) ? "right" : "left");
+                prompt.append(" edge of the middle layer and insert into a center-");
+                prompt.append((middle_layer_case == 2) ? "right" : "left");
+                prompt.append(" edge of the middle layer:\n");
+            }
+            return;
+        }
     }
 };
 void Tutorial::get_middle_layer_alg()
@@ -1465,16 +1495,25 @@ void Tutorial::get_middle_layer_alg()
 
     if (middle_layer_case < 2)
     {
-        std::cout << "Move whole cube so front face is " << Cube_face_str(middle_layer_front_face) << '\n';
-        std::cout << "Setup alg: " << Cube_notation_str(middle_layer_setup_alg) << "\n\n";
-        std::cout << "Move whole cube so front face is " << Cube_face_str(middle_layer_target_face) << '\n';
-        std::cout << "Move alg: " << Cube_notation_str(middle_layer_move_algs[0]) << "\n\n";
+        prompt.append("Move the cube so the ");
+        prompt.append(Cube_face_str(middle_layer_front_face));
+        prompt.append("face is facing you\nSetup algorithm: ");
+        prompt.append(Cube_notation_str(middle_layer_setup_alg));
+        prompt.append("\nMove whole cube so front face is ");
+        prompt.append(Cube_face_str(middle_layer_target_face));
+        prompt.append("\nMove algorithm: ");
+        prompt.append(Cube_notation_str(middle_layer_move_algs[0]));
     } else {
-        std::cout << "Move whole cube so front face is " << Cube_face_str(middle_layer_front_face) << '\n';
-        std::cout << "Move alg: " << Cube_notation_str(middle_layer_move_algs[0]) << "\n\n";
-        std::cout << "Move whole cube so front face is " << Cube_face_str(middle_layer_target_face) << '\n';
-        std::cout << "Setup alg: " << Cube_notation_str(middle_layer_setup_alg) << '\n';
-        std::cout << "Move alg: " << Cube_notation_str(middle_layer_move_algs[1]) << "\n\n";
+        prompt.append("Move whole cube so front face is ");
+        prompt.append(Cube_face_str(middle_layer_front_face));
+        prompt.append("face is facing you\nMove algorithm: ");
+        prompt.append(Cube_notation_str(middle_layer_move_algs[0]));
+        prompt.append("\nMove whole cube so front face is ");
+        prompt.append(Cube_face_str(middle_layer_target_face));
+        prompt.append("face is facing you\nSetup algorithm: ");
+        prompt.append(Cube_notation_str(middle_layer_setup_alg));
+        prompt.append("face is facing you\nMove algorithm: ");
+        prompt.append(Cube_notation_str(middle_layer_move_algs[1]));
     }
 };
 void Tutorial::get_middle_layer_setup_alg(int front_face, int target_face)
