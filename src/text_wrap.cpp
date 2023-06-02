@@ -16,7 +16,7 @@ void Text_wrap::Draw(int x, int y)
 {
     for (int i = 0; i < prompt.size(); ++i)
     {
-        DrawText(prompt[i].c_str(), 8, 48 + (i * font_height), font_size, PURPLE);
+        DrawText(prompt[i].c_str(), x, y + (i * font_height), font_size, PURPLE);
     }
 };
 
