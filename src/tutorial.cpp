@@ -637,9 +637,7 @@ void Tutorial::next_step()
                     increment = true;
                     break;
                 }
-                prompt = "Move white edges into the petal\n";
-                prompt.append(std::to_string(petals_count));
-                prompt.append("/4 petals for the daisy already in yellow face");
+                prompt = "This step is intuitive, meaning you must create a \"petal\" by adding four white edges to the yellow face (the corners can hold any colour).\nThe following instructions will show you a solution, but it is recommended that you try yourself and then use the \"Reset\" button to sync your cube with the tutorial\n\n";
                 set_prompt();
 
                 set_orient(2);
@@ -1012,7 +1010,8 @@ int Tutorial::get_petal_alg(Coord petal)
     
     invert_edge = Cube_invert_edge(petal.f, petal_edge);
 
-    prompt = "Insert the White-";
+    prompt = std::to_string(petals_count);
+    prompt.append("/4 petals in the daisy\nInsert the White-");
     prompt.append(Cube_face_str(cube.get_edge(invert_edge[0], invert_edge[1])));
     prompt.append("edge into the daisy in the yellow face:\n");
     switch (petal_setup_alg.size())
