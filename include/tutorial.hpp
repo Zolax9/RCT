@@ -49,6 +49,7 @@ class Tutorial
         std::vector<int> get_alg(); // gets currently executed alg (Cube3D)
         int get_move_index(); // gets move_index (Cube3D)
 
+        void Set_daisy(Texture2D val);
         void Set_fish(Texture2D val);
 
     private:
@@ -121,7 +122,8 @@ class Tutorial
         Cube cube;
         Cube3D cube3D;
         RenderTexture renderTexture_cube3D;
-        Texture2D fish;
+        Texture2D daisy; // daisy pattern
+        Texture2D fish; // fish pattern
         Text_wrap text_wrap;
 
         int cur_face;

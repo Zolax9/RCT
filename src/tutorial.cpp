@@ -502,10 +502,40 @@ void Tutorial::Draw()
 
         case 1:
             DrawText("Create the daisy", 8, 0, HEADER_SIZE, DARKGRAY);
+            // draws face of daisy
+            switch (petal_alg_shown)
+            {
+                case 0:
+                    DrawTextureRec(
+                        daisy,
+                        Rectangle{ 0, 0, daisy.width, daisy.height * -1 },
+                        Vector2{ 260 + 100 + 8, screenH - 8 - daisy.height },
+                        WHITE
+                    );
+                    break;
+
+                default:
+                    DrawTextureRec(
+                        daisy,
+                        Rectangle{ 0, 0, daisy.width, daisy.height * -1 },
+                        Vector2{ 20, screenH - 120 - 8 - daisy.height },
+                        WHITE
+                    );
+                    break;
+            }
             break;
 
         case 2:
             DrawText("Create the white cross", 8, 0, HEADER_SIZE, DARKGRAY);
+            if (petal_alg_shown != -1) // shows face of daisy until Right button/key pressd
+            {
+                DrawTextureRec(
+                    daisy,
+                    Rectangle{ 0, 0, daisy.width, daisy.height * -1 },
+                    Vector2{ 20, screenH - 120 - 8 - daisy.height },
+                    WHITE
+                );
+            }
             break;
 
         case 3:
@@ -617,6 +647,7 @@ void Tutorial::next_step()
                 {
                     prompt = "Cross already created!";
                     set_prompt();
+                    petal_alg_shown = -1; // prevent petal from drawing if step is skipped
                     ++step;
                     increment = true;
                     break;
@@ -2033,4 +2064,5 @@ int* Tutorial::get_cur_face_pointer() { return &cur_face; }
 std::vector<int> Tutorial::get_alg() { return cube3D.get_alg(); }
 int Tutorial::get_move_index() { return cube3D.get_move_index(); }
 
+void Tutorial::Set_daisy(Texture2D val) { daisy = val; }
 void Tutorial::Set_fish(Texture2D val) { fish = val; }

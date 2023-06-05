@@ -39,10 +39,27 @@ UI::UI()
     );
 
     int l = (int)(std::min(screenW, screenH) * 0.2);
+    std::array<Rectangle, CUBE_FACE_SIZE> daisy_rects;
     std::array<Rectangle, CUBE_FACE_SIZE> fish_rects;
-    RenderTexture2D fish_target = LoadRenderTexture(l + 4, l + 4);
+    RenderTexture2D daisy_render = LoadRenderTexture(l + 4, l + 4);
+    RenderTexture2D fish_render = LoadRenderTexture(l + 4, l + 4);
 
-    BeginTextureMode(fish_target);
+    BeginTextureMode(daisy_render);
+    ClearBackground(BLANK);
+
+    daisy_rects = face.GetStateFrameRects(2, 2, l / 3);
+    DrawRectangle(2, 2, l, l, cubeRGBCols[CUBE_SIZE]); // faster than individually setting each piece to grey
+    DrawRectangleRec(daisy_rects[1], cubeRGBCols[CUBE_WHITE]);
+    DrawRectangleRec(daisy_rects[3], cubeRGBCols[CUBE_WHITE]);
+    DrawRectangleRec(daisy_rects[4], cubeRGBCols[CUBE_YELLOW]);
+    DrawRectangleRec(daisy_rects[5], cubeRGBCols[CUBE_WHITE]);
+    DrawRectangleRec(daisy_rects[7], cubeRGBCols[CUBE_WHITE]);
+    face.draw_frame(2, 2, l / 3, 3, true);
+
+    EndTextureMode();
+    tutorial.Set_daisy(daisy_render.texture);
+
+    BeginTextureMode(fish_render);
     ClearBackground(BLANK);
 
     fish_rects = face.GetStateFrameRects(2, 2, l / 3);
@@ -56,7 +73,7 @@ UI::UI()
     face.draw_frame(2, 2, l / 3, 3, true);
 
     EndTextureMode();
-    tutorial.Set_fish(fish_target.texture);
+    tutorial.Set_fish(fish_render.texture);
 
     step = tutorial.get_step_pointer();
     pred_state = make_array<CUBE_FACE_SIZE>(CUBE_ANY);
