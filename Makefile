@@ -6,7 +6,7 @@ CONFIG:=debug
 
 LDFLAGS:=-L lib -L raylib -lm -lraylib -lraygui -lX11 -ldl -lopencv_core -lopencv_highgui -lopencv_imgcodecs -lopencv_imgproc -lopencv_videoio -pthread
 
-CFLAGS:= -g -pedantic -Wall -Wextra -Wno-missing-field-initializers
+CFLAGS:= -pedantic -Wall -Wextra -Wno-missing-field-initializers
 CFLAGS+= -std=c++17 -I ./include -I raylib -I /usr/include/opencv4
 
 ifeq ($(CAMERA),OFF)
