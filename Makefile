@@ -4,19 +4,19 @@ DBGOBJDIR:=obj/debug
 RELOBJDIR:=obj/release
 CONFIG:=debug
 
-LDFLAGS:=-L lib -L raylib -lm -lraylib -lraygui -lX11 -ldl -lopencv_core -lopencv_highgui -lopencv_imgcodecs -lopencv_imgproc -lopencv_videoio -pthread
+LDFLAGS:= -L raylib/lib -lm -lraylib -lraygui -lX11 -ldl -lopencv_core -lopencv_highgui -lopencv_imgcodecs -lopencv_imgproc -lopencv_videoio -pthread
 
 CFLAGS:= -pedantic -Wall -Wextra -Wno-missing-field-initializers
-CFLAGS+= -std=c++17 -I ./include -I raylib -I /usr/include/opencv4
+CFLAGS+= -std=c++17 -I include -I raylib/include -I /usr/include/opencv4
 
-ifeq ($(CAMERA),OFF)
-#	CFLAGS+= -DNO_CAMERA
+ifeq ($(NO_CAMERA),ON)
+	CFLAGS+= -DNO_CAMERA
 endif
 
 SRC:=$(wildcard src/*.cpp)
 INC:=$(wildcard include/*.hpp)
 DBGOBJ:=$(SRC:src/%.cpp=obj/debug/%.o)
-RELOBJ:=$(SRC:src/%.cpp=obj/release/%.o)
+RELOBJ:=$(SRC:src/%.cpp=obj/rel+ease/%.o)
 
 CC=g++
 
