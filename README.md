@@ -50,6 +50,19 @@ _Alternatively, buttons can be used instead._
 * Raylib and Raygui (currently v4.5.0 and v3.6 respectively) (already pre-packaged)
 * OpenCV v4.7.0 **if on Linux** or v4.5.5 on Windows (already pre-packaged)
 
+# Screenshots
+
+![](screenshots/screenshot1.png)
+![](screenshots/screenshot2.png)
+![](screenshots/screenshot3.png)
+![](screenshots/screenshot4.png)
+![](screenshots/screenshot5.png)
+![](screenshots/screenshot6.png)
+![](screenshots/screenshot7.png)
+![](screenshots/screenshot8.png)
+![](screenshots/screenshot9.png)
+![](screenshots/screenshot10.png)
+
 # Thanks
 
 Thanks to:
