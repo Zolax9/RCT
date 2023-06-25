@@ -1,8 +1,12 @@
 .etc/
-obj/debug/*
-obj/release/*
+bin/linux/debug/RCT-debug
+bin/linux/release/RCT-release
+bin/windows/debug/RCT-debug.exe
+bin/windows/release/RCT-release.exe
+obj/linux/debug/*
+obj/linux/release/*
+obj/windows/debug/*
+obj/windows/release/*
 build.sh
-RCT-debug
-RCT-release
 README.md.backup
 setup.sh

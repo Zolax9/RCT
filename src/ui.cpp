@@ -28,7 +28,11 @@ UI::UI()
     cube = tutorial.get_cube_pointer();
     cur_face = tutorial.get_cur_face_pointer();
 
-    video_index = 1;
+#ifdef OS_LIN
+    video_index = 0; // valid video index to prevent code breaking
+#else
+    video_index = 1; // linux starts from 0, while windows starts from 1
+#endif
     video.Init(video_index);
     face.Init(
         video.get_frame_pointer(),
@@ -213,7 +217,11 @@ void UI::Draw()
     if (*step == 0)
     {
         video.Draw();
+#ifdef OS_LIN
+        GuiSpinner((Rectangle){ 260, screenH - 60, 120, 40 }, NULL, &video_index, 0, 32767, false); // linux starts from 0, while windows starts from 1
+#else
         GuiSpinner((Rectangle){ 260, screenH - 60, 120, 40 }, NULL, &video_index, 1, 32767, false);
+#endif
         GuiLabel((Rectangle){ 390, screenH - 60, screenW, 40 }, "Video index (video output to use)");
     }
     face.Draw();

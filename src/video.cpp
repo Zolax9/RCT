@@ -19,7 +19,6 @@ void Video::Init(int _video_index)
     frame_image.mipmaps = 1;
 
 #ifdef NO_CAMERA
-    video_index = 0; // valid video index to prevent code breaking
     frame = cv::Mat(256, 256, CV_8UC3);
 #else
     open_camera(_video_index);
