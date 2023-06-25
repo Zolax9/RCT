@@ -1,7 +1,5 @@
 # RCT
 
-_This readme is currently under construction._
-
 A Rubik's Cube Tutorial application for beginners learning to solve the cube.
 
 # Functionality
@@ -11,6 +9,8 @@ A Rubik's Cube Tutorial application for beginners learning to solve the cube.
 * Program is still being actively worked on to hopefully realise such a program
 
 # Controls
+
+_Alternatively, buttons can be used instead._
 
 * **Left Control**: Toggle camera
 * **Space**: Store current face and move on to next / Fast forward cube animation
@@ -46,9 +46,9 @@ A Rubik's Cube Tutorial application for beginners learning to solve the cube.
 
 # Requirements
 
-* Linux-based OS (Windows port under consideration)
-* Raylib and Raygui (currently v4.5)
-* OpenCV (currently v4)
+* Windows or Linux-based OS
+* Raylib and Raygui (currently v4.5.0 and v3.6 respectively) (already pre-packaged)
+* OpenCV v4.7.0 **if on Linux** or v4.5.5 on Windows (already pre-packaged)
 
 # Thanks
 
