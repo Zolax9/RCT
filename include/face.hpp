@@ -17,13 +17,15 @@ class Face
 {
     public:
         Face() { };
-        void Init(cv::Mat* _frame, Vector2 videoSize, float _videoScale, Cube* _cube, int* _step, int* _cur_face);
+        void Init(cv::Mat* _frame, Vector2 videoSize, float videoScale, Cube* _cube, int* _step, int* _cur_face);
 
         std::array<int, CUBE_FACE_SIZE> Update();
         void Draw();
 
         void draw_frame(float x, float y, float l, int thickness, bool outline);
         std::array<Rectangle, CUBE_FACE_SIZE> GetStateFrameRects(float x, float y, float l);
+
+        void set_video(cv::Mat* _frame, Vector2 videoSize, float videoScale);
     private:
         std::array<cv::Rect, CUBE_FACE_SIZE> rects;
         std::array<Rectangle, CUBE_FACE_SIZE> live_preview;
@@ -34,7 +36,6 @@ class Face
 
         int videoW;
         int videoH;
-        float videoScale;
         int LIVEPREVIEW_SIZE;
         int PREDPREVIEW_SIZE;
         int STATEPREVIEW_SIZE;

@@ -28,7 +28,8 @@ UI::UI()
     cube = tutorial.get_cube_pointer();
     cur_face = tutorial.get_cur_face_pointer();
 
-    video.Init();
+    video_index = 1;
+    video.Init(video_index);
     face.Init(
         video.get_frame_pointer(),
         video.get_size(),
@@ -104,6 +105,22 @@ void UI::Update()
 #endif
     if (*step == 0)
     {
+        if (IsKeyPressed(KEY_ONE)) { video_index = 1; }
+        if (IsKeyPressed(KEY_TWO)) { video_index = 2; }
+        if (IsKeyPressed(KEY_THREE)) { video_index = 3; }
+        if (IsKeyPressed(KEY_FOUR)) { video_index = 4; }
+        if (IsKeyPressed(KEY_FIVE)) { video_index = 5; }
+        if (IsKeyPressed(KEY_SIX)) { video_index = 6; }
+        if (IsKeyPressed(KEY_SEVEN)) { video_index = 7; }
+        if (IsKeyPressed(KEY_EIGHT)) { video_index = 8; }
+        if (IsKeyPressed(KEY_NINE)) { video_index = 9; }
+        if (IsKeyPressed(KEY_ZERO)) { video_index = 0; }
+        if (video_index != video.get_video_index())
+        {
+            video.open_camera(video_index);
+            face.set_video(video.get_frame_pointer(), video.get_size(), video.get_scale());
+        }
+
         if (IsKeyPressed(KEY_Q))
         {
             *cur_face = CUBE_YELLOW;
@@ -196,6 +213,8 @@ void UI::Draw()
     if (*step == 0)
     {
         video.Draw();
+        GuiSpinner((Rectangle){ 260, screenH - 60, 120, 40 }, NULL, &video_index, 1, 32767, false);
+        GuiLabel((Rectangle){ 390, screenH - 60, screenW, 40 }, "Video index (video output to use)");
     }
     face.Draw();
     tutorial.Draw();

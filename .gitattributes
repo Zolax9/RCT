@@ -1,1 +1,3 @@
 raylib/** linguist-vendored
+*.cpp		eol=lf
+*.hpp		eol=lf

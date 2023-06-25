@@ -10,17 +10,21 @@ class Video
 {
     public:
         Video() { };
-        void Init();
+        void Init(int _video_index);
 
         void Update();
         void Draw();
+
+        void open_camera(int video_index);
 
         cv::Mat* get_frame_pointer();
         float get_scale();
         Vector2 get_size();
         Texture2D get_texture();
+        int get_video_index();
+    private:    
+        void set_scale_pos();
 
-    private:
         bool visible;
         float scale;
         Vector2 pos;
@@ -28,6 +32,7 @@ class Video
         cv::Mat frame; // if NO_CAMERA flag used, this is just an empty mat
         cv::Mat frame_rgb;
         cv::VideoCapture cap;
+        int video_index;
 
         Image frame_image;
         Texture2D frame_texture2D;

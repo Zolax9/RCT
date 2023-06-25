@@ -11,12 +11,8 @@
 #include "opencv2/opencv.hpp"
 #include "opencv2/highgui/highgui.hpp"
 
-void Face::Init(cv::Mat* _frame, Vector2 videoSize, float _videoScale, Cube* _cube, int* _step, int* _cur_face)
+void Face::Init(cv::Mat* _frame, Vector2 videoSize, float videoScale, Cube* _cube, int* _step, int* _cur_face)
 {
-    frame = _frame;
-    videoW = videoSize.x;
-    videoH = videoSize.y;
-    videoScale = _videoScale;
     cube = _cube;
     step = _step;
     cur_face = _cur_face;
@@ -26,21 +22,7 @@ void Face::Init(cv::Mat* _frame, Vector2 videoSize, float _videoScale, Cube* _cu
     PREDPREVIEW_SIZE = (int)(smallLength * 0.07);
     STATEPREVIEW_SIZE = (int)(smallLength * 0.035);
     FACE_SIZE = (int)(smallLength * 0.14);
-
-    float piece_len = FACE_SIZE / videoScale;
-
-    for (size_t y = 0; y < 3; ++y)
-    {
-        for (size_t x = 0; x < 3; ++x)
-        {
-            rects[y * 3 + x] = cv::Rect(
-                videoW / 2.0 + (x - 1.5) * piece_len,
-                videoH / 2.0 + (y - 1.5) * piece_len,
-                piece_len,
-                piece_len 
-            );
-        }
-    }
+    set_video(_frame, videoSize, videoScale);
 
     for (size_t y = 0; y < 3; ++y)
     {
@@ -343,4 +325,27 @@ std::array<Rectangle, CUBE_FACE_SIZE> Face::GetStateFrameRects(float x, float y,
         }
     }
     return stateFrame;
+};
+
+void Face::set_video(cv::Mat* _frame, Vector2 videoSize, float videoScale)
+{
+    frame = _frame;
+    videoW = videoSize.x;
+    videoH = videoSize.y;
+
+    float piece_len = FACE_SIZE / videoScale;
+
+    for (size_t y = 0; y < 3; ++y)
+    {
+        for (size_t x = 0; x < 3; ++x)
+        {
+            rects[y * 3 + x] = cv::Rect(
+                videoW / 2.0 + (x - 1.5) * piece_len,
+                videoH / 2.0 + (y - 1.5) * piece_len,
+                piece_len,
+                piece_len 
+            );
+        }
+    }
+
 };

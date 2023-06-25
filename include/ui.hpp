@@ -30,6 +30,7 @@ class UI
         Video video;
         Face face;
 
+        int video_index;
         std::array<int, CUBE_FACE_SIZE> pred_state;
         int* step;
         int* cur_face;
